@@ -1,0 +1,634 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESIGN TOKENS — Dark defaults (overridden dynamically from App.tsx :root)
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Background layers */
+  --color-background:       #050507;
+  --color-card-bg:          rgba(15, 15, 20, 0.75);
+
+  /* Text hierarchy */
+  --color-text-main:        #e4e4e7;
+  --color-text-muted:       rgba(255, 255, 255, 0.38);
+
+  /* Borders */
+  --color-border-line:      rgba(255, 255, 255, 0.05);
+
+  /* Accent */
+  --color-accent-highlight: #d4af37;
+
+  /* Table density (overridden from config) */
+  --table-font-size:        11px;
+  --table-row-padding:      8px;
+
+  /* Shape */
+  --border-radius-factor:   10px;
+  --table-card-width:       280px;
+  --app-font-scale:         100%;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SCROLLBARS
+   ───────────────────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar               { width: 5px; height: 5px; }
+::-webkit-scrollbar-track         { background: var(--color-background); }
+::-webkit-scrollbar-thumb         { background: var(--color-border-line); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover   { background: var(--color-accent-highlight); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BODY & BASE
+   ───────────────────────────────────────────────────────────────────────────── */
+body {
+  background-color: var(--color-background);
+  color:            var(--color-text-main);
+  font-family:      var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition:       background-color 0.25s ease, color 0.25s ease;
+}
+
+.font-display { font-family: var(--font-display), sans-serif !important; }
+.font-mono    { font-family: var(--font-mono), monospace !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLASS PANEL — single reusable card primitive
+   ───────────────────────────────────────────────────────────────────────────── */
+.glass-panel,
+.glass-panel-heavy {
+  background:    var(--color-card-bg) !important;
+  border-color:  var(--color-border-line) !important;
+  color:         var(--color-text-main) !important;
+  border-style:  solid;
+  border-width:  1px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BACKGROUND OVERRIDES
+   Map hardcoded Tailwind zinc/black classes → CSS variables so themes work
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Page-level backgrounds */
+div.bg-black, div.bg-zinc-950, div.bg-zinc-900,
+div.bg-\[\#050505\], div.bg-\[\#030303\], div.bg-\[\#020202\],
+main.bg-\[\#030303\] {
+  background-color: var(--color-background) !important;
+}
+
+/* Card / panel backgrounds */
+div.bg-zinc-950\/40, div.bg-zinc-950\/60, div.bg-zinc-950\/70,
+div.bg-zinc-950\/80, div.bg-zinc-900\/40, div.bg-zinc-900\/60,
+div.bg-\[\#020202\]\/30, div.bg-\[\#020202\]\/80,
+div.bg-\[\#09090b\], div.bg-\[\#0a0a0d\] {
+  background-color: var(--color-card-bg) !important;
+  border-color:     var(--color-border-line) !important;
+}
+
+/* SmartTable header cells — the deepest dark (#09090b / #0f0f12) */
+.bg-\[\#09090b\]   { background-color: color-mix(in srgb, var(--color-background) 80%, var(--color-card-bg)) !important; }
+.bg-\[\#0f0f12\]   { background-color: color-mix(in srgb, var(--color-background) 60%, var(--color-card-bg)) !important; }
+
+/* Sidebar */
+aside {
+  background-color: var(--color-background) !important;
+  border-color:     var(--color-border-line) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BORDER OVERRIDES
+   ───────────────────────────────────────────────────────────────────────────── */
+.border-white\/\[0\.04\], .border-white\/\[0\.05\], .border-white\/\[0\.08\],
+.border-white\/\[0\.06\], .border-zinc-800, .border-zinc-700 {
+  border-color: var(--color-border-line) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TEXT OVERRIDES
+   Use css opacity hierarchy — do NOT flatten all text to one colour
+   ───────────────────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6,
+.text-white, .text-zinc-100, .text-zinc-200 {
+  color: var(--color-text-main) !important;
+}
+
+.text-zinc-300 { color: var(--color-text-main) !important; opacity: 0.9; }
+.text-zinc-400 { color: var(--color-text-main) !important; opacity: 0.75; }
+.text-zinc-500 { color: var(--color-text-main) !important; opacity: 0.55; }
+.text-zinc-600 { color: var(--color-text-main) !important; opacity: 0.40; }
+
+/* Utility: use text-muted class for muted text instead of text-zinc-* */
+.text-muted { color: var(--color-text-muted) !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ACCENT UTILITIES
+   ───────────────────────────────────────────────────────────────────────────── */
+.text-gold,
+.text-\[\#d4af37\]            { color: var(--color-accent-highlight) !important; }
+
+.border-gold,
+.border-\[\#d4af37\]\/15,
+.border-\[\#d4af37\]\/30      { border-color: var(--color-accent-highlight) !important; }
+
+.bg-\[\#d4af37\]              { background-color: var(--color-accent-highlight) !important;
+                                 color: var(--color-background) !important; }
+.bg-\[\#d4af37\]\/5           { background-color: color-mix(in srgb, var(--color-accent-highlight) 5%, transparent) !important; }
+.bg-\[\#d4af37\]\/10          { background-color: color-mix(in srgb, var(--color-accent-highlight) 10%, transparent) !important; }
+.hover\:bg-\[\#b08e23\]:hover { background-color: var(--color-accent-highlight) !important; filter: brightness(0.85); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TABLES — responsive to design tokens
+   ───────────────────────────────────────────────────────────────────────────── */
+table  { width: 100% !important; border-collapse: collapse !important; }
+
+table th, th {
+  color:           var(--color-text-main) !important;
+  font-family:     var(--font-display), sans-serif !important;
+  font-size:       var(--table-font-size, 11px) !important;
+  font-weight:     600 !important;
+  letter-spacing:  0.05em !important;
+  text-transform:  uppercase !important;
+  border-bottom:   1px solid var(--color-border-line) !important;
+  padding:         var(--table-row-padding, 8px) 12px !important;
+}
+
+table td, td {
+  color:           var(--color-text-main) !important;
+  font-size:       var(--table-font-size, 11px) !important;
+  border-bottom:   1px solid var(--color-border-line) !important;
+  padding:         var(--table-row-padding, 8px) 12px !important;
+  transition:      background-color 0.1s ease;
+}
+
+thead, tr.bg-zinc-950\/75, tr[class*="bg-zinc-950"] {
+  background-color: color-mix(in srgb, var(--color-text-main) 5%, transparent) !important;
+}
+
+tr:hover td {
+  background-color: color-mix(in srgb, var(--color-text-main) 2%, transparent) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FORMS — inputs, selects, textareas
+   ───────────────────────────────────────────────────────────────────────────── */
+input, select, textarea {
+  background-color: color-mix(in srgb, var(--color-text-main) 3%, transparent) !important;
+  border:           1px solid var(--color-border-line) !important;
+  color:            var(--color-text-main) !important;
+  font-family:      var(--font-sans), sans-serif !important;
+  border-radius:    var(--border-radius-factor, 8px) !important;
+  transition:       border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline:          none !important;
+  border-color:     var(--color-accent-highlight) !important;
+  box-shadow:       0 0 0 2px color-mix(in srgb, var(--color-accent-highlight) 15%, transparent) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color:   var(--color-text-main) !important;
+  opacity: 0.4 !important;
+}
+
+/* Range inputs — color via JS accentColor prop, fallback to CSS var */
+input[type="range"] {
+  background-color: transparent !important;
+  border:           none !important;
+  box-shadow:       none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BUTTONS
+   ───────────────────────────────────────────────────────────────────────────── */
+button.bg-white, button.bg-zinc-100 {
+  background-color: var(--color-accent-highlight) !important;
+  color:            var(--color-background) !important;
+  transition:       filter 0.15s ease, transform 0.1s ease !important;
+}
+button.bg-white:hover, button.bg-zinc-100:hover { filter: brightness(1.1) !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BORDER RADIUS
+   ───────────────────────────────────────────────────────────────────────────── */
+.rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl {
+  border-radius: var(--border-radius-factor, 10px) !important;
+}
+.rounded-none { border-radius: 0 !important; }
+.rounded-full { border-radius: 9999px !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MODAL OVERLAYS
+   ───────────────────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter:  blur(8px) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-fadeIn  { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-pulse   { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-spin    { animation: spin 1s linear infinite; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESIZE HANDLES (Dashboard + SmartTable)
+   ───────────────────────────────────────────────────────────────────────────── */
+.resize-handle {
+  position:         absolute;
+  bottom:           0;
+  right:            0;
+  width:            18px;
+  height:           18px;
+  cursor:           se-resize;
+  opacity:          0;
+  transition:       opacity 0.2s ease;
+}
+.resize-handle::after {
+  content:          '';
+  position:         absolute;
+  bottom:           4px;
+  right:            4px;
+  width:            10px;
+  height:           10px;
+  border-right:     2px solid var(--color-accent-highlight);
+  border-bottom:    2px solid var(--color-accent-highlight);
+  border-radius:    0 0 3px 0;
+}
+
+/* Show resize handle on widget hover */
+[data-widget]:hover .resize-handle,
+.widget-card:hover  .resize-handle { opacity: 1; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DRAG GHOST (floating drag preview)
+   ───────────────────────────────────────────────────────────────────────────── */
+.dragging-ghost {
+  opacity:   0.55;
+  transform: scale(0.97);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE OVERRIDES
+   Applied via .is-light class on root div — supplements App.tsx inline variables
+   ───────────────────────────────────────────────────────────────────────────── */
+.is-light table th, .is-light th       { color: #1f2328 !important; }
+.is-light table td, .is-light td       { color: #1f2328 !important; }
+.is-light input, .is-light select,
+.is-light textarea                     { color: #1f2328 !important; }
+.is-light .text-zinc-300,
+.is-light .text-zinc-400,
+.is-light .text-zinc-500               { color: rgba(0,0,0,0.7) !important; opacity: 1; }
+.is-light .text-white                  { color: #1f2328 !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SIDEBAR TRANSITION
+   ───────────────────────────────────────────────────────────────────────────── */
+aside {
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MOBILE — ensure main canvas tidak tertutup sidebar fixed
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .scrollbar-dark { padding-left: 0 !important; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TAMBAHAN — bg-zinc-900 & varian lain yang belum tertangkap
+   ───────────────────────────────────────────────────────────────────────────── */
+div.bg-zinc-900,
+section.bg-zinc-900,
+form.bg-zinc-900 {
+  background-color: var(--color-card-bg) !important;
+  border-color:     var(--color-border-line) !important;
+}
+
+/* Filter bar containers */
+div.bg-zinc-950\/40,
+div.bg-zinc-900\/50,
+div.bg-zinc-950\/50 {
+  background-color: var(--color-card-bg) !important;
+  border-color:     var(--color-border-line) !important;
+}
+
+/* Modal overlay backgrounds — pertahankan gelap agar tetap modal */
+div.bg-black\/85, div.bg-black\/80, div.bg-black\/70 {
+  background-color: rgba(0, 0, 0, 0.80) !important;
+}
+
+/* Modal content panels */
+.glass-panel-heavy {
+  background:    var(--color-card-bg) !important;
+  border-color:  var(--color-border-line) !important;
+  backdrop-filter: blur(16px) !important;
+  border-width:  1px !important;
+  border-style:  solid !important;
+}
+
+/* Tab indicator bar — ikut accent highlight */
+div[class*="bg-\[#d4af37\]"],
+motion\.div[class*="bg-\[#d4af37\]"] {
+  background-color: var(--color-accent-highlight) !important;
+}
+
+/* Focus: accent border on inputs */
+.focus\:border-\[\#d4af37\]:focus {
+  border-color: var(--color-accent-highlight) !important;
+}
+
+/* Text accent variants in views */
+.text-\[\#d4af37\]\/80 {
+  color: var(--color-accent-highlight) !important;
+  opacity: 0.8;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE — input/select dalam konteks .is-light
+   ───────────────────────────────────────────────────────────────────────────── */
+.is-light input,
+.is-light select,
+.is-light textarea {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #1f2328 !important;
+}
+
+.is-light div.bg-zinc-900,
+.is-light div.bg-zinc-950,
+.is-light div.bg-zinc-950\/40,
+.is-light div.bg-zinc-900\/50 {
+  background-color: rgba(255,255,255,0.85) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   V5.2 — Glass Theme + Sound + UI Refinements
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Glass Theme Token ─────────────────────────────────────────────────── */
+html.glass {
+  --color-background:       transparent;
+  --color-card-bg:          rgba(30, 28, 40, 0.55);
+  --color-text-main:        rgba(255, 255, 255, 0.92);
+  --color-text-muted:       rgba(255, 255, 255, 0.44);
+  --color-border-line:      rgba(255, 255, 255, 0.10);
+  --color-accent-highlight: #7c3aed;
+}
+
+html.glass body {
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 0%,  rgba(120,60,220,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 85% 15%, rgba(160,80,240,0.14) 0%, transparent 50%),
+    linear-gradient(160deg, #0b0714 0%, #10082a 35%, #0d0a1e 65%, #080510 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+html.glass #root > div {
+  background: rgba(14, 12, 22, 0.45) !important;
+  backdrop-filter: blur(52px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(150%) !important;
+}
+
+html.glass aside {
+  background: rgba(8, 6, 14, 0.68) !important;
+  backdrop-filter: blur(36px) !important;
+  -webkit-backdrop-filter: blur(36px) !important;
+  border-right: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+html.glass .bg-\[var\(--color-card-bg\)\],
+html.glass [class*="rounded-2xl"] {
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+html.glass .bg-\[var\(--color-background\)\] {
+  background: rgba(255,255,255,0.04) !important;
+}
+
+html.glass input, html.glass select, html.glass textarea {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.11) !important;
+  color: rgba(255,255,255,0.92) !important;
+}
+html.glass input::placeholder, html.glass textarea::placeholder {
+  color: rgba(255,255,255,0.28) !important;
+}
+
+html.glass aside button[style*="#7c3aed"],
+html.glass aside button[style*="3aed"],
+html.glass aside button[style*="boxShadow"] {
+  background: rgba(255,255,255,0.11) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+html.glass .fixed.bottom-0 {
+  background: rgba(8,6,14,0.82) !important;
+  backdrop-filter: blur(40px) !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+html.glass [class*="border-\[var(--color-border"] {
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+html.glass ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius:99px; }
+html.glass ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+
+/* ─── Theme Transition ─────────────────────────────────────────────────── */
+body, aside, header, main, section, article,
+[class*="bg-"], [class*="border-"], [class*="text-"] {
+  transition:
+    background-color  0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color      0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow        0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Matikan transition untuk elemen yang bergerak */
+[class*="animate-"], [class*="translate-"], [class*="rotate-"],
+button:active, input:focus { transition: none !important; }
+
+/* ─── UI Density & Typography ─────────────────────────────────────────── */
+h1, h2, h3 { font-family: var(--font-display, inherit); }
+
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+table thead th {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+table tbody td { font-size: 0.8125rem; }
+table tbody tr { transition: background-color 0.1s ease; }
+
+/* ─── Empty State ─────────────────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+/* ─── Skeleton Loading ────────────────────────────────────────────────── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--color-border-line) 25%,
+    var(--color-background) 50%,
+    var(--color-border-line) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ─── Command Palette Blur ────────────────────────────────────────────── */
+.command-overlay {
+  backdrop-filter: blur(12px) !important;
+}
+
+/* ─── Sidebar Nav Item Premium ────────────────────────────────────────── */
+nav button { border-radius: 10px; }
+nav button:hover { backdrop-filter: brightness(1.1); }
+
+/* ─── Light Mode Tokens (via html.is-light) ──────────────────────────────── */
+html.is-light {
+  --color-background:       #f5f5f7;
+  --color-card-bg:          #ffffff;
+  --color-text-main:        #1d1d1f;
+  --color-text-muted:       #6e6e73;
+  --color-border-line:      rgba(0, 0, 0, 0.09);
+  --color-accent-highlight: #0071e3;
+}
+html.is-light body {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+html.is-light aside {
+  background: rgba(255,255,255,0.92) !important;
+  border-right: 1px solid rgba(0,0,0,0.08) !important;
+  backdrop-filter: blur(20px) !important;
+}
+html.is-light input,
+html.is-light select,
+html.is-light textarea {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.12) !important;
+  color: #1d1d1f !important;
+}
+
+/* ─── Dark Mode explicit (default) ──────────────────────────────────────── */
+html.is-dark {
+  --color-background:       #050507;
+  --color-card-bg:          rgba(15, 15, 20, 0.75);
+  --color-text-main:        #e4e4e7;
+  --color-text-muted:       rgba(228, 228, 231, 0.45);
+  --color-border-line:      rgba(255, 255, 255, 0.05);
+  --color-accent-highlight: #0071e3;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPATIBILITY LAYER — V4 pages pakai CSS vars via class override
+   Mengubah bg-zinc/text-zinc/bg-black/bg-white → CSS vars secara global
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* bg-black → background */
+.bg-black, .bg-\[\#000\], .bg-\[\#000000\] {
+  background-color: var(--color-background) !important;
+}
+/* bg-white → card */
+.bg-white {
+  background-color: var(--color-card-bg) !important;
+}
+/* bg-zinc-900, bg-zinc-950 → background */
+.bg-zinc-900, .bg-zinc-950, .bg-zinc-800 {
+  background-color: var(--color-background) !important;
+}
+/* bg-zinc-800/x → transparent dark */
+.bg-zinc-700 { background-color: rgba(255,255,255,0.05) !important; }
+.bg-zinc-600 { background-color: rgba(255,255,255,0.08) !important; }
+/* bg-zinc-100, bg-zinc-200 (light grays) → card */
+.bg-zinc-100, .bg-zinc-200 {
+  background-color: var(--color-background) !important;
+}
+/* text-zinc-100, text-white → main text */
+.text-zinc-100, .text-zinc-200 {
+  color: var(--color-text-main) !important;
+}
+/* text-zinc-400, text-zinc-500, text-zinc-600 → muted */
+.text-zinc-400, .text-zinc-500, .text-zinc-600 {
+  color: var(--color-text-muted) !important;
+}
+/* text-black → main text in light mode */
+.text-black {
+  color: var(--color-text-main) !important;
+}
+/* text-white → keep white untuk buttons dengan background */
+button .text-white,
+a .text-white { color: #ffffff !important; }
+
+/* border-zinc → border-line */
+.border-zinc-800, .border-zinc-700, .border-zinc-900 {
+  border-color: var(--color-border-line) !important;
+}
+.border-zinc-200, .border-zinc-300 {
+  border-color: var(--color-border-line) !important;
+}
+
+/* placeholder colors */
+.placeholder-zinc-600::placeholder,
+.placeholder-zinc-500::placeholder {
+  color: var(--color-text-muted) !important;
+}
+
+/* ─── Light mode overrides — zinc colors harus balik ke terang ─────────── */
+html.is-light .bg-zinc-900, html.is-light .bg-zinc-950 {
+  background-color: #f5f5f7 !important;
+}
+html.is-light .bg-zinc-100, html.is-light .bg-zinc-200 {
+  background-color: #ffffff !important;
+}
+html.is-light .text-zinc-100, html.is-light .text-zinc-200 {
+  color: #1d1d1f !important;
+}
+html.is-light .text-white {
+  color: #1d1d1f !important;
+}
+html.is-light .border-zinc-800 {
+  border-color: rgba(0,0,0,0.10) !important;
+}
