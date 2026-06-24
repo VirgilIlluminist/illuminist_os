@@ -1,4 +1,4 @@
-# NEVAEH AI OS v12
+# ILLUMINIST AI OS v12
 
 > Enterprise Business Operating System untuk Fashion Brand  
 > React 19 · TypeScript · Vite · TailwindCSS v4 · Express · Supabase-ready · Multi-AI
