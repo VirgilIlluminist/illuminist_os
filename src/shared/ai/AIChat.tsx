@@ -27,8 +27,8 @@ function renderMarkdown(text: string): string {
   const safe = sanitize(text);
   return safe
     .replace(/\*\*(.*?)\*\*/g,   '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g,       '<code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;font-size:11px;font-family:var(--font-mono)">$1</code>')
-    .replace(/^### (.+)$/gm,     '<h3 style="font-weight:600;font-size:12px;margin:10px 0 4px;color:var(--color-accent-highlight)">$1</h3>')
+    .replace(/`([^`]+)`/g,       '<code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:5px;font-size:12px;font-family:var(--font-mono)">$1</code>')
+    .replace(/^### (.+)$/gm,     '<h3 style="font-weight:600;font-size:13px;margin:12px 0 5px;color:var(--color-accent-highlight)">$1</h3>')
     .replace(/^## (.+)$/gm,      '<h2 style="font-weight:600;font-size:14px;margin:12px 0 6px;color:var(--color-text-main)">$1</h2>')
     .replace(/^- (.+)$/gm,       '<li style="margin-left:16px;list-style-type:disc">$1</li>')
     .replace(/\n/g,              '<br/>');
@@ -48,7 +48,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
   const [input, setInput] = useState('');
   const bottomRef  = useRef<HTMLDivElement>(null);
   const inputRef   = useRef<HTMLTextAreaElement>(null);
-  const accentHex  = config?.customAccentColor || '#d4af37';
+  const accentHex  = config?.customAccentColor || '#7c3aed';
 
   // Build ERP state snapshot for AI context
   const erpState = {
@@ -89,24 +89,24 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-line)] shrink-0">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg" style={{ background: accentHex + '20' }}>
-            <Bot size={15} style={{ color: accentHex }} />
+          <div className="p-2 rounded-xl" style={{ background: accentHex + '20' }}>
+            <Bot size={17} style={{ color: accentHex }} />
           </div>
           <div>
-            <span className="text-xs font-display font-semibold text-[var(--color-text-main)] uppercase tracking-wider">
+            <span className="font-semibold" style={{ fontSize: '14px', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               {t('AI Assistant')}
             </span>
-            <div className="flex items-center gap-1 mt-0.5">
+            <div className="flex items-center gap-1.5 mt-0.5">
               {isOffline
-                ? <><WifiOff size={9} className="text-yellow-500" /><span className="text-[9px] font-mono text-yellow-500">OFFLINE MODE</span></>
-                : <><span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[9px] font-mono text-emerald-400">ONLINE</span></>
+                ? <><WifiOff size={11} className="text-yellow-500" /><span style={{ fontSize: '11px' }} className="text-yellow-500">Offline Mode</span></>
+                : <><span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /><span style={{ fontSize: '11px' }} className="text-emerald-400">Online</span></>
               }
             </div>
           </div>
         </div>
         {chatMessages.length > 0 && (
-          <button onClick={clearHistory} className="p-1.5 text-[var(--color-text-muted)] hover:text-red-400 transition-colors cursor-pointer" title="Hapus riwayat">
-            <Trash2 size={13} />
+          <button onClick={clearHistory} className="p-2 text-[var(--color-text-muted)] hover:text-red-400 transition-colors cursor-pointer rounded-lg hover:bg-white/5" title="Hapus riwayat">
+            <Trash2 size={16} />
           </button>
         )}
       </div>
@@ -120,7 +120,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
             </div>
             <div>
               <p className="text-sm font-display font-medium text-[var(--color-text-main)]">
-                NEVAEH AI Siap
+                ILLUMINIST AI Siap
               </p>
               <p className="text-xs text-[var(--color-text-muted)] font-mono mt-1">
                 Tanya apapun tentang bisnis Anda
@@ -155,12 +155,12 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
               }`}
                 style={msg.role === 'assistant' ? { background: accentHex + '20' } : {}}>
                 {msg.role === 'user'
-                  ? <User size={13} className="text-[var(--color-text-muted)]" />
-                  : <Bot  size={13} style={{ color: accentHex }} />
+                  ? <User size={16} className="text-[var(--color-text-muted)]" />
+                  : <Bot  size={16} style={{ color: accentHex }} />
                 }
               </div>
               {/* Bubble */}
-              <div className={`max-w-[85%] px-3.5 py-2.5 rounded-xl text-xs leading-relaxed ${
+              <div className={`max-w-[85%] px-4 py-3 rounded-xl leading-relaxed ${
                 msg.role === 'user'
                   ? 'bg-white/[0.05] text-[var(--color-text-main)] ml-auto'
                   : 'bg-[var(--color-background)] border border-[var(--color-border-line)] text-[var(--color-text-main)]'
@@ -170,7 +170,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
                   : <span>{msg.content}</span>
                 }
                 {msg.timestamp && (
-                  <p className="text-[9px] text-[var(--color-text-muted)] font-mono mt-1.5 text-right">
+                  <p style={{ fontSize: '11px' }} className="text-[var(--color-text-muted)] mt-2 text-right">
                     {new Date(msg.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 )}
@@ -182,12 +182,12 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
         {/* Loading indicator */}
         {loading && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-2.5">
-            <div className="p-1.5 rounded-lg h-fit" style={{ background: accentHex + '20' }}>
-              <Bot size={13} style={{ color: accentHex }} />
+            <div className="p-2 rounded-xl h-fit" style={{ background: accentHex + '20' }}>
+              <Bot size={16} style={{ color: accentHex }} />
             </div>
-            <div className="bg-[var(--color-background)] border border-[var(--color-border-line)] px-4 py-3 rounded-xl flex items-center gap-2">
-              <Loader size={12} className="animate-spin text-[var(--color-text-muted)]" />
-              <span className="text-xs text-[var(--color-text-muted)] font-mono">Menganalisis data bisnis...</span>
+            <div className="bg-[var(--color-background)] border border-[var(--color-border-line)] px-4 py-3 rounded-xl flex items-center gap-2.5">
+              <Loader size={14} className="animate-spin text-[var(--color-text-muted)]" />
+              <span style={{ fontSize: '13px', letterSpacing: '-0.01em' }} className="text-[var(--color-text-muted)]">Menganalisis data bisnis...</span>
             </div>
           </motion.div>
         )}
@@ -207,7 +207,8 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
             onKeyDown={handleKeyDown}
             placeholder="Tanya tentang inventori, penjualan, keuangan..."
             rows={1}
-            className="flex-1 resize-none text-xs font-sans px-3 py-2 bg-[var(--color-background)] border border-[var(--color-border-line)] text-[var(--color-text-main)] rounded-lg focus:outline-none transition-all max-h-28"
+            className="flex-1 resize-none font-sans px-4 py-3 bg-[var(--color-background)] border border-[var(--color-border-line)] text-[var(--color-text-main)] rounded-xl focus:outline-none transition-all max-h-28"
+          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
             style={{ lineHeight: '1.5' }}
           />
           <button
@@ -219,8 +220,8 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
             <Send size={15} />
           </button>
         </div>
-        <p className="text-[9.5px] text-[var(--color-text-muted)] font-mono mt-1.5 text-center">
-          Enter kirim • Shift+Enter baris baru
+        <p style={{ fontSize: '11px', letterSpacing: '-0.01em' }} className="text-[var(--color-text-muted)] mt-2 text-center">
+          Enter kirim · Shift+Enter baris baru
         </p>
       </div>
     </div>

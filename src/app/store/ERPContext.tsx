@@ -1,6 +1,14 @@
 import { getTxEngine } from '../../core/services/TransactionEngine';
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useBusiness } from './BusinessContext';
+import { storageMode } from '../../core/repositories/index';
+import { isSupabaseEnabled } from '../../infra/supabase/client';
+import {
+  hydrateFromSupabase,
+  sbSupplier, sbMaterial, sbProduct, sbCustomer, sbSale,
+  sbSample, sbProduction, sbVariant, sbAds, sbKol,
+  sbPurchaseOrder, sbAsset, sbCashTransaction, sbOpsCost,
+} from './erpSupabase';
 import { getTranslation } from '../../core/utils/translations';
 import {
   Material,
@@ -186,6 +194,11 @@ interface ERPContextType {
   formatPercent: (val: number | string, customDecimals?: number) => string;
   convertCurrency: (val: number, from: 'IDR' | 'USD', to: 'IDR' | 'USD') => number;
   t: (key: string) => string;
+
+  // Multi-business & connection info
+  activeCompanyId: string;
+  dataSource: 'supabase' | 'localStorage';
+  switchCompany: (companyId: string) => void;
 }
 
 const ERPContext = createContext<ERPContextType | undefined>(undefined);
@@ -233,8 +246,15 @@ function safeSetItem(key: string, value: string): void {
 
 export function ERPProvider({ children }: { children: React.ReactNode }) {
   // Sync storage key dengan active business
-  const { activeBusiness: _activeBiz } = (() => { try { return useBusiness(); } catch { return { activeBusiness: null }; } })();
+  const { activeBusiness: _activeBiz, switchBusiness: _switchBusiness } = (() => {
+    try { return useBusiness(); }
+    catch { return { activeBusiness: null, switchBusiness: (_: string) => {} }; }
+  })();
   if (_activeBiz?.id) _ACTIVE_BUSINESS_ID = _activeBiz.id;
+
+  // Company id used for all Supabase reads/writes. Matches the seeded company_id
+  // (BusinessContext default NEVAEH = ...0002 / resetAndSeed canonical ids).
+  const companyId = _activeBiz?.id || _ACTIVE_BUSINESS_ID;
 
   // Reset state saat switch bisnis — reload dari localStorage key yang benar
   const [currentBizId, setCurrentBizId] = React.useState(_ACTIVE_BUSINESS_ID);
@@ -361,7 +381,7 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
     lowStockThreshold: 150,
     autoReorderEnabled: true,
     defaultTaxRate: 10,
-    systemName: 'NEVAEH AI OS',
+    systemName: 'ILLUMINIST OS',
     systemSubName: 'Supply chain, margins, and luxury brand diagnostics.',
     brandMonogram: 'N',
     currencySymbol: 'Rp',
@@ -399,75 +419,29 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
   ];
 
   // --- STATE DECLARED WITH LOCAL STORAGE SYNC ---
-  const [suppliers, setSuppliers] = useState<Supplier[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_suppliers`);
-    return local ? JSON.parse(local) : initialSuppliers;
-  });
+  // In Supabase mode every data entity starts EMPTY (clean slate). The 5 core
+  // entities are then hydrated from Supabase; localStorage dummy seeds are never
+  // shown. In localStorage mode we keep the legacy seed-or-restore behaviour.
+  const initState = <T,>(key: string, seed: T[]): T[] => {
+    if (isSupabaseEnabled) return [];
+    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_${key}`);
+    return local ? (JSON.parse(local) as T[]) : seed;
+  };
 
-  const [materials, setMaterials] = useState<Material[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_materials`);
-    return local ? JSON.parse(local) : initialMaterials;
-  });
-
-  const [products, setProducts] = useState<MasterProduct[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_products`);
-    return local ? JSON.parse(local) : initialProducts;
-  });
-
-  const [samples, setSamples] = useState<SampleDevelopment[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_samples`);
-    return local ? JSON.parse(local) : initialSamples;
-  });
-
-  const [production, setProduction] = useState<ProductionBatch[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_production`);
-    return local ? JSON.parse(local) : initialProduction;
-  });
-
-  const [variants, setVariants] = useState<SizeVariantInventory[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_variants`);
-    return local ? JSON.parse(local) : initialVariants;
-  });
-
-  const [sales, setSales] = useState<SalesRecord[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_sales`);
-    return local ? JSON.parse(local) : initialSales;
-  });
-
-  const [operationalCosts, setOperationalCosts] = useState<OperationalCost[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_ops`);
-    return local ? JSON.parse(local) : initialOperationalCosts;
-  });
-
-  const [adsCampaigns, setAdsCampaigns] = useState<AdsCampaign[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_ads`);
-    return local ? JSON.parse(local) : initialAdsCampaigns;
-  });
-
-  const [kols, setKols] = useState<KolTracking[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_kols`);
-    return local ? JSON.parse(local) : initialKols;
-  });
-
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_pos`);
-    return local ? JSON.parse(local) : initialPOS;
-  });
-
-  const [customers, setCustomers] = useState<Customer[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_customers`);
-    return local ? JSON.parse(local) : initialCustomers;
-  });
-
-  const [assets, setAssets] = useState<AssetEquipment[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_assets`);
-    return local ? JSON.parse(local) : initialAssets;
-  });
-
-  const [cashflowState, setCashflowState] = useState<CashTransaction[]>(() => {
-    const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_cash`);
-    return local ? JSON.parse(local) : initialCash;
-  });
+  const [suppliers, setSuppliers]             = useState<Supplier[]>(() => initState('suppliers', initialSuppliers));
+  const [materials, setMaterials]             = useState<Material[]>(() => initState('materials', initialMaterials));
+  const [products, setProducts]               = useState<MasterProduct[]>(() => initState('products', initialProducts));
+  const [samples, setSamples]                 = useState<SampleDevelopment[]>(() => initState('samples', initialSamples));
+  const [production, setProduction]           = useState<ProductionBatch[]>(() => initState('production', initialProduction));
+  const [variants, setVariants]               = useState<SizeVariantInventory[]>(() => initState('variants', initialVariants));
+  const [sales, setSales]                     = useState<SalesRecord[]>(() => initState('sales', initialSales));
+  const [operationalCosts, setOperationalCosts] = useState<OperationalCost[]>(() => initState('ops', initialOperationalCosts));
+  const [adsCampaigns, setAdsCampaigns]       = useState<AdsCampaign[]>(() => initState('ads', initialAdsCampaigns));
+  const [kols, setKols]                       = useState<KolTracking[]>(() => initState('kols', initialKols));
+  const [purchaseOrders, setPurchaseOrders]   = useState<PurchaseOrder[]>(() => initState('pos', initialPOS));
+  const [customers, setCustomers]             = useState<Customer[]>(() => initState('customers', initialCustomers));
+  const [assets, setAssets]                   = useState<AssetEquipment[]>(() => initState('assets', initialAssets));
+  const [cashflowState, setCashflowState]     = useState<CashTransaction[]>(() => initState('cash', initialCash));
 
   const [notifications, setNotifications] = useState<Notification[]>(() => {
     const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_notifications`);
@@ -477,12 +451,17 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
   const [config, setConfig] = useState<ERPConfig>(() => {
     const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_config`);
     const parsed = local ? JSON.parse(local) : initialConfig;
-    return {
+    const merged = {
       activeCurrency: 'IDR',
       currencySymbol: 'Rp',
       currencyRate: 1,
       ...parsed
     };
+    // Migrate legacy product name persisted from older versions
+    if (!merged.systemName || merged.systemName === 'NEVAEH AI OS') {
+      merged.systemName = 'ILLUMINIST OS';
+    }
+    return merged;
   });
 
   const [moodboard, setMoodboard] = useState<MoodboardItem[]>(() => {
@@ -493,24 +472,70 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
   // PERF-01 FIX: Per-state useEffect agar hanya state yang berubah yang disimpan
   // Sebelumnya: 1 useEffect menyimpan semua 17 state setiap ada perubahan apapun
   // Sekarang: masing-masing state punya useEffect sendiri → hemat CPU dan storage calls
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_suppliers`,    JSON.stringify(suppliers));    }, [suppliers]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_materials`,    JSON.stringify(materials));    }, [materials]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_products`,     JSON.stringify(products));     }, [products]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_samples`,      JSON.stringify(samples));      }, [samples]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_production`,   JSON.stringify(production));   }, [production]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_variants`,     JSON.stringify(variants));     }, [variants]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_sales`,        JSON.stringify(sales));        }, [sales]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_ops`,          JSON.stringify(operationalCosts)); }, [operationalCosts]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_ads`,          JSON.stringify(adsCampaigns)); }, [adsCampaigns]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_kols`,         JSON.stringify(kols));         }, [kols]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_pos`,          JSON.stringify(purchaseOrders)); }, [purchaseOrders]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_customers`,    JSON.stringify(customers));    }, [customers]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_assets`,       JSON.stringify(assets));       }, [assets]);
-  useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_cash`,         JSON.stringify(cashflowState)); }, [cashflowState]);
+  // The 5 Supabase-backed entities are NOT mirrored to localStorage in SB mode
+  // (Supabase is the source of truth; avoids re-creating stale dummy keys).
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_suppliers`, JSON.stringify(suppliers)); }, [suppliers]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_materials`, JSON.stringify(materials)); }, [materials]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_products`,  JSON.stringify(products));  }, [products]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_samples`,      JSON.stringify(samples));      }, [samples]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_production`,   JSON.stringify(production));   }, [production]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_variants`,     JSON.stringify(variants));     }, [variants]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_sales`,        JSON.stringify(sales));        }, [sales]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_ops`,          JSON.stringify(operationalCosts)); }, [operationalCosts]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_ads`,          JSON.stringify(adsCampaigns)); }, [adsCampaigns]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_kols`,         JSON.stringify(kols));         }, [kols]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_pos`,          JSON.stringify(purchaseOrders)); }, [purchaseOrders]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_customers`,    JSON.stringify(customers));    }, [customers]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_assets`,       JSON.stringify(assets));       }, [assets]);
+  useEffect(() => { if (!isSupabaseEnabled) safeSetItem(`${LOCAL_STORAGE_KEY}_cash`,         JSON.stringify(cashflowState)); }, [cashflowState]);
   useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_notifications`, JSON.stringify(notifications)); }, [notifications]);
   useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_config`,       JSON.stringify(config));       }, [config]);
   // BUG-03: moodboard bisa berisi gambar base64 besar → pakai safeSetItem untuk graceful fail
   useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_moodboard`,    JSON.stringify(moodboard));    }, [moodboard]);
+
+  // ── Supabase: clean slate + hydration ──────────────────────────────────────
+  // One-time purge of legacy dummy keys (nevaeh_erp_state_v2_idr_*) and the
+  // migration flags, so stale Google-AI-Studio seed data never resurfaces.
+  useEffect(() => {
+    if (!isSupabaseEnabled) return;
+    if (localStorage.getItem('illum_clean_v1')) return;
+    try {
+      const kill: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.startsWith('nevaeh_erp_state_v2_idr_') || k.startsWith('illum_migrated_'))) kill.push(k);
+      }
+      kill.forEach(k => localStorage.removeItem(k));
+      localStorage.setItem('illum_clean_v1', '1');
+    } catch { /* ignore */ }
+  }, []);
+
+  // Hydrate the 5 Supabase-backed entities for the active company. Runs on mount
+  // and whenever the active business changes. Supabase is the source of truth.
+  useEffect(() => {
+    if (!isSupabaseEnabled || !companyId) return;
+    let cancelled = false;
+    hydrateFromSupabase(companyId)
+      .then(h => {
+        if (cancelled) return;
+        setSuppliers(h.suppliers);
+        setMaterials(h.materials);
+        setProducts(h.products);
+        setCustomers(h.customers);
+        setSales(h.sales);
+        setSamples(h.samples);
+        setProduction(h.production);
+        setVariants(h.variants);
+        setAdsCampaigns(h.adsCampaigns);
+        setKols(h.kols);
+        setPurchaseOrders(h.purchaseOrders);
+        setAssets(h.assets);
+        setCashflowState(h.cashflow);
+        setOperationalCosts(h.operationalCosts);
+      })
+      .catch(() => { /* keep empty state on failure */ });
+    return () => { cancelled = true; };
+  }, [companyId]);
 
   // Helper t() lokal — perlu didefinisikan SEBELUM mutator functions
   // agar bisa digunakan di addMaterial, addSale, dll.
@@ -519,83 +544,120 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
   // --- MUTATOR ACTIONS ---
   const addMaterial = (item: Omit<Material, 'id'>) => {
     const nextId = getNextId(materials, 'MAT');
-    setMaterials(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setMaterials(prev => [...prev, row]);
     addNotification(t('notif_added_material'), 'success');
+    if (isSupabaseEnabled) sbMaterial.save(companyId, row);
   };
 
   const updateMaterial = (id: string, updates: Partial<Material>) => {
     setMaterials(prev => prev.map(m => m.id === id ? { ...m, ...updates } : m));
+    if (isSupabaseEnabled) {
+      const current = materials.find(m => m.id === id);
+      if (current) sbMaterial.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteMaterial = (id: string) => {
     setMaterials(prev => prev.filter(m => m.id !== id));
+    if (isSupabaseEnabled) sbMaterial.remove(companyId, id);
   };
 
   const addSample = (item: Omit<SampleDevelopment, 'id'>) => {
     const nextId = getNextId(samples, 'SMP');
-    setSamples(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setSamples(prev => [...prev, row]);
     addNotification(t('notif_added_sample'), 'info');
+    if (isSupabaseEnabled) sbSample.save(companyId, row);
   };
 
   const updateSample = (id: string, updates: Partial<SampleDevelopment>) => {
     setSamples(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+    if (isSupabaseEnabled) {
+      const current = samples.find(s => s.id === id);
+      if (current) sbSample.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteSample = (id: string) => {
     setSamples(prev => prev.filter(s => s.id !== id));
+    if (isSupabaseEnabled) sbSample.remove(companyId, id);
   };
 
   const addProduction = (item: Omit<ProductionBatch, 'id'>) => {
     const nextId = getNextId(production, 'PRD');
-    setProduction(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setProduction(prev => [...prev, row]);
     addNotification(t('notif_added_production'), 'success');
+    if (isSupabaseEnabled) sbProduction.save(companyId, row);
   };
 
   const updateProduction = (id: string, updates: Partial<ProductionBatch>) => {
     setProduction(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+    if (isSupabaseEnabled) {
+      const current = production.find(p => p.id === id);
+      if (current) sbProduction.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteProduction = (id: string) => {
     setProduction(prev => prev.filter(p => p.id !== id));
+    if (isSupabaseEnabled) sbProduction.remove(companyId, id);
   };
 
   const addProduct = (item: Omit<MasterProduct, 'id'>) => {
     const nextId = getNextId(products, 'PROD');
-    setProducts(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setProducts(prev => [...prev, row]);
     addNotification(t('notif_added_product'), 'success');
+    if (isSupabaseEnabled) sbProduct.save(companyId, row);
   };
 
   const updateProduct = (id: string, updates: Partial<MasterProduct>) => {
     setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+    if (isSupabaseEnabled) {
+      const current = products.find(p => p.id === id);
+      if (current) sbProduct.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteProduct = (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id));
+    if (isSupabaseEnabled) sbProduct.remove(companyId, id);
   };
 
   const addVariant = (item: SizeVariantInventory) => {
     setVariants(prev => {
       if (prev.some(v => v.sku === item.sku)) return prev;
+      if (isSupabaseEnabled) sbVariant.save(companyId, item);
       return [...prev, item];
     });
   };
 
   const updateVariant = (sku: string, updates: Partial<SizeVariantInventory>) => {
-    setVariants(prev => prev.map(v => v.sku === sku ? { ...v, ...updates } : v));
+    setVariants(prev => prev.map(v => {
+      if (v.sku !== sku) return v;
+      const updated = { ...v, ...updates };
+      if (isSupabaseEnabled) sbVariant.save(companyId, updated);
+      return updated;
+    }));
   };
 
   const deleteVariant = (sku: string) => {
     setVariants(prev => prev.filter(v => v.sku !== sku));
+    if (isSupabaseEnabled) sbVariant.remove(companyId, sku);
   };
 
   const addSale = (item: Omit<SalesRecord, 'id'>) => {
     const nextId = getNextOrderId(sales);
-    setSales(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setSales(prev => [...prev, row]);
     addNotification(t('notif_added_sales'), 'success');
+    if (isSupabaseEnabled) sbSale.save(companyId, row);
     // Catat ke Transaction Engine (async, tidak block UI)
-    const companyId = localStorage.getItem('illuminist_active_company') || 'nevaeh';
+    const txCompanyId = localStorage.getItem('illuminist_active_company') || 'nevaeh';
     const rev = (item.pricePerPcs||0)*(item.qtySold||0) - (item.platformFee||0) - (item.discount||0);
-    getTxEngine(companyId).record({
+    getTxEngine(txCompanyId).record({
       type: 'sale', amount: Math.max(0, rev),
       date: item.date || new Date().toISOString().slice(0,10),
       description: `Penjualan - ${item.customerName || 'Customer'}`,
@@ -606,18 +668,25 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
 
   const updateSale = (id: string, updates: Partial<SalesRecord>) => {
     setSales(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+    if (isSupabaseEnabled) {
+      const current = sales.find(s => s.id === id);
+      if (current) sbSale.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteSale = (id: string) => {
     setSales(prev => prev.filter(s => s.id !== id));
+    if (isSupabaseEnabled) sbSale.remove(companyId, id);
   };
 
   const addOperationalCost = (item: Omit<OperationalCost, 'id'>) => {
     const nextId = getNextId(operationalCosts, 'EXP');
-    setOperationalCosts(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setOperationalCosts(prev => [...prev, row]);
     addNotification(t('notif_added_ops'), 'info');
-    const companyId = localStorage.getItem('illuminist_active_company') || 'nevaeh';
-    getTxEngine(companyId).record({
+    if (isSupabaseEnabled) sbOpsCost.save(companyId, row);
+    const txCompanyId2 = localStorage.getItem('illuminist_active_company') || 'nevaeh';
+    getTxEngine(txCompanyId2).record({
       type: 'expense', amount: item.amount || 0,
       date: item.date || new Date().toISOString().slice(0,10),
       description: item.category || 'Biaya Operasional',
@@ -627,54 +696,76 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
 
   const updateOperationalCost = (id: string, updates: Partial<OperationalCost>) => {
     setOperationalCosts(prev => prev.map(o => o.id === id ? { ...o, ...updates } : o));
+    if (isSupabaseEnabled) {
+      const current = operationalCosts.find(o => o.id === id);
+      if (current) sbOpsCost.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteOperationalCost = (id: string) => {
     setOperationalCosts(prev => prev.filter(o => o.id !== id));
+    if (isSupabaseEnabled) sbOpsCost.remove(companyId, id);
   };
 
   const addAdsCampaign = (item: Omit<AdsCampaign, 'id'>) => {
     const nextId = getNextId(adsCampaigns, 'CAM');
-    setAdsCampaigns(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setAdsCampaigns(prev => [...prev, row]);
     addNotification(t('notif_added_ads'), 'success');
+    if (isSupabaseEnabled) sbAds.save(companyId, row);
   };
 
   const updateAdsCampaign = (id: string, updates: Partial<AdsCampaign>) => {
     setAdsCampaigns(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+    if (isSupabaseEnabled) {
+      const current = adsCampaigns.find(a => a.id === id);
+      if (current) sbAds.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteAdsCampaign = (id: string) => {
     setAdsCampaigns(prev => prev.filter(a => a.id !== id));
+    if (isSupabaseEnabled) sbAds.remove(companyId, id);
   };
 
   const addKol = (item: Omit<KolTracking, 'id'>) => {
     const nextId = getNextId(kols, 'KOL');
-    setKols(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setKols(prev => [...prev, row]);
     addNotification(t('notif_added_kol'), 'info');
+    if (isSupabaseEnabled) sbKol.save(companyId, row);
   };
 
   const updateKol = (id: string, updates: Partial<KolTracking>) => {
     setKols(prev => prev.map(k => k.id === id ? { ...k, ...updates } : k));
+    if (isSupabaseEnabled) {
+      const current = kols.find(k => k.id === id);
+      if (current) sbKol.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteKol = (id: string) => {
     setKols(prev => prev.filter(k => k.id !== id));
+    if (isSupabaseEnabled) sbKol.remove(companyId, id);
   };
 
   const addPurchaseOrder = (item: Omit<PurchaseOrder, 'id'>) => {
     const nextId = getNextId(purchaseOrders, 'PO');
-    setPurchaseOrders(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setPurchaseOrders(prev => [...prev, row]);
     addNotification(t('notif_added_po'), 'info');
+    if (isSupabaseEnabled) sbPurchaseOrder.save(companyId, row);
   };
 
   const updatePurchaseOrder = (id: string, updates: Partial<PurchaseOrder>) => {
     setPurchaseOrders(prev => prev.map(po => {
       if (po.id === id) {
-        // If PO transitioning to "Received"
         if (updates.status === 'Received' && po.status !== 'Received') {
           addNotification(t('notif_po_received'), 'success');
         }
-        return { ...po, ...updates };
+        const updated = { ...po, ...updates };
+        if (isSupabaseEnabled) sbPurchaseOrder.save(companyId, updated);
+        return updated;
       }
       return po;
     }));
@@ -682,54 +773,78 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
 
   const deletePurchaseOrder = (id: string) => {
     setPurchaseOrders(prev => prev.filter(po => po.id !== id));
+    if (isSupabaseEnabled) sbPurchaseOrder.remove(companyId, id);
   };
 
   const addSupplier = (item: Omit<Supplier, 'id'>) => {
     const nextId = getNextId(suppliers, 'SUP');
-    setSuppliers(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setSuppliers(prev => [...prev, row]);
     addNotification(t('notif_added_supplier'), 'info');
+    if (isSupabaseEnabled) sbSupplier.save(companyId, row);
   };
 
   const updateSupplier = (id: string, updates: Partial<Supplier>) => {
     setSuppliers(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+    if (isSupabaseEnabled) {
+      const current = suppliers.find(s => s.id === id);
+      if (current) sbSupplier.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteSupplier = (id: string) => {
     setSuppliers(prev => prev.filter(s => s.id !== id));
+    if (isSupabaseEnabled) sbSupplier.remove(companyId, id);
   };
 
   const addCustomer = (item: Omit<Customer, 'id'>) => {
     const nextId = getNextId(customers, 'CUST');
-    setCustomers(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setCustomers(prev => [...prev, row]);
     addNotification(t('notif_added_customer'), 'info');
+    if (isSupabaseEnabled) sbCustomer.save(companyId, row);
   };
 
   const updateCustomer = (id: string, updates: Partial<Customer>) => {
     setCustomers(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c));
+    if (isSupabaseEnabled) {
+      const current = customers.find(c => c.id === id);
+      if (current) sbCustomer.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteCustomer = (id: string) => {
     setCustomers(prev => prev.filter(c => c.id !== id));
+    if (isSupabaseEnabled) sbCustomer.remove(companyId, id);
   };
 
   const addAsset = (item: Omit<AssetEquipment, 'id'>) => {
     const nextId = getNextId(assets, 'AST');
-    setAssets(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setAssets(prev => [...prev, row]);
     addNotification(t('notif_added_asset'), 'info');
+    if (isSupabaseEnabled) sbAsset.save(companyId, row);
   };
 
   const updateAsset = (id: string, updates: Partial<AssetEquipment>) => {
     setAssets(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+    if (isSupabaseEnabled) {
+      const current = assets.find(a => a.id === id);
+      if (current) sbAsset.save(companyId, { ...current, ...updates });
+    }
   };
 
   const deleteAsset = (id: string) => {
     setAssets(prev => prev.filter(a => a.id !== id));
+    if (isSupabaseEnabled) sbAsset.remove(companyId, id);
   };
 
   const addCashTransaction = (item: Omit<CashTransaction, 'id'>) => {
     const nextId = getNextId(cashflowState, 'CSH');
-    setCashflowState(prev => [...prev, { ...item, id: nextId }]);
+    const row = { ...item, id: nextId };
+    setCashflowState(prev => [...prev, row]);
     addNotification(t('notif_added_cash'), 'info');
+    if (isSupabaseEnabled) sbCashTransaction.save(companyId, row);
   };
 
   const addNotification = (message: string, type: Notification['type'] = 'info') => {
@@ -1337,6 +1452,10 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
       formatPercent,
       convertCurrency,
       t,
+
+      activeCompanyId: _activeBiz?.id ?? 'default',
+      dataSource: storageMode(),
+      switchCompany: _switchBusiness,
     }}>
       {children}
     </ERPContext.Provider>

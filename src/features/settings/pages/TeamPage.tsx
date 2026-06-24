@@ -31,7 +31,7 @@ export default function TeamPage() {
   const [invEmail, setInvEmail] = useState('');
   const [invRole,  setInvRole]  = useState('viewer');
   const [sending,  setSending]  = useState(false);
-  const accent = config?.customAccentColor || '#d4af37';
+  const accent = config?.customAccentColor || '#7c3aed';
 
   const loadMembers = async () => {
     if (!supabase) return;

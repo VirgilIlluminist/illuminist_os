@@ -9,7 +9,7 @@ import { Wallet, TrendingUp, PieChart, ArrowRight } from 'lucide-react';
 export default function OwnerFinanceView() {
   const { currentColor, activeBusiness } = useBusiness();
   const { computedSales, computedCashflow, formatMoney, config } = useERP();
-  const accent = currentColor || config?.customAccentColor || '#0071e3';
+  const accent = currentColor || config?.customAccentColor || '#7c3aed';
 
   const now   = new Date();
   const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;

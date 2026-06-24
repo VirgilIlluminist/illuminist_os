@@ -46,7 +46,7 @@ export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => v
         className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-white/[0.04] transition-all cursor-pointer">
         <span className="text-lg">{TYPE_ICONS[activeBusiness?.business_type || 'holding']||'🏢'}</span>
         <div className="flex-1 min-w-0 text-left">
-          <p className="text-[11px] font-bold font-mono text-[var(--color-text-main)] truncate uppercase tracking-wide leading-tight">
+          <p className="text-[12px] font-semibold text-[var(--color-text-main)] truncate leading-tight">
             {activeBusiness?.name || 'Select Business'}
           </p>
           <p className="text-[9px] font-mono text-[var(--color-text-muted)] capitalize leading-tight">

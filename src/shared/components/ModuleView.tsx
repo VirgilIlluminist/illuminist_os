@@ -22,7 +22,7 @@ const PER_PAGE = 12;
 export default function ModuleView({ module }: Props) {
   const { activeBusiness } = useBusiness();
   const { config, formatMoney } = useERP();
-  const accent = module.color || config?.customAccentColor || '#0071e3';
+  const accent = module.color || config?.customAccentColor || '#7c3aed';
   const bizId  = activeBusiness?.id || 'default';
 
   const [records, setRecords]   = useState<Record<string,any>[]>([]);
@@ -125,7 +125,7 @@ export default function ModuleView({ module }: Props) {
     if (f.type === 'boolean') return <span>{raw ? '✓' : '—'}</span>;
     if (f.type === 'badge') {
       const color = f.badgeColors?.[raw] || '#8e8e93';
-      return <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap"
+      return <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap"
         style={{ background:`${color}20`, color }}>{String(raw)}</span>;
     }
     return <span>{String(raw)}</span>;
@@ -147,14 +147,14 @@ export default function ModuleView({ module }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <button onClick={openAudit} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-            <Clock size={13}/> Audit
+          <button onClick={openAudit} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer" style={{ fontSize: '13px' }}>
+            <Clock size={15}/> Audit
           </button>
-          <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-            <Download size={13}/> Export CSV
+          <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer" style={{ fontSize: '13px' }}>
+            <Download size={15}/> Export CSV
           </button>
-          <button onClick={openCreate} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-xl text-white cursor-pointer" style={{ background:accent }}>
-            <Plus size={15}/> Tambah
+          <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2.5 font-medium rounded-xl text-white cursor-pointer" style={{ background:accent, fontSize: '14px' }}>
+            <Plus size={16}/> Tambah
           </button>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function ModuleView({ module }: Props) {
           {kpiResults.map(({ kpi, value }) => (
             <div key={kpi.key} className={`${card} p-4`}>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
+                <span className="text-xs text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
                 <span className="text-base">{kpi.icon}</span>
               </div>
               <p className="text-xl font-bold tracking-tight tabular-nums" style={{ color:kpi.color }}>

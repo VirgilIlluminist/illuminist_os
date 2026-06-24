@@ -26,10 +26,5 @@ export const supabase: SupabaseClient<Database> | null = isSupabaseEnabled
     })
   : null;
 
-if (isSupabaseEnabled) {
-  console.log('[Supabase] ✅ Connected —', supabaseUrl);
-} else {
-  console.warn('[Supabase] ⚠ Running in localStorage mode. Add VITE_SUPABASE_URL to .env to enable database.');
-}
 
 export default supabase;

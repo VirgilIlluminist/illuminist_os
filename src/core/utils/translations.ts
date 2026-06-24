@@ -1,4 +1,4 @@
-// Multilingual dictionary for NEVAEH AI OS
+// Multilingual dictionary for ILLUMINIST OS
 export const translations = {
   en: {
     // ── Nav Items ──────────────────────────────────────────────────────────────

@@ -1,31 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { useERP } from '../../../app/store/ERPContext';
 import { toast } from '../../../shared/ui/Toast';
-import { SampleDevelopment, ProductionBatch, MasterProduct, SizeVariantInventory } from '../types';
-import SmartTable, { ColumnDef } from '../../../shared/table/SmartTable';
-import { 
-  Plus, 
-  Search, 
-  Trash2, 
-  Edit3, 
-  CheckCircle, 
-  Hammer, 
-  Shirt, 
-  Layers, 
-  ChevronRight, 
-  TrendingUp, 
-  Sparkles, 
-  Layers3, 
-  Database,
-  Tag,
-  Upload
-} from 'lucide-react';
+import { MasterProduct, SampleDevelopment, ProductionBatch, SizeVariantInventory } from '../types';
+import { DataTable, DtColumn, moneyCell, numberCell } from '../../../shared/ui/DataTable';
+import SmartTable, { ColumnDef as SmartColumnDef } from '../../../shared/table/SmartTable';
+import EmptyGuide from '../../../shared/ui/EmptyGuide';
+import PageHeader, { HeaderBtn } from '../../../shared/ui/PageHeader';
+import { Plus, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import ImageUploader from '../../../shared/components/ImageUploader';
 import CurrencyInput from '../../../shared/components/CurrencyInput';
+import NumberInput from '../../../shared/ui/NumberInput';
 
 interface ProductsViewProps {
-  key?: string;
   initialSubTab?: 'sample' | 'production' | 'master' | 'variants';
 }
 
@@ -50,931 +37,664 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
     addVariant,
     updateVariant,
     deleteVariant,
-    formatMoney, t
+    formatMoney, t,
   } = useERP();
-  const accentHex = config?.customAccentColor || '#d4af37';
 
-  const [activeTab, setActiveTab] = useState<'sample' | 'production' | 'master' | 'variants'>(initialSubTab);
-
-  const isIdLng = config?.language === 'id';
+  const accentHex = config?.customAccentColor || '#7c3aed';
   const currencySymbol = config?.currencySymbol || 'Rp';
+  const isId = config?.language === 'id';
 
-  const columnsMaster: ColumnDef[] = [
-    { key: 'id', label: 'Product ID', type: 'text', isEditable: false },
-    { key: 'name', label: isIdLng ? 'Nama Produk' : 'Product Name', isEditable: true, type: 'text' },
-    { key: 'collection', label: isIdLng ? 'Koleksi' : 'Collection', isEditable: true, type: 'text' },
-    { key: 'category', label: isIdLng ? 'Kategori' : 'Category', isEditable: true, type: 'text' },
-    { key: 'sellingPrice', label: isIdLng ? 'Harga Jual' : 'Selling Price', isEditable: true, type: 'currency', align: 'right' },
-    { key: 'productionCost', label: isIdLng ? 'Biaya Produksi' : 'Production Cost', type: 'currency', align: 'right', isEditable: false },
-    { key: 'operationalCost', label: isIdLng ? 'Alokasi Ops' : 'Operational Cost', type: 'currency', align: 'right', isEditable: false },
-    { key: 'adsAllocation', label: isIdLng ? 'Alokasi Iklan' : 'Ads Allocation', type: 'currency', align: 'right', isEditable: false },
-    { key: 'kolAllocation', label: isIdLng ? 'Alokasi KOL' : 'KOL Allocation', type: 'currency', align: 'right', isEditable: false },
-    { key: 'finalHPP', label: 'Final HPP', type: 'formula', formulaExpr: "{productionCost} + {operationalCost} + {adsAllocation} + {kolAllocation}", align: 'right', isEditable: false },
-    { key: 'grossProfit', label: isIdLng ? 'Laba Kotor' : 'Gross Profit', type: 'formula', formulaExpr: "{sellingPrice} - {productionCost}", align: 'right', isEditable: false },
-    { key: 'netProfit', label: isIdLng ? 'Laba Bersih' : 'Net Profit', type: 'formula', formulaExpr: "{sellingPrice} - {finalHPP}", align: 'right', isEditable: false },
-    { key: 'marginPercentage', label: 'Margin %', type: 'formula', formulaExpr: "round(({netProfit} / {sellingPrice}) * 100)", align: 'right', isEditable: false },
-    { key: 'status', label: 'Status', isEditable: true, type: 'status', selectOptions: ['Active', 'Archived'], align: 'center' },
-    { key: 'aiAlignment', label: 'AI Trend Alignment 🔮', type: 'aiSummary', width: 220, isEditable: false }
-  ];
+  const [activeTab, setActiveTab] = useState<'master' | 'sample' | 'production' | 'variants'>(initialSubTab);
+  const [search, setSearch] = useState('');
+  const [collFilter, setCollFilter] = useState('ALL');
 
-  const handleDataChangeMaster = (newData: Record<string, any>[]) => {
-    // Deletion detection
-    const newDataIds = new Set(newData.map(item => item.id));
-    products.forEach(oldItem => {
-      if (!newDataIds.has(oldItem.id)) {
-        deleteProduct(oldItem.id);
-      }
-    });
+  // ── Edit states ──────────────────────────────────────────────────────────────
+  type EditProd = MasterProduct & { id: string };
+  const [editingProd, setEditingProd] = useState<EditProd | null>(null);
 
-    newData.forEach(newItem => {
-      const oldItem = computedProducts.find(p => p.id === newItem.id);
-      if (oldItem) {
-        const updates: Partial<MasterProduct> = {};
-        if (newItem.name !== oldItem.name) updates.name = newItem.name;
-        if (newItem.collection !== oldItem.collection) updates.collection = newItem.collection;
-        if (newItem.category !== oldItem.category) updates.category = newItem.category;
-        if (newItem.sellingPrice !== oldItem.sellingPrice) updates.sellingPrice = Number(newItem.sellingPrice) || 0;
-        if (newItem.status !== oldItem.status) updates.status = newItem.status as 'Active' | 'Archived';
-
-        if (Object.keys(updates).length > 0) {
-          updateProduct(newItem.id, updates);
-        }
-      }
-    });
-  };
-
-  const columnsSample: ColumnDef[] = [
-    { key: 'id', label: 'Sample ID', type: 'text', isEditable: false },
-    { key: 'productName', label: isIdLng ? 'Produk Terkait' : 'Product Link', isEditable: true, type: 'text' },
-    { key: 'version', label: isIdLng ? 'Versi Pola' : 'Pattern Version', isEditable: true, type: 'text' },
-    { key: 'materialId', label: isIdLng ? 'Serat Kain ID' : 'Fibre ID', isEditable: true, type: 'text' },
-    { key: 'usageQty', label: isIdLng ? 'Penggunaan (m)' : 'Usage (MT)', isEditable: true, type: 'number', align: 'right' },
-    { key: 'wastePercentage', label: isIdLng ? 'Porsi Buang %' : 'Waste Margin %', isEditable: true, type: 'percentage', align: 'right' },
-    { key: 'finalUsageQty', label: isIdLng ? 'Sisa Bersih (m)' : 'Final Usage', type: 'formula', formulaExpr: "{usageQty} * (1 - {wastePercentage})", align: 'right', isEditable: false },
-    { key: 'materialCost', label: isIdLng ? 'Biaya Bahan' : 'Material Cost', type: 'currency', align: 'right', isEditable: false },
-    { key: 'laborCost', label: isIdLng ? 'Upah Jahit' : 'Labor Charge', isEditable: true, type: 'currency', align: 'right' },
-    { key: 'sampleTotalCost', label: isIdLng ? 'Biaya Prototipe' : 'Prototype Cost', type: 'formula', formulaExpr: "{materialCost} + {laborCost}", align: 'right', isEditable: false },
-    { key: 'status', label: 'Status Approved', isEditable: true, type: 'status', selectOptions: ['Design', 'Sampling', 'Approved', 'Rejected'], align: 'center' },
-    { key: 'createdDate', label: isIdLng ? 'Tanggal Log' : 'Date Logged', type: 'date', isEditable: false }
-  ];
-
-  const handleDataChangeSample = (newData: Record<string, any>[]) => {
-    // Deletion detection
-    const newDataIds = new Set(newData.map(item => item.id));
-    computedSamples.forEach(oldItem => {
-      if (!newDataIds.has(oldItem.id)) {
-        deleteSample(oldItem.id);
-      }
-    });
-
-    newData.forEach(newItem => {
-      const oldItem = computedSamples.find(s => s.id === newItem.id);
-      if (oldItem) {
-        const updates: Partial<SampleDevelopment> = {};
-        if (newItem.productName !== oldItem.productName) updates.productName = newItem.productName;
-        if (newItem.version !== oldItem.version) updates.version = newItem.version;
-        if (newItem.materialId !== oldItem.materialId) updates.materialId = newItem.materialId;
-        if (newItem.laborCost !== oldItem.laborCost) updates.laborCost = Number(newItem.laborCost) || 0;
-        if (newItem.usageQty !== oldItem.usageQty) updates.usageQty = Number(newItem.usageQty) || 0;
-        if (newItem.wastePercentage !== oldItem.wastePercentage) updates.wastePercentage = Number(newItem.wastePercentage) || 0;
-        if (newItem.status !== oldItem.status) updates.status = newItem.status as any;
-
-        if (Object.keys(updates).length > 0) {
-          updateSample(newItem.id, updates);
-        }
-      }
-    });
-  };
-
-  const columnsProduction: ColumnDef[] = [
-    { key: 'id', label: 'Batch ID', type: 'text', isEditable: false },
-    { key: 'productName', label: isIdLng ? 'Produk Terkait' : 'Product Link', isEditable: true, type: 'text' },
-    { key: 'factory', label: isIdLng ? 'Mitra Pabrik' : 'Factory', isEditable: true, type: 'text' },
-    { key: 'qty', label: isIdLng ? 'Porsi Produksi' : 'Production Qty', isEditable: true, type: 'number', align: 'right' },
-    { key: 'materialId', label: isIdLng ? 'Bahan Baku ID' : 'Material ID', isEditable: true, type: 'text' },
-    { key: 'usagePerPcs', label: isIdLng ? 'Bahan/PCS' : 'Usage/PCS', isEditable: true, type: 'number', align: 'right' },
-    { key: 'totalUsageQty', label: isIdLng ? 'Total Volume' : 'Allocated Volume', type: 'formula', formulaExpr: "{qty} * {usagePerPcs}", align: 'right', isEditable: false },
-    { key: 'materialCost', label: isIdLng ? 'Biaya Bahan' : 'Material Cost', type: 'currency', align: 'right', isEditable: false },
-    { key: 'laborCost', label: isIdLng ? 'Upah Jahit' : 'Labor Cost', isEditable: true, type: 'currency', align: 'right' },
-    { key: 'packagingCost', label: isIdLng ? 'Kemasan' : 'Packaging Cost', isEditable: true, type: 'currency', align: 'right' },
-    { key: 'totalProductionCost', label: isIdLng ? 'Total Biaya' : 'Total Cost', type: 'formula', formulaExpr: "{materialCost} + ({laborCost} + {packagingCost}) * {qty}", align: 'right', isEditable: false },
-    { key: 'unitCost', label: isIdLng ? 'Biaya Per Satuan' : 'Unit Cost', type: 'formula', formulaExpr: "{totalProductionCost} / {qty}", align: 'right', isEditable: false },
-    { key: 'qcStatus', label: 'QC Status', isEditable: true, type: 'status', selectOptions: ['Pending', 'Passed', 'Failed'], align: 'center' },
-    { key: 'productionStatus', label: 'Status', isEditable: true, type: 'priority', selectOptions: ['Scheduled', 'In Progress', 'Completed', 'Delayed'], align: 'center' }
-  ];
-
-  const handleDataChangeProduction = (newData: Record<string, any>[]) => {
-    // Deletion detection
-    const newDataIds = new Set(newData.map(item => item.id));
-    computedProduction.forEach(oldItem => {
-      if (!newDataIds.has(oldItem.id)) {
-        deleteProduction(oldItem.id);
-      }
-    });
-
-    newData.forEach(newItem => {
-      const oldItem = computedProduction.find(p => p.id === newItem.id);
-      if (oldItem) {
-        const updates: Partial<ProductionBatch> = {};
-        if (newItem.productName !== oldItem.productName) updates.productName = newItem.productName;
-        if (newItem.factory !== oldItem.factory) updates.factory = newItem.factory;
-        if (newItem.qty !== oldItem.qty) updates.qty = Number(newItem.qty) || 0;
-        if (newItem.materialId !== oldItem.materialId) updates.materialId = newItem.materialId;
-        if (newItem.usagePerPcs !== oldItem.usagePerPcs) updates.usagePerPcs = Number(newItem.usagePerPcs) || 0;
-        if (newItem.laborCost !== oldItem.laborCost) updates.laborCost = Number(newItem.laborCost) || 0;
-        if (newItem.packagingCost !== oldItem.packagingCost) updates.packagingCost = Number(newItem.packagingCost) || 0;
-        if (newItem.qcStatus !== oldItem.qcStatus) updates.qcStatus = newItem.qcStatus as any;
-        if (newItem.productionStatus !== oldItem.productionStatus) updates.productionStatus = newItem.productionStatus as any;
-
-        if (Object.keys(updates).length > 0) {
-          updateProduction(newItem.id, updates);
-        }
-      }
-    });
-  };
-
-  const columnsVariant: ColumnDef[] = [
-    { key: 'id', label: 'Variant SKU', type: 'text', isEditable: false },
-    { key: 'productId', label: isIdLng ? 'Product ID Link' : 'Product ID Link', isEditable: true, type: 'text' },
-    { key: 'productName', label: isIdLng ? 'Nama Produk' : 'Product Name', isEditable: true, type: 'text' },
-    { key: 'color', label: isIdLng ? 'Warna' : 'Color', isEditable: true, type: 'text' },
-    { key: 'size', label: isIdLng ? 'Ukuran' : 'Size', isEditable: true, type: 'text' },
-    { key: 'currentStock', label: isIdLng ? 'Stok Awal' : 'Initial Stock', isEditable: true, type: 'number', align: 'right' },
-    { key: 'soldQty', label: isIdLng ? 'Terjual' : 'Sold Quantity', isEditable: true, type: 'number', align: 'right' },
-    { key: 'remainingStock', label: isIdLng ? 'Sisa Stok' : 'Remaining Stock', type: 'formula', formulaExpr: "{currentStock} - {soldQty}", align: 'right', isEditable: false },
-    { key: 'minStock', label: isIdLng ? 'Batas Minimum' : 'Min Threshold', isEditable: true, type: 'number', align: 'right' },
-    { key: 'status', label: 'Inventory Status', type: 'priority', align: 'center', isEditable: false }
-  ];
-
-  const handleDataChangeVariant = (newData: Record<string, any>[]) => {
-    // Deletion detection
-    const newDataIds = new Set(newData.map(item => item.id));
-    computedVariants.forEach(oldItem => {
-      if (!newDataIds.has(oldItem.sku)) {
-        deleteVariant(oldItem.sku);
-      }
-    });
-
-    newData.forEach(newItem => {
-      const oldItem = computedVariants.find(v => v.sku === newItem.id);
-      if (oldItem) {
-        const updates: Partial<SizeVariantInventory> = {};
-        if (newItem.productId !== oldItem.productId) updates.productId = newItem.productId;
-        if (newItem.productName !== oldItem.productName) updates.productName = newItem.productName;
-        if (newItem.color !== oldItem.color) updates.color = newItem.color;
-        if (newItem.size !== oldItem.size) updates.size = newItem.size;
-        if (newItem.currentStock !== oldItem.currentStock) updates.currentStock = Number(newItem.currentStock) || 0;
-        if (newItem.minStock !== oldItem.minStock) updates.minStock = Number(newItem.minStock) || 0;
-
-        if (Object.keys(updates).length > 0) {
-          updateVariant(newItem.id, updates);
-        }
-      }
-    });
-  };
-
-  // Search and filters
-  const [searchQuery, setSearchQuery] = useState('');
-  const [collectionFilter, setCollectionFilter] = useState('ALL');
-
-  // Input states for Add Product Modal (Master)
+  // ── Add states ───────────────────────────────────────────────────────────────
   const [showAddProd, setShowAddProd] = useState(false);
   const [newProd, setNewProd] = useState<Omit<MasterProduct, 'id'>>({
-    name: '',
-    collection: 'NEBULAE-26',
-    category: 'Outerwear',
-    sellingPrice: 195.00,
-    status: 'Active'
+    name: '', collection: '', category: 'T-Shirt', sellingPrice: 0, status: 'Active',
   });
 
-  // Input states for Add Sample Modal
   const [showAddSample, setShowAddSample] = useState(false);
   const [newSample, setNewSample] = useState<Omit<SampleDevelopment, 'id'>>({
-    productId: products[0]?.id || '',
-    productName: products[0]?.name || '',
-    version: 'v1.0',
-    materialId: computedMaterials[0]?.id || '',
-    usageQty: 2.0,
-    wastePercentage: 0.10,
-    laborCost: 40.00,
-    status: 'Sampling',
-    createdDate: new Date().toISOString().split('T')[0],
-    notes: ''
+    productId: '', productName: '', version: 'v1.0',
+    materialId: '', usageQty: 2.0, wastePercentage: 0.10, laborCost: 0,
+    status: 'Sampling', createdDate: new Date().toISOString().split('T')[0], notes: '',
   });
 
-  // Input states for Add Production Batch
-  const [showAddProdBatch, setShowAddProdBatch] = useState(false);
-  const [newProdBatch, setNewProdBatch] = useState<Omit<ProductionBatch, 'id'>>({
-    productId: products[0]?.id || '',
-    productName: products[0]?.name || '',
-    factory: 'Saitama Craft Lab',
-    qty: 100,
-    materialId: computedMaterials[0]?.id || '',
-    usagePerPcs: 1.5,
-    laborCost: 15.00,
-    packagingCost: 3.00,
-    qcStatus: 'Pending',
-    productionStatus: 'In Progress',
-    productionDate: new Date().toISOString().split('T')[0],
-    notes: ''
+  const [showAddBatch, setShowAddBatch] = useState(false);
+  const [newBatch, setNewBatch] = useState<Omit<ProductionBatch, 'id'>>({
+    productId: '', productName: '', factory: '',
+    qty: 100, materialId: '', usagePerPcs: 1.5,
+    laborCost: 0, packagingCost: 0,
+    qcStatus: 'Pending', productionStatus: 'Scheduled',
+    productionDate: new Date().toISOString().split('T')[0], notes: '',
   });
 
-  // Input states for Add Size Variant SKU
   const [showAddVariant, setShowAddVariant] = useState(false);
   const [newVariant, setNewVariant] = useState<SizeVariantInventory>({
-    sku: '',
-    productId: products[0]?.id || '',
-    productName: products[0]?.name || '',
-    color: 'Obsidian Black',
-    size: 'M',
-    currentStock: 100,
-    minStock: 20
+    sku: '', productId: '', productName: '',
+    color: 'White', size: 'M', currentStock: 50, minStock: 10,
   });
 
-  // Distinct Collections
-  const collections = useMemo(() => {
-    return Array.from(new Set(products.map(p => p.collection)));
-  }, [products]);
+  // ── Collections list ─────────────────────────────────────────────────────────
+  const collections = useMemo(() => [...new Set(products.map(p => p.collection))], [products]);
 
-  // Filters
-  const filteredProducts = useMemo(() => {
-    return computedProducts.filter(p => {
-      const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchColl = collectionFilter === 'ALL' || p.collection === collectionFilter;
-      return matchSearch && matchColl;
+  // ── Filtered data ─────────────────────────────────────────────────────────────
+  const filteredProducts = useMemo(() => computedProducts.filter(p => {
+    const q = search.toLowerCase();
+    return (p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))
+      && (collFilter === 'ALL' || p.collection === collFilter);
+  }), [computedProducts, search, collFilter]);
+
+  const filteredSamples = useMemo(() => computedSamples.filter(s =>
+    s.productName.toLowerCase().includes(search.toLowerCase()) ||
+    s.id.toLowerCase().includes(search.toLowerCase()),
+  ), [computedSamples, search]);
+
+  const filteredProduction = useMemo(() => computedProduction.filter(p =>
+    p.productName.toLowerCase().includes(search.toLowerCase()) ||
+    p.id.toLowerCase().includes(search.toLowerCase()),
+  ), [computedProduction, search]);
+
+  const filteredVariants = useMemo(() => computedVariants.filter(v =>
+    v.productName.toLowerCase().includes(search.toLowerCase()) ||
+    v.sku.toLowerCase().includes(search.toLowerCase()),
+  ), [computedVariants, search]);
+
+  // ── Status badge helper ──────────────────────────────────────────────────────
+  const statusColors: Record<string, { color: string; bg: string; border: string }> = {
+    Active:      { color: '#4ADE80', bg: 'rgba(74,222,128,0.10)',  border: 'rgba(74,222,128,0.25)' },
+    active:      { color: '#4ADE80', bg: 'rgba(74,222,128,0.10)',  border: 'rgba(74,222,128,0.25)' },
+    Approved:    { color: '#4ADE80', bg: 'rgba(74,222,128,0.10)',  border: 'rgba(74,222,128,0.25)' },
+    Completed:   { color: '#4ADE80', bg: 'rgba(74,222,128,0.10)',  border: 'rgba(74,222,128,0.25)' },
+    Passed:      { color: '#4ADE80', bg: 'rgba(74,222,128,0.10)',  border: 'rgba(74,222,128,0.25)' },
+    'In Progress':{ color: '#60A5FA', bg: 'rgba(96,165,250,0.10)', border: 'rgba(96,165,250,0.25)' },
+    Sampling:    { color: '#60A5FA', bg: 'rgba(96,165,250,0.10)',  border: 'rgba(96,165,250,0.25)' },
+    Scheduled:   { color: '#60A5FA', bg: 'rgba(96,165,250,0.10)',  border: 'rgba(96,165,250,0.25)' },
+    Sent:        { color: '#60A5FA', bg: 'rgba(96,165,250,0.10)',  border: 'rgba(96,165,250,0.25)' },
+    Archived:    { color: 'rgba(255,255,255,0.4)', bg: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.1)' },
+    Draft:       { color: 'rgba(255,255,255,0.4)', bg: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.1)' },
+    Design:      { color: 'rgba(255,255,255,0.4)', bg: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.1)' },
+    Pending:     { color: '#FBBF24', bg: 'rgba(251,191,36,0.10)',  border: 'rgba(251,191,36,0.25)' },
+    Rejected:    { color: '#F87171', bg: 'rgba(248,113,113,0.10)', border: 'rgba(248,113,113,0.25)' },
+    Failed:      { color: '#F87171', bg: 'rgba(248,113,113,0.10)', border: 'rgba(248,113,113,0.25)' },
+    Delayed:     { color: '#F87171', bg: 'rgba(248,113,113,0.10)', border: 'rgba(248,113,113,0.25)' },
+    Cancelled:   { color: '#F87171', bg: 'rgba(248,113,113,0.10)', border: 'rgba(248,113,113,0.25)' },
+  };
+
+  const statusBadge = (v: unknown) => {
+    const s = String(v ?? '');
+    const c = statusColors[s] ?? { color: 'rgba(255,255,255,0.5)', bg: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.1)' };
+    return (
+      <span style={{
+        display: 'inline-block', padding: '2px 10px', borderRadius: '20px',
+        fontSize: '11px', fontWeight: 500,
+        background: c.bg, color: c.color, border: `1px solid ${c.border}`,
+      }}>
+        {s}
+      </span>
+    );
+  };
+
+  // ── Columns (Sample / Production / Variants use DataTable) ──────────────────
+  type CS = typeof computedSamples[0];
+  const colsSample: DtColumn<CS>[] = [
+    {
+      key: 'productName', label: 'Produk',
+      render: (v, row) => (
+        <div>
+          <div style={{ fontWeight: 500, color: 'rgba(255,255,255,0.9)' }}>{String(v)}</div>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)' }}>{row.id} · {row.version}</div>
+        </div>
+      ),
+    },
+    { key: 'usageQty', label: 'Usage (m)', align: 'right', width: '110px', render: v => numberCell(v) },
+    { key: 'wastePercentage', label: 'Waste %', align: 'right', width: '90px',
+      render: v => `${(Number(v) * 100).toFixed(1)}%` },
+    { key: 'laborCost', label: 'Labor', align: 'right', width: '130px', render: v => moneyCell(v) },
+    { key: 'sampleTotalCost', label: 'Total Cost', align: 'right', width: '140px', render: v => moneyCell(v) },
+    { key: 'status', label: 'Status', align: 'center', width: '100px', render: statusBadge },
+    { key: 'createdDate', label: 'Tanggal', width: '110px' },
+  ];
+
+  type CPB = typeof computedProduction[0];
+  const colsBatch: DtColumn<CPB>[] = [
+    {
+      key: 'productName', label: 'Produk',
+      render: (v, row) => (
+        <div>
+          <div style={{ fontWeight: 500, color: 'rgba(255,255,255,0.9)' }}>{String(v)}</div>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)' }}>{row.id} · {row.factory}</div>
+        </div>
+      ),
+    },
+    { key: 'qty', label: 'Qty', align: 'right', width: '80px', render: v => numberCell(v) },
+    { key: 'totalProductionCost', label: 'Total Cost', align: 'right', width: '150px', render: v => moneyCell(v) },
+    { key: 'unitCost', label: 'Unit Cost', align: 'right', width: '130px', render: v => moneyCell(v) },
+    { key: 'qcStatus', label: 'QC', align: 'center', width: '90px', render: statusBadge },
+    { key: 'productionStatus', label: 'Status', align: 'center', width: '110px', render: statusBadge },
+  ];
+
+  type CV = { sku: string; productName: string; color: string; size: string; remainingStock: number; currentStock: number; minStock: number; status: string };
+  const colsVariant: DtColumn<CV>[] = [
+    {
+      key: 'productName', label: 'Produk',
+      render: (v, row) => (
+        <div>
+          <div style={{ fontWeight: 500, color: 'rgba(255,255,255,0.9)' }}>{String(v)}</div>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)' }}>{row.sku}</div>
+        </div>
+      ),
+    },
+    { key: 'color', label: 'Warna', width: '100px' },
+    { key: 'size', label: 'Size', align: 'center', width: '70px' },
+    { key: 'currentStock', label: 'Stok Awal', align: 'right', width: '100px', render: v => numberCell(v) },
+    {
+      key: 'remainingStock', label: 'Sisa', align: 'right', width: '90px',
+      render: (v, row) => {
+        const n = Number(v) || 0;
+        const isLow = n <= Number(row.minStock);
+        return <span style={{ color: isLow ? '#F87171' : '#4ADE80', fontVariantNumeric: 'tabular-nums', fontWeight: isLow ? 600 : 400 }}>
+          {n.toLocaleString('id-ID')}
+        </span>;
+      },
+    },
+    { key: 'status', label: 'Status', align: 'center', width: '100px', render: statusBadge },
+  ];
+
+  // ── Master Products → SmartTable (Excel-style) ──────────────────────────────
+  const prodCols: SmartColumnDef[] = [
+    { key: 'name',             label: 'Nama Produk',  type: 'text',     isEditable: true,  width: 220 },
+    { key: 'sku',              label: 'SKU',          type: 'text',     isComputed: true,  width: 120 },
+    { key: 'collection',       label: 'Koleksi',      type: 'text',     isEditable: true,  width: 160 },
+    { key: 'category',         label: 'Kategori',     type: 'text',     isEditable: true,  width: 130 },
+    { key: 'sellingPrice',     label: 'Harga Jual',   type: 'currency', isEditable: true,  align: 'right', width: 130 },
+    { key: 'finalHPP',         label: 'HPP',          type: 'currency', isComputed: true,  align: 'right', width: 130 },
+    { key: 'marginPercentage', label: 'Margin %',     type: 'number',   isComputed: true,  align: 'right', width: 90 },
+    { key: 'status',           label: 'Status',       type: 'status',   isEditable: true,  selectOptions: ['Active','Draft','Archived'], width: 120 },
+  ];
+
+  const prodRows = useMemo(() => filteredProducts.map(p => ({ ...p, sku: p.id })), [filteredProducts]);
+
+  const handleProdChange = (newData: Record<string, unknown>[]) => {
+    const ids = new Set(newData.map(r => r.id));
+    products.forEach(old => { if (!ids.has(old.id)) deleteProduct(old.id); });
+    newData.forEach(row => {
+      const id = String(row.id);
+      const old = computedProducts.find(p => p.id === id);
+      if (!old) return;
+      const updates: Partial<MasterProduct> = {};
+      if (row.name !== old.name) updates.name = String(row.name ?? '');
+      if (row.collection !== old.collection) updates.collection = String(row.collection ?? '');
+      if (row.category !== old.category) updates.category = String(row.category ?? '');
+      if (Number(row.sellingPrice) !== old.sellingPrice) updates.sellingPrice = Number(row.sellingPrice) || 0;
+      if (row.status !== old.status) updates.status = String(row.status) as MasterProduct['status'];
+      if (Object.keys(updates).length) updateProduct(id, updates);
     });
-  }, [computedProducts, searchQuery, collectionFilter]);
+  };
 
-  const filteredSamples = useMemo(() => {
-    return computedSamples.filter(s => {
-      return s.productName.toLowerCase().includes(searchQuery.toLowerCase()) || s.version.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-  }, [computedSamples, searchQuery]);
+  // ── Shared UI helpers ─────────────────────────────────────────────────────────
+  const inputCls = 'w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)] text-xs font-mono';
 
-  const filteredProduction = useMemo(() => {
-    return computedProduction.filter(p => {
-      return p.productName.toLowerCase().includes(searchQuery.toLowerCase()) || p.id.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-  }, [computedProduction, searchQuery]);
+  const tabBtn = (key: typeof activeTab, label: string, count: number) => (
+    <button
+      onClick={() => { setActiveTab(key); setSearch(''); }}
+      style={{
+        paddingBottom: '10px', background: 'none', border: 'none', cursor: 'pointer',
+        position: 'relative', fontSize: '12px', fontWeight: 500,
+        color: activeTab === key ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)',
+        transition: 'color 0.15s',
+      }}
+    >
+      {activeTab === key && (
+        <motion.div layoutId="prod-indicator" style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px',
+          background: accentHex, borderRadius: '1px',
+        }}/>
+      )}
+      {label} <span style={{ opacity: 0.4, fontSize: '10px' }}>[{count}]</span>
+    </button>
+  );
 
-  const filteredVariants = useMemo(() => {
-    return computedVariants.filter(v => {
-      return v.productName.toLowerCase().includes(searchQuery.toLowerCase()) || v.sku.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-  }, [computedVariants, searchQuery]);
-
-  const mappedVariants = useMemo(() => {
-    return filteredVariants.map(v => ({
-      ...v,
-      id: v.sku
-    }));
-  }, [filteredVariants]);
+  const modalOverlay: React.CSSProperties = {
+    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', zIndex: 50,
+  };
+  const modalCard: React.CSSProperties = {
+    width: '100%', maxWidth: '480px',
+    background: 'rgba(18,14,34,0.97)',
+    border: '1px solid rgba(255,255,255,0.10)',
+    borderRadius: '16px', padding: '28px',
+    boxShadow: '0 32px 80px rgba(0,0,0,0.60)',
+    maxHeight: '90vh', overflowY: 'auto',
+  };
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[var(--color-border-line)] pb-5">
-        <div>
-          <span className="text-xs font-mono tracking-widest" style={{color:accentHex}}>{t('prod_page_label')}</span>
-          <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)] mt-1">{t('prod_page_title')}</h2>
-        </div>
 
-        {/* Action Button depending on Active Tab */}
-        <div className="flex gap-2">
-          {activeTab === 'master' && (
-            <button 
-              onClick={() => setShowAddProd(true)}
-              className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] hover:bg-[var(--color-background)] transition-colors rounded text-xs uppercase font-mono tracking-wider flex items-center gap-1.5 font-semibold"
-            >
-              <Plus size={14} /> {t('prod_btn_add_product')}
-            </button>
-          )}
-          {activeTab === 'sample' && (
-            <button 
-              onClick={() => {
-                if(products.length > 0 && computedMaterials.length > 0) {
-                  setNewSample(prev => ({
-                    ...prev,
-                    productId: products[0].id,
-                    productName: products[0].name,
-                    materialId: computedMaterials[0].id
-                  }));
-                }
-                setShowAddSample(true);
-              }}
-              className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] hover:bg-[var(--color-background)] transition-colors rounded text-xs uppercase font-mono tracking-wider flex items-center gap-1.5 font-semibold"
-            >
-              <Plus size={14} /> {t('prod_btn_add_sample')}
-            </button>
-          )}
-          {activeTab === 'production' && (
-            <button 
-              onClick={() => {
-                if(products.length > 0 && computedMaterials.length > 0) {
-                  setNewProdBatch(prev => ({
-                    ...prev,
-                    productId: products[0].id,
-                    productName: products[0].name,
-                    materialId: computedMaterials[0].id
-                  }));
-                }
-                setShowAddProdBatch(true);
-              }}
-              className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] hover:bg-[var(--color-background)] transition-colors rounded text-xs uppercase font-mono tracking-wider flex items-center gap-1.5 font-semibold"
-            >
-              <Plus size={14} /> {t('prod_btn_add_batch')}
-            </button>
-          )}
-          {activeTab === 'variants' && (
-            <button 
-              onClick={() => {
-                if(products.length > 0) {
-                  setNewVariant(prev => ({
-                    ...prev,
-                    productId: products[0].id,
-                    productName: products[0].name
-                  }));
-                }
-                setShowAddVariant(true);
-              }}
-              className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] hover:bg-[var(--color-background)] transition-colors rounded text-xs uppercase font-mono tracking-wider flex items-center gap-1.5 font-semibold"
-            >
-              <Plus size={14} /> {t('prod_btn_add_variant')}
-            </button>
-          )}
-        </div>
+      {/* Header */}
+      <PageHeader
+        title="Products"
+        actions={
+          <div className="flex gap-2">
+            {activeTab === 'master' && <HeaderBtn onClick={() => setShowAddProd(true)} label={t('prod_btn_add_product')} icon={<Plus size={12}/>}/>}
+            {activeTab === 'sample' && <HeaderBtn onClick={() => {
+              if (products.length && computedMaterials.length) {
+                setNewSample(s => ({ ...s, productId: products[0].id, productName: products[0].name, materialId: computedMaterials[0].id }));
+              }
+              setShowAddSample(true);
+            }} label={t('prod_btn_add_sample')} icon={<Plus size={12}/>}/>}
+            {activeTab === 'production' && <HeaderBtn onClick={() => {
+              if (products.length && computedMaterials.length) {
+                setNewBatch(b => ({ ...b, productId: products[0].id, productName: products[0].name, materialId: computedMaterials[0].id }));
+              }
+              setShowAddBatch(true);
+            }} label={t('prod_btn_add_batch')} icon={<Plus size={12}/>}/>}
+            {activeTab === 'variants' && <HeaderBtn onClick={() => {
+              if (products.length) setNewVariant(v => ({ ...v, productId: products[0].id, productName: products[0].name }));
+              setShowAddVariant(true);
+            }} label={t('prod_btn_add_variant')} icon={<Plus size={12}/>}/>}
+          </div>
+        }
+      />
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '24px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+        {tabBtn('master',     t('prod_tab_products'),    computedProducts.length)}
+        {tabBtn('sample',     t('prod_tab_samples'),     computedSamples.length)}
+        {tabBtn('production', t('prod_tab_production'),  computedProduction.length)}
+        {tabBtn('variants',   t('prod_tab_variants'),    computedVariants.length)}
       </div>
 
-      {/* Internal Tabs Selector */}
-      <div className="flex border-b border-white/[0.05] gap-6 text-sm">
-        <button 
-          onClick={() => { setActiveTab('master'); setSearchQuery(''); }}
-          className={`pb-3 font-mono tracking-wider uppercase text-xs transition-colors relative ${activeTab === 'master' ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
-        >
-          {activeTab === 'master' && <motion.div layoutId="prod-tab-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d4af37]" />}
-          {t('prod_tab_products')} [{computedProducts.length}]
-        </button>
-        <button 
-          onClick={() => { setActiveTab('sample'); setSearchQuery(''); }}
-          className={`pb-3 font-mono tracking-wider uppercase text-xs transition-colors relative ${activeTab === 'sample' ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
-        >
-          {activeTab === 'sample' && <motion.div layoutId="prod-tab-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d4af37]" />}
-          {t('prod_tab_samples')} [{computedSamples.length}]
-        </button>
-        <button 
-          onClick={() => { setActiveTab('production'); setSearchQuery(''); }}
-          className={`pb-3 font-mono tracking-wider uppercase text-xs transition-colors relative ${activeTab === 'production' ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
-        >
-          {activeTab === 'production' && <motion.div layoutId="prod-tab-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d4af37]" />}
-          {t('prod_tab_production')} [{computedProduction.length}]
-        </button>
-        <button 
-          onClick={() => { setActiveTab('variants'); setSearchQuery(''); }}
-          className={`pb-3 font-mono tracking-wider uppercase text-xs transition-colors relative ${activeTab === 'variants' ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
-        >
-          {activeTab === 'variants' && <motion.div layoutId="prod-tab-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d4af37]" />}
-          {t('prod_tab_variants')} [{computedVariants.length}]
-        </button>
-      </div>
-
-      {/* SEARCH AND FILTER PANEL */}
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-[var(--color-background)]/40 border border-white/[0.03] p-4 rounded-lg">
-        <div className="relative w-full md:max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--color-text-muted)]" />
-          <input 
-            type="text" 
-            placeholder="Lock on SKU, Product Name or ID..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[var(--color-card-bg)]/60 border border-white/[0.05] focus:border-white/[0.15] text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] rounded text-xs font-mono transition-colors"
+      {/* Search */}
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '220px', maxWidth: '360px' }}>
+          <Search size={13} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
+          <input value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="Cari produk, SKU, ID..."
+            style={{ width: '100%', paddingLeft: '32px', paddingRight: '12px', paddingTop: '8px', paddingBottom: '8px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9px', color: 'rgba(255,255,255,0.8)', fontSize: '12.5px', outline: 'none', boxSizing: 'border-box' }}
           />
         </div>
-
-        {activeTab === 'master' && (
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <span className="text-[10px] font-mono uppercase text-[var(--color-text-muted)]">COLLECTION:</span>
-            <select 
-              value={collectionFilter} 
-              onChange={(e) => setCollectionFilter(e.target.value)}
-              className="bg-[var(--color-card-bg)] border border-white/[0.05] text-[var(--color-text-main)] text-xs font-mono py-1 px-3 rounded"
-            >
-              <option value="ALL">ALL COLLECTIONS</option>
-              {collections.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
+        {activeTab === 'master' && collections.length > 0 && (
+          <select value={collFilter} onChange={e => setCollFilter(e.target.value)}
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', borderRadius: '9px', padding: '7px 12px', fontSize: '12px' }}>
+            <option value="ALL">Semua Koleksi</option>
+            {collections.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
         )}
       </div>
 
-      {/* --- TAB 1: MASTER PRODUCTS TABLE & CALCULATIONS --- */}
+      {/* ── Tables ── */}
       {activeTab === 'master' && (
-        <div className="space-y-4">
-          <SmartTable 
-            tableId="products_master"
-            title="Master Product Swatches"
-            columns={columnsMaster}
-            data={filteredProducts}
-            onDataChange={handleDataChangeMaster}
-            allowAddColumn={true}
-            allowAddRow={true}
-            allowImport={true}
-            allowExport={true}
-            frozenColumns={2}
+        prodRows.length === 0 ? (
+          <EmptyGuide
+            icon="👕"
+            title="Products kosong"
+            description={<>Tambahkan produk pertama Anda. Klik <strong>+ Tambah Produk</strong> di kanan atas, lalu edit langsung di tabel.</>}
+            tableHints
+            action={{ label: '+ Tambah Produk', onClick: () => setShowAddProd(true) }}
           />
-        </div>
+        ) : (
+        <SmartTable
+          tableId="master_products"
+          title="Products"
+          columns={prodCols}
+          data={prodRows}
+          onDataChange={handleProdChange}
+          allowAddRow={false}
+          allowImport
+          allowExport
+          frozenColumns={1}
+        />
+        )
       )}
 
-      {/* --- TAB 2: SAMPLE DEVELOPMENT DATABASE --- */}
       {activeTab === 'sample' && (
-        <div className="space-y-4">
-          <SmartTable 
-            tableId="products_sampling"
-            title="Sample Prototypes Ledger"
-            columns={columnsSample}
-            data={filteredSamples}
-            onDataChange={handleDataChangeSample}
-            allowAddColumn={true}
-            allowAddRow={true}
-            allowImport={true}
-            allowExport={true}
-            frozenColumns={2}
+        filteredSamples.length === 0 ? (
+          <EmptyGuide icon="🧪" title="Sample Development kosong"
+            description={<>Catat prototipe/sample pertama. Klik <strong>+ Tambah Sample</strong> di kanan atas.</>}
+            action={{ label: '+ Tambah Sample', onClick: () => { if (products.length && computedMaterials.length) setNewSample(s => ({ ...s, productId: products[0].id, productName: products[0].name, materialId: computedMaterials[0].id })); setShowAddSample(true); } }}
           />
-        </div>
+        ) : (
+        <DataTable
+          columns={colsSample}
+          data={filteredSamples as unknown as Record<string, unknown>[]}
+          emptyIcon="🧪"
+          emptyMessage="Belum ada sample"
+        />
+        )
       )}
 
-      {/* --- TAB 3: PRODUCTION BATCH LIBRARY --- */}
       {activeTab === 'production' && (
-        <div className="space-y-4">
-          <SmartTable 
-            tableId="products_production"
-            title="Production Pipeline Runs"
-            columns={columnsProduction}
-            data={filteredProduction}
-            onDataChange={handleDataChangeProduction}
-            allowAddColumn={true}
-            allowAddRow={true}
-            allowImport={true}
-            allowExport={true}
-            frozenColumns={2}
+        filteredProduction.length === 0 ? (
+          <EmptyGuide icon="🏭" title="Production kosong"
+            description={<>Mulai batch produksi pertama. Klik <strong>+ Tambah Batch</strong> di kanan atas.</>}
+            action={{ label: '+ Tambah Batch', onClick: () => { if (products.length && computedMaterials.length) setNewBatch(b => ({ ...b, productId: products[0].id, productName: products[0].name, materialId: computedMaterials[0].id })); setShowAddBatch(true); } }}
           />
-        </div>
+        ) : (
+        <DataTable
+          columns={colsBatch}
+          data={filteredProduction as unknown as Record<string, unknown>[]}
+          emptyIcon="🏭"
+          emptyMessage="Belum ada produksi"
+        />
+        )
       )}
 
-      {/* --- TAB 4: SIZE VARIANT INVENTORY --- */}
       {activeTab === 'variants' && (
-        <div className="space-y-4">
-          <SmartTable 
-            tableId="products_variants"
-            title="Inventory Variations (SKUs)"
-            columns={columnsVariant}
-            data={mappedVariants}
-            onDataChange={handleDataChangeVariant}
-            allowAddColumn={true}
-            allowAddRow={true}
-            allowImport={true}
-            allowExport={true}
-            frozenColumns={2}
-          />
-        </div>
+        <DataTable
+          columns={colsVariant as DtColumn<Record<string, unknown>>[]}
+          data={filteredVariants.map(v => ({
+            ...v,
+            remainingStock: v.currentStock - (computedProducts.find(p => p.id === v.productId) ? 0 : 0),
+            status: v.currentStock <= v.minStock ? 'Low Stock' : 'OK',
+          } as Record<string, unknown>))}
+          emptyIcon="📦"
+          emptyMessage="Belum ada variant SKU"
+        />
       )}
 
-      {/* --- DESIGNER INPUT MODAL DIALOGS --- */}
+      {/* ══════════════════════════════════════════════════════════════════════
+          MODALS
+      ══════════════════════════════════════════════════════════════════════ */}
 
-      {/* 1. Add Master Product */}
-      {showAddProd && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel-heavy rounded-lg max-w-sm w-full p-6 space-y-4">
-            <h3 className="text-base font-display font-semibold uppercase tracking-wider text-[var(--color-text-main)] border-b border-[var(--color-border-line)] pb-3">{t('prod_modal_add_product')}</h3>
-            
-            <div className="space-y-3 text-xs font-mono">
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Product Name</label>
-                <input 
-                  type="text" 
-                  value={newProd.name} 
-                  placeholder="e.g. Helix Tactical Cargo"
-                  onChange={(e) => setNewProd({...newProd, name: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]"
-                />
+      {/* Add / Edit Master Product */}
+      {(showAddProd || editingProd) && (
+        <div style={modalOverlay}>
+          <div style={modalCard}>
+            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+              {editingProd ? 'Edit Produk' : t('prod_modal_add_product')}
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama Produk</label>
+                <input type="text" value={editingProd ? editingProd.name : newProd.name}
+                  placeholder="e.g. Oversize Tee Classic White"
+                  onChange={e => editingProd ? setEditingProd({ ...editingProd, name: e.target.value }) : setNewProd({ ...newProd, name: e.target.value })}
+                  className={inputCls}/>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[var(--color-text-muted)] uppercase">Collection</label>
-                  <input 
-                    type="text" 
-                    value={newProd.collection} 
-                    onChange={(e) => setNewProd({...newProd, collection: e.target.value})}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                  />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Koleksi</label>
+                  <input type="text" value={editingProd ? editingProd.collection : newProd.collection}
+                    onChange={e => editingProd ? setEditingProd({ ...editingProd, collection: e.target.value }) : setNewProd({ ...newProd, collection: e.target.value })}
+                    placeholder="Essential Series 2025" className={inputCls}/>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[var(--color-text-muted)] uppercase">Category</label>
-                  <input 
-                    type="text" 
-                    value={newProd.category} 
-                    onChange={(e) => setNewProd({...newProd, category: e.target.value})}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                  />
+                <div>
+                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kategori</label>
+                  <input type="text" value={editingProd ? editingProd.category : newProd.category}
+                    onChange={e => editingProd ? setEditingProd({ ...editingProd, category: e.target.value }) : setNewProd({ ...newProd, category: e.target.value })}
+                    className={inputCls}/>
                 </div>
               </div>
-
-              <div className="space-y-1 block">
-                <label className="text-[var(--color-text-muted)] uppercase">Target Retail Price ({currencySymbol})</label>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Harga Jual ({currencySymbol})</label>
                 <CurrencyInput
-                  value={newProd.sellingPrice}
-                  onChange={(val) => setNewProd({...newProd, sellingPrice: val})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+                  value={editingProd ? editingProd.sellingPrice : newProd.sellingPrice}
+                  onChange={v => editingProd ? setEditingProd({ ...editingProd, sellingPrice: v }) : setNewProd({ ...newProd, sellingPrice: v })}
+                  className={inputCls}/>
               </div>
-
-              <div className="pt-2">
-                <ImageUploader 
-                  currentImage={newProd.image} 
-                  onUpload={(b64) => setNewProd({...newProd, image: b64})} 
-                  label="Product Lookbook/Aesthetic Board (Visual)"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <select
+                  value={editingProd ? editingProd.status : newProd.status}
+                  onChange={e => editingProd
+                    ? setEditingProd({ ...editingProd, status: e.target.value as MasterProduct['status'] })
+                    : setNewProd({ ...newProd, status: e.target.value as MasterProduct['status'] })}
+                  className={inputCls}>
+                  <option value="Active">Active</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Archived">Archived</option>
+                </select>
+              </div>
+              <div>
+                <ImageUploader
+                  currentImage={editingProd ? editingProd.image : newProd.image}
+                  onUpload={b64 => editingProd ? setEditingProd({ ...editingProd, image: b64 }) : setNewProd({ ...newProd, image: b64 })}
+                  label="Foto Produk (opsional)"/>
               </div>
             </div>
-
-            <div className="flex gap-2 justify-end text-xs font-mono pt-4 border-t border-white/[0.05]">
-              <button 
-                onClick={() => setShowAddProd(false)}
-                className="px-4 py-2 border border-white/[0.03] text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={() => {
-                  if(!newProd.name) return toast.error('Name required.');
-                  addProduct(newProd);
-                  setShowAddProd(false);
-                }}
-                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded"
-              >
-                Catalog Product
-              </button>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: editingProd ? 'space-between' : 'flex-end', marginTop: '20px' }}>
+              {editingProd && (
+                <button onClick={() => { deleteProduct(editingProd.id); setEditingProd(null); }}
+                  style={{ padding: '9px 16px', background: 'rgba(248,113,113,0.10)', border: '1px solid rgba(248,113,113,0.25)', color: '#F87171', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+                  Hapus
+                </button>
+              )}
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={() => { setShowAddProd(false); setEditingProd(null); }}
+                  style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+                  Batal
+                </button>
+                <button onClick={() => {
+                  if (editingProd) {
+                    updateProduct(editingProd.id, {
+                      name: editingProd.name, collection: editingProd.collection,
+                      category: editingProd.category, sellingPrice: editingProd.sellingPrice,
+                      status: editingProd.status,
+                    });
+                    setEditingProd(null);
+                    toast.success('Produk diperbarui');
+                  } else {
+                    if (!newProd.name) return toast.error('Nama produk wajib diisi');
+                    addProduct(newProd);
+                    setShowAddProd(false);
+                    setNewProd({ name: '', collection: '', category: 'T-Shirt', sellingPrice: 0, status: 'Active' });
+                  }
+                }} style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                  {editingProd ? 'Simpan' : t('prod_modal_add_product').split(' ')[0] + ' Produk'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* 2. Add Prototype Sample */}
+      {/* Add Sample */}
       {showAddSample && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel-heavy rounded-lg max-w-lg w-full p-6 space-y-4">
-            <h3 className="text-base font-display font-semibold uppercase tracking-wider text-[var(--color-text-main)] border-b border-[var(--color-border-line)] pb-3">{t('prod_modal_add_sample')}</h3>
-            
-            <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Target Product Link</label>
-                <select 
-                  value={newSample.productId} 
-                  onChange={(e) => {
-                    const backingP = products.find(p => p.id === e.target.value);
-                    setNewSample({
-                      ...newSample, 
-                      productId: e.target.value,
-                      productName: backingP ? backingP.name : ''
-                    });
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                >
-                  {products.map(p => <option key={p.id} value={p.id}>{p.id} - {p.name}</option>)}
+        <div style={modalOverlay}>
+          <div style={{ ...modalCard, maxWidth: '520px' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+              {t('prod_modal_add_sample')}
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <select value={newSample.productId} onChange={e => {
+                  const p = products.find(x => x.id === e.target.value);
+                  setNewSample({ ...newSample, productId: e.target.value, productName: p?.name ?? '' });
+                }} className={inputCls}>
+                  {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Pattern Version</label>
-                <input 
-                  type="text" 
-                  value={newSample.version} 
-                  onChange={(e) => setNewSample({...newSample, version: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Versi Pola</label>
+                <input type="text" value={newSample.version}
+                  onChange={e => setNewSample({ ...newSample, version: e.target.value })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1 col-span-2">
-                <label className="text-[var(--color-text-muted)] uppercase font-bold text-[var(--color-accent-highlight)]">Required Raw Material Fiber</label>
-                <select 
-                  value={newSample.materialId} 
-                  onChange={(e) => setNewSample({...newSample, materialId: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]"
-                >
+              <div style={{ gridColumn: '1/-1' }}>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Material</label>
+                <select value={newSample.materialId}
+                  onChange={e => setNewSample({ ...newSample, materialId: e.target.value })} className={inputCls}>
                   {computedMaterials.map(m => (
-                    <option key={m.id} value={m.id}>{m.id} - {m.name} ({formatMoney(m.costPerUnit)}/{m.unit}) {"["}Remaining: {m.remainingQty}{"]"}</option>
+                    <option key={m.id} value={m.id}>{m.name} — sisa {m.remainingQty} {m.unit}</option>
                   ))}
                 </select>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Base Material Needed</label>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  value={newSample.usageQty === 0 ? '' : newSample.usageQty} 
-                  onChange={(e) => {
-                    const parsed = parseFloat(e.target.value);
-                    setNewSample({...newSample, usageQty: isNaN(parsed) ? 0 : parsed});
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Usage (m)</label>
+                <NumberInput value={newSample.usageQty} onChange={n => setNewSample({ ...newSample, usageQty: n })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Waste Allowance Margin (%)</label>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  value={newSample.wastePercentage === 0 ? '' : newSample.wastePercentage} 
-                  placeholder="e.g. 0.10 for 10%"
-                  onChange={(e) => {
-                    const parsed = parseFloat(e.target.value);
-                    setNewSample({...newSample, wastePercentage: isNaN(parsed) ? 0 : parsed});
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Waste % (0.10 = 10%)</label>
+                <NumberInput value={newSample.wastePercentage} onChange={n => setNewSample({ ...newSample, wastePercentage: n })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Specific Labor Tech Charge ({currencySymbol})</label>
-                <CurrencyInput
-                  value={newSample.laborCost}
-                  onChange={(val) => setNewSample({...newSample, laborCost: val})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Labor ({currencySymbol})</label>
+                <CurrencyInput value={newSample.laborCost} onChange={v => setNewSample({ ...newSample, laborCost: v })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Status</label>
-                <select 
-                  value={newSample.status} 
-                  onChange={(e) => setNewSample({...newSample, status: e.target.value as any})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                >
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <select value={newSample.status} onChange={e => setNewSample({ ...newSample, status: e.target.value as SampleDevelopment['status'] })} className={inputCls}>
                   <option value="Design">Design</option>
                   <option value="Sampling">Sampling</option>
                   <option value="Approved">Approved</option>
                   <option value="Rejected">Rejected</option>
                 </select>
               </div>
-
-              <div className="col-span-2 space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Development Feedback / Notes</label>
-                <textarea 
-                  value={newSample.notes} 
-                  placeholder="Notes about weave, pockets, layout and feedback during fitting..."
-                  onChange={(e) => setNewSample({...newSample, notes: e.target.value})}
-                  className="w-full h-16 p-3 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
-              </div>
-
-              <div className="col-span-2">
-                <ImageUploader 
-                  currentImage={newSample.image} 
-                  onUpload={(b64) => setNewSample({...newSample, image: b64})} 
-                  label="Prototype Product Picture/Sketch (Visual)"
-                />
+              <div style={{ gridColumn: '1/-1' }}>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Catatan</label>
+                <textarea value={newSample.notes} onChange={e => setNewSample({ ...newSample, notes: e.target.value })}
+                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none text-xs font-mono"/>
               </div>
             </div>
-
-            <div className="flex gap-2 justify-end text-xs font-mono pt-4 border-t border-white/[0.05]">
-              <button 
-                onClick={() => setShowAddSample(false)}
-                className="px-4 py-2 border border-white/[0.03] text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded"
-              >
-                Cancel
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <button onClick={() => setShowAddSample(false)} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+                Batal
               </button>
-              <button 
-                onClick={() => {
-                  addSample(newSample);
-                  setShowAddSample(false);
-                }}
-                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded"
-              >
-                Queue Prototype
+              <button onClick={() => { addSample(newSample); setShowAddSample(false); }}
+                style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                Buat Sample
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 3. Add Production Run */}
-      {showAddProdBatch && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel-heavy rounded-lg max-w-lg w-full p-6 space-y-4">
-            <h3 className="text-base font-display font-semibold uppercase tracking-wider text-[var(--color-text-main)] border-b border-[var(--color-border-line)] pb-3">{t('prod_modal_add_batch')}</h3>
-            
-            <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Target Product</label>
-                <select 
-                  value={newProdBatch.productId} 
-                  onChange={(e) => {
-                    const P = products.find(p => p.id === e.target.value);
-                    setNewProdBatch({
-                      ...newProdBatch, 
-                      productId: e.target.value,
-                      productName: P ? P.name : ''
-                    });
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                >
-                  {products.map(p => <option key={p.id} value={p.id}>{p.id} - {p.name}</option>)}
+      {/* Add Production Batch */}
+      {showAddBatch && (
+        <div style={modalOverlay}>
+          <div style={{ ...modalCard, maxWidth: '520px' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+              {t('prod_modal_add_batch')}
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <select value={newBatch.productId} onChange={e => {
+                  const p = products.find(x => x.id === e.target.value);
+                  setNewBatch({ ...newBatch, productId: e.target.value, productName: p?.name ?? '' });
+                }} className={inputCls}>
+                  {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Factory Facility</label>
-                <input 
-                  type="text" 
-                  value={newProdBatch.factory} 
-                  onChange={(e) => setNewProdBatch({...newProdBatch, factory: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Pabrik</label>
+                <input type="text" value={newBatch.factory}
+                  onChange={e => setNewBatch({ ...newBatch, factory: e.target.value })}
+                  placeholder="Nama CMT / pabrik" className={inputCls}/>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Volume Quantity (PCS)</label>
-                <input 
-                  type="number" 
-                  value={newProdBatch.qty === 0 ? '' : newProdBatch.qty} 
-                  onChange={(e) => {
-                    const parsed = parseFloat(e.target.value);
-                    setNewProdBatch({...newProdBatch, qty: isNaN(parsed) ? 0 : parsed});
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Primary Fiber Alloy ID</label>
-                <select 
-                  value={newProdBatch.materialId} 
-                  onChange={(e) => setNewProdBatch({...newProdBatch, materialId: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                >
-                  {computedMaterials.map(m => (
-                    <option key={m.id} value={m.id}>{m.id} - {m.name} [Available: {m.remainingQty}]</option>
-                  ))}
+              <div style={{ gridColumn: '1/-1' }}>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Material</label>
+                <select value={newBatch.materialId} onChange={e => setNewBatch({ ...newBatch, materialId: e.target.value })} className={inputCls}>
+                  {computedMaterials.map(m => <option key={m.id} value={m.id}>{m.name} — sisa {m.remainingQty} {m.unit}</option>)}
                 </select>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Required Usage Per Piece (MT)</label>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  value={newProdBatch.usagePerPcs === 0 ? '' : newProdBatch.usagePerPcs} 
-                  onChange={(e) => {
-                    const parsed = parseFloat(e.target.value);
-                    setNewProdBatch({...newProdBatch, usagePerPcs: isNaN(parsed) ? 0 : parsed});
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Qty Produksi</label>
+                <NumberInput value={newBatch.qty} allowDecimal={false}
+                  onChange={n => setNewBatch({ ...newBatch, qty: n })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase text-[var(--color-text-muted)]">Labor allocation/PCS ({currencySymbol})</label>
-                <CurrencyInput
-                  value={newProdBatch.laborCost}
-                  onChange={(val) => setNewProdBatch({...newProdBatch, laborCost: val})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Usage/PCS (m)</label>
+                <NumberInput value={newBatch.usagePerPcs}
+                  onChange={n => setNewBatch({ ...newBatch, usagePerPcs: n })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1 block col-span-2">
-                <label className="text-[var(--color-text-muted)] uppercase text-[var(--color-text-muted)]">Packaging Charge/PCS ({currencySymbol})</label>
-                <CurrencyInput
-                  value={newProdBatch.packagingCost}
-                  onChange={(val) => setNewProdBatch({...newProdBatch, packagingCost: val})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Labor/PCS ({currencySymbol})</label>
+                <CurrencyInput value={newBatch.laborCost} onChange={v => setNewBatch({ ...newBatch, laborCost: v })} className={inputCls}/>
+              </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Packaging/PCS ({currencySymbol})</label>
+                <CurrencyInput value={newBatch.packagingCost} onChange={v => setNewBatch({ ...newBatch, packagingCost: v })} className={inputCls}/>
+              </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status Produksi</label>
+                <select value={newBatch.productionStatus} onChange={e => setNewBatch({ ...newBatch, productionStatus: e.target.value as ProductionBatch['productionStatus'] })} className={inputCls}>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Delayed">Delayed</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tanggal</label>
+                <input type="date" value={newBatch.productionDate}
+                  onChange={e => setNewBatch({ ...newBatch, productionDate: e.target.value })} className={inputCls}/>
               </div>
             </div>
-
-            <div className="flex gap-2 justify-end text-xs font-mono pt-4 border-t border-white/[0.05]">
-              <button 
-                onClick={() => setShowAddProdBatch(false)}
-                className="px-4 py-2 border border-white/[0.03] text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded"
-              >
-                Cancel
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <button onClick={() => setShowAddBatch(false)} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+                Batal
               </button>
-              <button 
-                onClick={() => {
-                  addProduction(newProdBatch);
-                  setShowAddProdBatch(false);
-                }}
-                className="px-4 py-2 bg-[#d4af37] text-[var(--color-text-main)] font-semibold hover:bg-[#b08e23] transition-colors uppercase rounded"
-              >
-                Queue Factory Run
+              <button onClick={() => { addProduction(newBatch); setShowAddBatch(false); }}
+                style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                Buat Batch
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 4. Add SKU Size Variant */}
+      {/* Add Size Variant */}
       {showAddVariant && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="glass-panel-heavy rounded-lg max-w-sm w-full p-6 space-y-4">
-            <h3 className="text-base font-display font-semibold uppercase tracking-wider text-[var(--color-text-main)] border-b border-[var(--color-border-line)] pb-3">{t('prod_modal_add_variant')}</h3>
-            
-            <div className="space-y-3 text-xs font-mono">
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Reference Product</label>
-                <select 
-                  value={newVariant.productId} 
-                  onChange={(e) => {
-                    const P = products.find(p => p.id === e.target.value);
-                    setNewVariant({
-                      ...newVariant, 
-                      productId: e.target.value,
-                      productName: P ? P.name : ''
-                    });
-                  }}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                >
-                  {products.map(p => <option key={p.id} value={p.id}>{p.id} - {p.name}</option>)}
+        <div style={modalOverlay}>
+          <div style={modalCard}>
+            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+              {t('prod_btn_add_variant')}
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div style={{ gridColumn: '1/-1' }}>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <select value={newVariant.productId} onChange={e => {
+                  const p = products.find(x => x.id === e.target.value);
+                  setNewVariant({ ...newVariant, productId: e.target.value, productName: p?.name ?? '' });
+                }} className={inputCls}>
+                  {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[var(--color-text-muted)] uppercase">Hardware SKU ID</label>
-                <input 
-                  type="text" 
-                  value={newVariant.sku} 
-                  placeholder="e.g. PROD-001-BLK-M"
-                  onChange={(e) => setNewVariant({...newVariant, sku: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]"
-                />
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">SKU</label>
+                <input type="text" value={newVariant.sku}
+                  onChange={e => setNewVariant({ ...newVariant, sku: e.target.value })}
+                  placeholder="NVH-OTC-S-WHT" className={inputCls}/>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[var(--color-text-muted)] uppercase">Aesthetic Color</label>
-                  <input 
-                    type="text" 
-                    value={newVariant.color} 
-                    onChange={(e) => setNewVariant({...newVariant, color: e.target.value})}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[var(--color-text-muted)] uppercase">Fitted Size</label>
-                  <input 
-                    type="text" 
-                    value={newVariant.size} 
-                    placeholder="S, M, L, 42..."
-                    onChange={(e) => setNewVariant({...newVariant, size: e.target.value})}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                  />
-                </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Warna</label>
+                <input type="text" value={newVariant.color}
+                  onChange={e => setNewVariant({ ...newVariant, color: e.target.value })} className={inputCls}/>
               </div>
-
-              <div className="space-y-1 grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[var(--color-text-muted)] uppercase">Initial volume Stock</label>
-                  <input 
-                    type="number" 
-                    value={newVariant.currentStock === 0 ? '' : newVariant.currentStock} 
-                    onChange={(e) => {
-                      const parsed = parseInt(e.target.value, 10);
-                      setNewVariant({...newVariant, currentStock: isNaN(parsed) ? 0 : parsed});
-                    }}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="text-[var(--color-text-muted)] uppercase">Min Safety Limit</label>
-                  <input 
-                    type="number" 
-                    value={newVariant.minStock === 0 ? '' : newVariant.minStock} 
-                    onChange={(e) => {
-                      const parsed = parseInt(e.target.value, 10);
-                      setNewVariant({...newVariant, minStock: isNaN(parsed) ? 0 : parsed});
-                    }}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
-                  />
-                </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Size</label>
+                <select value={newVariant.size} onChange={e => setNewVariant({ ...newVariant, size: e.target.value })} className={inputCls}>
+                  {['XS','S','M','L','XL','XXL','3XL','Free Size'].map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Stok Awal</label>
+                <NumberInput value={newVariant.currentStock} allowDecimal={false}
+                  onChange={n => setNewVariant({ ...newVariant, currentStock: n })} className={inputCls}/>
+              </div>
+              <div>
+                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Min Stok</label>
+                <NumberInput value={newVariant.minStock} allowDecimal={false}
+                  onChange={n => setNewVariant({ ...newVariant, minStock: n })} className={inputCls}/>
               </div>
             </div>
-
-            <div className="flex gap-2 justify-end text-xs font-mono pt-4 border-t border-white/[0.05]">
-              <button 
-                onClick={() => setShowAddVariant(false)}
-                className="px-4 py-2 border border-white/[0.03] text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded"
-              >
-                Cancel
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <button onClick={() => setShowAddVariant(false)} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+                Batal
               </button>
-              <button 
-                onClick={() => {
-                  if(!newVariant.sku) return toast.error('SKU required.');
-                  addVariant(newVariant);
-                  setShowAddVariant(false);
-                }}
-                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded"
-              >
-                Register SKU
+              <button onClick={() => {
+                if (!newVariant.sku) return toast.error('SKU wajib diisi');
+                addVariant(newVariant);
+                setShowAddVariant(false);
+              }} style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                Tambah Variant
               </button>
             </div>
           </div>

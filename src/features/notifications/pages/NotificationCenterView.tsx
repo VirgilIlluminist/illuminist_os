@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 
 export default function NotificationCenterView() {
   const { notifications, clearNotifications, t, config } = useERP();
-  const activeColor = config?.customAccentColor || '#d4af37';
+  const activeColor = config?.customAccentColor || '#7c3aed';
 
   return (
     <div className="space-y-6 animate-fadeIn">

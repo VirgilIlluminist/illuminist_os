@@ -1,32 +1,52 @@
 import React from 'react';
 
 interface PageHeaderProps {
-  pageLabel: string;       // kecil di atas, aksen color
-  title: string;           // judul besar
-  description?: string;    // sub-teks kecil
+  title: string;
+  description?: string;
+  pageLabel?: string;
   accentColor?: string;
-  actions?: React.ReactNode; // tombol-tombol di kanan
+  actions?: React.ReactNode;
 }
 
-export default function PageHeader({
-  pageLabel, title, description, accentColor = 'var(--color-accent-highlight)', actions,
-}: PageHeaderProps) {
+export default function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[var(--color-border-line)] pb-5">
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        gap: '16px',
+        paddingBottom: '24px',
+        borderBottom: '1px solid var(--border-subtle)',
+      }}
+    >
       <div>
-        <span className="text-xs font-mono tracking-widest uppercase"
-              style={{ color: accentColor }}>
-          {pageLabel}
-        </span>
-        <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)] mt-1">
+        <h1
+          style={{
+            fontSize: '26px',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.04em',
+            lineHeight: 1.2,
+            margin: 0,
+          }}
+        >
           {title}
-        </h2>
+        </h1>
         {description && (
-          <p className="text-xs text-[var(--color-text-muted)] font-mono mt-1">{description}</p>
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--text-tertiary)',
+            marginTop: '5px', marginBottom: 0,
+            letterSpacing: '-0.01em',
+            lineHeight: 1.5,
+          }}>
+            {description}
+          </p>
         )}
       </div>
       {actions && (
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           {actions}
         </div>
       )}
@@ -34,9 +54,10 @@ export default function PageHeader({
   );
 }
 
-// ─── Action button standar ─────────────────────────────────────────────────
+// ─── HeaderBtn ────────────────────────────────────────────────────────────────
+
 export function HeaderBtn({
-  onClick, label, icon, accentColor = 'var(--color-accent-highlight)', variant = 'primary',
+  onClick, label, icon, variant = 'primary',
 }: {
   onClick: () => void;
   label: string;
@@ -44,13 +65,34 @@ export function HeaderBtn({
   accentColor?: string;
   variant?: 'primary' | 'ghost';
 }) {
+  const [hov, setHov] = React.useState(false);
   return (
-    <button onClick={onClick}
-      className="flex items-center gap-1.5 px-3 py-1.5 text-[10.5px] font-mono uppercase tracking-wider font-semibold rounded transition-all cursor-pointer"
-      style={variant === 'primary'
-        ? { background: accentColor, color: 'var(--color-background)' }
-        : { border: '1px solid var(--color-border-line)', color: 'var(--color-text-muted)' }
-      }>
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={
+        variant === 'primary'
+          ? {
+              display: 'flex', alignItems: 'center', gap: '7px',
+              background: hov ? 'var(--accent-primary-hover)' : 'var(--accent-primary)',
+              color: 'white', border: 'none',
+              borderRadius: '10px', padding: '9px 18px',
+              fontSize: '14px', fontWeight: 500, letterSpacing: '-0.01em',
+              cursor: 'pointer', transition: 'background 0.15s ease',
+              boxShadow: '0 2px 12px rgba(124,58,237,0.30)',
+            }
+          : {
+              display: 'flex', alignItems: 'center', gap: '7px',
+              background: hov ? 'var(--bg-surface-hover)' : 'var(--bg-surface)',
+              color: 'var(--text-secondary)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '10px', padding: '9px 18px',
+              fontSize: '14px', fontWeight: 500, letterSpacing: '-0.01em',
+              cursor: 'pointer', transition: 'background 0.15s ease',
+            }
+      }
+    >
       {icon}{label}
     </button>
   );

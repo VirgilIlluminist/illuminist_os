@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import '@fontsource-variable/geist';
 @import "tailwindcss";
+@import "./shared/styles/tokens.css";
 
 @theme {
-  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans:    "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    ui-monospace, "SFMono-Regular", "Menlo", monospace;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -12,8 +13,8 @@
    ───────────────────────────────────────────────────────────────────────────── */
 :root {
   /* Background layers */
-  --color-background:       #050507;
-  --color-card-bg:          rgba(15, 15, 20, 0.75);
+  --color-background:       #0a0a0f;
+  --color-card-bg:          #0d0d15;
 
   /* Text hierarchy */
   --color-text-main:        #e4e4e7;
@@ -22,8 +23,8 @@
   /* Borders */
   --color-border-line:      rgba(255, 255, 255, 0.05);
 
-  /* Accent */
-  --color-accent-highlight: #d4af37;
+  /* Accent — unified purple (Fierce) */
+  --color-accent-highlight: #7c3aed;
 
   /* Table density (overridden from config) */
   --table-font-size:        11px;
@@ -49,13 +50,18 @@
 body {
   background-color: var(--color-background);
   color:            var(--color-text-main);
-  font-family:      var(--font-sans), sans-serif;
+  font-family:      "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
   transition:       background-color 0.25s ease, color 0.25s ease;
 }
 
-.font-display { font-family: var(--font-display), sans-serif !important; }
-.font-mono    { font-family: var(--font-mono), monospace !important; }
+* { font-family: inherit; }
+
+.font-display { font-family: "Geist Variable", "Geist", ui-sans-serif, sans-serif !important; }
+.font-mono    { font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace !important; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    GLASS PANEL — single reusable card primitive
@@ -128,18 +134,29 @@ h1, h2, h3, h4, h5, h6,
 /* ─────────────────────────────────────────────────────────────────────────────
    ACCENT UTILITIES
    ───────────────────────────────────────────────────────────────────────────── */
+/* Legacy gold (#d4af37) classes are remapped to the THEME accent so no gold
+   ever renders and SmartTable follows the active theme (midnight/ocean/etc).
+   All opacity variants are covered via color-mix. */
 .text-gold,
-.text-\[\#d4af37\]            { color: var(--color-accent-highlight) !important; }
+.text-\[\#d4af37\]            { color: var(--accent-primary) !important; }
 
 .border-gold,
+.border-\[\#d4af37\],
 .border-\[\#d4af37\]\/15,
-.border-\[\#d4af37\]\/30      { border-color: var(--color-accent-highlight) !important; }
+.border-\[\#d4af37\]\/30,
+.border-\[\#d4af37\]\/60      { border-color: var(--accent-primary) !important; }
 
-.bg-\[\#d4af37\]              { background-color: var(--color-accent-highlight) !important;
-                                 color: var(--color-background) !important; }
-.bg-\[\#d4af37\]\/5           { background-color: color-mix(in srgb, var(--color-accent-highlight) 5%, transparent) !important; }
-.bg-\[\#d4af37\]\/10          { background-color: color-mix(in srgb, var(--color-accent-highlight) 10%, transparent) !important; }
-.hover\:bg-\[\#b08e23\]:hover { background-color: var(--color-accent-highlight) !important; filter: brightness(0.85); }
+.bg-\[\#d4af37\]              { background-color: var(--accent-primary) !important; color: #fff !important; }
+.bg-\[\#d4af37\]\/5           { background-color: color-mix(in srgb, var(--accent-primary) 5%,  transparent) !important; }
+.bg-\[\#d4af37\]\/10          { background-color: color-mix(in srgb, var(--accent-primary) 10%, transparent) !important; }
+.bg-\[\#d4af37\]\/40          { background-color: color-mix(in srgb, var(--accent-primary) 40%, transparent) !important; }
+.hover\:bg-\[\#d4af37\]\/40:hover { background-color: color-mix(in srgb, var(--accent-primary) 40%, transparent) !important; }
+.hover\:bg-\[\#d4af37\]\/60:hover { background-color: color-mix(in srgb, var(--accent-primary) 60%, transparent) !important; }
+.hover\:bg-\[\#b08e23\]:hover { background-color: var(--accent-primary) !important; filter: brightness(0.85); }
+
+/* SmartTable near-black surfaces → theme content/border tokens (opaque header) */
+.bg-\[\#0d0d0f\]              { background-color: var(--bg-content) !important; }
+.border-\[\#0d0d0f\]          { border-color: var(--border-subtle) !important; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    TABLES — responsive to design tokens
@@ -148,7 +165,7 @@ table  { width: 100% !important; border-collapse: collapse !important; }
 
 table th, th {
   color:           var(--color-text-main) !important;
-  font-family:     var(--font-display), sans-serif !important;
+  font-family:     "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif !important;
   font-size:       var(--table-font-size, 11px) !important;
   font-weight:     600 !important;
   letter-spacing:  0.05em !important;
@@ -408,16 +425,12 @@ html.glass body {
 }
 
 html.glass #root > div {
-  background: rgba(14, 12, 22, 0.45) !important;
-  backdrop-filter: blur(52px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(52px) saturate(150%) !important;
+  background: transparent !important;
 }
 
 html.glass aside {
-  background: rgba(8, 6, 14, 0.68) !important;
-  backdrop-filter: blur(36px) !important;
-  -webkit-backdrop-filter: blur(36px) !important;
-  border-right: 1px solid rgba(255,255,255,0.07) !important;
+  background: rgba(0, 0, 0, 0.28) !important;
+  border-right: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 html.glass .bg-\[var\(--color-card-bg\)\],
@@ -533,7 +546,7 @@ html.is-light {
   --color-text-main:        #1d1d1f;
   --color-text-muted:       #6e6e73;
   --color-border-line:      rgba(0, 0, 0, 0.09);
-  --color-accent-highlight: #0071e3;
+  --color-accent-highlight: #7c3aed;
 }
 html.is-light body {
   background: #f5f5f7;
@@ -554,12 +567,12 @@ html.is-light textarea {
 
 /* ─── Dark Mode explicit (default) ──────────────────────────────────────── */
 html.is-dark {
-  --color-background:       #050507;
-  --color-card-bg:          rgba(15, 15, 20, 0.75);
+  --color-background:       #0a0a0f;
+  --color-card-bg:          #0d0d15;
   --color-text-main:        #e4e4e7;
   --color-text-muted:       rgba(228, 228, 231, 0.45);
   --color-border-line:      rgba(255, 255, 255, 0.05);
-  --color-accent-highlight: #0071e3;
+  --color-accent-highlight: #7c3aed;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -631,4 +644,99 @@ html.is-light .text-white {
 }
 html.is-light .border-zinc-800 {
   border-color: rgba(0,0,0,0.10) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   WALLPAPER LAYER (CSS gradient fallback — used when no image is uploaded)
+   ───────────────────────────────────────────────────────────────────────────── */
+.app-wallpaper {
+  /* Covers the whole viewport, used as fallback wallpaper in BackgroundStage */
+  background: var(--bg-wallpaper);
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.app-wallpaper::before {
+  content: '';
+  position: absolute;
+  top: 0%;
+  right: 5%;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, var(--accent-primary-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.app-wallpaper::after {
+  content: '';
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-primary-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(65px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLASS SYSTEM — Fierce-style layered glass
+   Rule: backdrop-filter goes ONLY on .glass-shell (the outer app container).
+   Inner elements (.glass-card, .glass-inset) use solid translucent fills —
+   never nested backdrop-filter which white-washes and causes jank.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* The ONE element that blurs the wallpaper. --dash-blur is set by BackgroundStage.
+   22% of #0d0820 + transparent = very see-through dark tint, just like the template. */
+.glass-shell {
+  background: rgba(10, 6, 26, 0.22);
+  backdrop-filter: blur(var(--dash-blur, 24px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--dash-blur, 24px)) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+    0 1px 0 0 rgba(255,255,255,0.07) inset,
+    0 32px 80px -20px rgba(0,0,0,0.75);
+  transform: translateZ(0);
+}
+
+/* Inner cards — semi-transparent fill, NO backdrop-filter (no nested blur) */
+.glass-card {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  box-shadow: 0 1px 0 0 rgba(255,255,255,0.05) inset;
+}
+
+/* Subtle inset (active nav items, tags) */
+.glass-inset {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.09);
+}
+
+/* Outer bezel ring — decorative frame around the glass shell */
+.bezel-frame {
+  background: linear-gradient(
+    155deg,
+    rgba(255,255,255,0.13) 0%,
+    rgba(255,255,255,0.04) 30%,
+    rgba(0,0,0,0.08) 70%,
+    rgba(255,255,255,0.08) 100%
+  );
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.07),
+    0 48px 100px -30px rgba(0,0,0,0.75),
+    0 2px 0 0 rgba(255,255,255,0.10) inset;
+}
+
+/* App shell — flex container inside glass-shell */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }

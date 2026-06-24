@@ -12,11 +12,11 @@ import {
 
 // ─── Default Config ───────────────────────────────────────────────────────────
 export const DEFAULT_CONFIG: any = {
-  systemName:         'NEVAEH AI OS',
+  systemName:         'ILLUMINIST OS',
   systemSubName:      'Intelligent Business Operating System',
   brandMonogram:      'N',
-  accentColor:        'gold',
-  customAccentColor:  '#d4af37',
+  accentColor:        'purple',
+  customAccentColor:  '#7c3aed',
   themeMode:          'dark',
   language:           'id',
   activeCurrency:     'IDR',
@@ -31,7 +31,7 @@ export const DEFAULT_CONFIG: any = {
 export const INITIAL_NOTIFICATIONS: Notification[] = [
   {
     id: 'NTF-001',
-    message: 'Sistem NEVAEH AI OS berhasil diinisialisasi. Semua modul aktif.',
+    message: 'Sistem ILLUMINIST OS berhasil diinisialisasi. Semua modul aktif.',
     type: 'success',
     read: false,
     timestamp: new Date().toLocaleString('id-ID'),

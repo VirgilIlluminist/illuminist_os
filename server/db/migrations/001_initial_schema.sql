@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════════════
--- NEVAEH AI OS v12 — Database Schema (Production Ready)
+-- ILLUMINIST OS v12 — Database Schema (Production Ready)
 -- Target: Supabase PostgreSQL 15+
 -- Versi: 1.0.1 (fix: RLS policies lengkap untuk semua tabel)
 --
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.app_settings (
   accent_color     TEXT DEFAULT '#d4af37',
   decimal_places   INT  DEFAULT 0 CHECK (decimal_places BETWEEN 0 AND 4),
   font_family      TEXT DEFAULT 'Inter',
-  system_name      TEXT DEFAULT 'NEVAEH AI OS',
+  system_name      TEXT DEFAULT 'ILLUMINIST OS',
   system_sub_name  TEXT DEFAULT 'Business Operating System',
   brand_monogram   TEXT DEFAULT 'N',
   created_at       TIMESTAMPTZ DEFAULT NOW(),
@@ -698,5 +698,5 @@ ON CONFLICT (slug) DO NOTHING;
 INSERT INTO public.app_settings (company_id, language, currency, currency_symbol, system_name, brand_monogram)
 VALUES (
   '00000000-0000-0000-0000-000000000002',
-  'id', 'IDR', 'Rp', 'NEVAEH AI OS', 'N'
+  'id', 'IDR', 'Rp', 'ILLUMINIST OS', 'N'
 ) ON CONFLICT (company_id) DO NOTHING;

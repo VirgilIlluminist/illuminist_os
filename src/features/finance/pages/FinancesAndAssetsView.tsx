@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { create, all } from 'mathjs';
+const math = create(all, { number: 'number' });
 import { useERP } from '../../../app/store/ERPContext';
 import { toast } from '../../../shared/ui/Toast';
 import { AssetEquipment, Customer, CashTransaction } from '../types';
@@ -77,7 +79,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
     config,
     addNotification
   } = useERP();
-  const accentHex = config?.customAccentColor || '#d4af37';
+  const accentHex = config?.customAccentColor || '#7c3aed';
 
   const isIdLng = config?.language === 'id';
   const currencySymbol = 'Rp';
@@ -366,10 +368,9 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
         expr = expr.replace(`[${fieldName}]`, String(val));
       }
 
-      // Simple safe evaluation
+      // Safe arithmetic via mathjs (replaces eval)
       const sanitized = expr.replace(/[^0-9+\-*/().\s]/g, '');
-      // eslint-disable-next-line no-eval
-      const result = eval(sanitized);
+      const result = math.evaluate(sanitized);
       return typeof result === 'number' ? result : formula;
     } catch {
       return '#REF!';
@@ -689,17 +690,12 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
       >
         <div className="absolute top-0 right-0 h-40 w-40 bg-gradient-to-bl from-white/[0.02] to-transparent pointer-events-none rounded-bl-full" />
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Sparkles size={16} className={selectedTheme.text + " animate-pulse"} />
-              <span className="text-xs font-mono tracking-widest uppercase" style={{color:accentHex}}>{t('fin_page_label')}</span>
-              <span className="bg-[var(--color-accent-highlight)]/10 text-[var(--color-accent-highlight)] border border-[var(--color-accent-highlight)]/20 text-[9px] font-mono px-2 py-0.5 rounded tracking-widest uppercase">EXCEL GRID PRO</span>
-            </div>
-            <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)] mt-1">
-              {t('fin_page_title')}
-            </h2>
-            <p className="text-[11px] text-[var(--color-text-muted)] font-mono">
-              Live spreadsheet computation engine linking physical factory loom portfolios, outward CRM cash-flow margins, and audited ledgers instantly.
+          <div>
+            <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.3px', margin: 0 }}>
+              Finances &amp; Assets
+            </h1>
+            <p style={{ fontSize: '13px', color: 'var(--text-tertiary)', marginTop: '3px', marginBottom: 0 }}>
+              Pelanggan, aset, arus kas, dan laporan dalam satu tempat.
             </p>
           </div>
 
@@ -741,7 +737,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
           { label: 'LIQUID BANK INFLOW', val: cashflowSummary.totalInflow, color: 'text-emerald-400', desc: 'Active sales deposits & funding lines' },
           { label: 'OPERATIONAL DEBITS OUTFLOW', val: cashflowSummary.totalOutflow, color: 'text-red-400', desc: 'Raw material POs & production costs' },
           { label: 'RESERVE BALANCES', val: cashflowSummary.balance, color: 'text-[var(--color-accent-highlight)]', desc: 'Liquid capital safety assets' },
-          { label: 'ASSETS VALUATION', val: assets.reduce((sum, a) => sum + a.value, 0), color: 'text-indigo-400', desc: 'Equipment Appraisals' }
+          { label: 'ASSETS VALUATION', val: assets.reduce((sum, a) => sum + (a.value ?? (a.purchaseValue || 0) * (a.qty || 1)), 0), color: 'text-indigo-400', desc: 'Equipment Appraisals' }
         ].map((card, i) => (
           <div key={i} className="glass-panel p-4 rounded-xl border border-white/[0.03] bg-[var(--color-background)]/75 flex flex-col justify-between">
             <span className="text-[10px] font-mono text-[var(--color-text-muted)] uppercase tracking-widest">{card.label}</span>

@@ -61,6 +61,7 @@ export default function BusinessWizard({ open, onClose }: Props) {
 
   const [bizType,   setBizType]   = useState('fashion');
   const [bizName,   setBizName]   = useState('');
+  const [nameEdited,setNameEdited] = useState(false);
   const [bizDesc,   setBizDesc]   = useState('');
   const [currency,  setCurrency]  = useState('IDR');
   const [timezone,  setTimezone]  = useState('Asia/Jakarta');
@@ -68,11 +69,14 @@ export default function BusinessWizard({ open, onClose }: Props) {
 
   const selectedType = ALL_BUSINESS_TYPES.find(t => t.id === bizType);
 
-  // Sync modul saat tipe berubah
+  // Sync modul + nama default saat tipe berubah.
+  // Nama hanya di-override jika user belum mengetik manual.
   useEffect(() => {
     const defaults = getModulesForType(bizType);
     setModules(new Set(defaults));
-    if (!bizName) setBizName(ALL_BUSINESS_TYPES.find(t => t.id === bizType)?.defaultName || '');
+    if (!nameEdited) {
+      setBizName(ALL_BUSINESS_TYPES.find(t => t.id === bizType)?.defaultName || '');
+    }
   }, [bizType]);
 
   const toggleModule = (id: string) => {
@@ -103,7 +107,7 @@ export default function BusinessWizard({ open, onClose }: Props) {
   };
 
   const resetWizard = () => {
-    setStep(1); setDone(false); setBizName(''); setBizDesc(''); setBizType('fashion');
+    setStep(1); setDone(false); setBizName(''); setNameEdited(false); setBizDesc(''); setBizType('fashion');
   };
 
   const canNext = () => {
@@ -183,7 +187,7 @@ export default function BusinessWizard({ open, onClose }: Props) {
                   <p className="text-xs text-[var(--color-text-muted)] mb-4">Atur identitas bisnis Anda</p>
                   <div>
                     <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">Nama Bisnis <span className="text-red-500">*</span></label>
-                    <input value={bizName} onChange={e => setBizName(e.target.value)} autoFocus
+                    <input value={bizName} onChange={e => { setBizName(e.target.value); setNameEdited(true); }} autoFocus
                       placeholder={selectedType?.defaultName}
                       className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] focus:outline-none"/>
                   </div>

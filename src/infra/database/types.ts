@@ -142,6 +142,10 @@ export interface Product {
   selling_price:     number;
   description:       string | null;
   image_url:         string | null;
+  cover_image_url:   string | null;
+  status:            string | null;
+  collection:        string | null;
+  restock_point:     number | null;
   is_active:         boolean;
   created_at:        string;
   updated_at:        string;
@@ -372,6 +376,193 @@ export interface AuditLog {
   created_at:  string;
 }
 
+// ─── Migration 002 — New feature tables ───────────────────────────────────────
+
+export interface TaxConfig {
+  id:              string;
+  company_id:      string;
+  ppn_rate:        number;
+  pph21_rate:      number;
+  pph23_rate:      number;
+  pph_final_rate:  number;
+  pkp_status:      boolean;
+  tax_method:      'inclusive' | 'exclusive';
+  npwp:            string | null;
+  tax_name:        string | null;
+  created_at:      string;
+  updated_at:      string;
+  deleted_at:      string | null;
+}
+
+export interface AiUsage {
+  id:            string;
+  company_id:    string;
+  session_id:    string;
+  provider:      string;
+  model:         string;
+  input_tokens:  number;
+  output_tokens: number;
+  cost_usd:      number;
+  date:          string;
+  context:       string;
+  created_at:    string;
+  updated_at:    string;
+  deleted_at:    string | null;
+}
+
+export interface ShopeeChannel {
+  id:                   string;
+  company_id:           string;
+  name:                 string;
+  shop_id:              string | null;
+  commission_rate:      number;
+  admin_fee_rate:       number;
+  transaction_fee_rate: number;
+  ppn_rate:             number;
+  is_active:            boolean;
+  created_at:           string;
+  updated_at:           string;
+  deleted_at:           string | null;
+}
+
+export interface ShopeeImportBatch {
+  id:                string;
+  company_id:        string;
+  filename:          string;
+  channel_config_id: string | null;
+  row_count:         number;
+  total_gross:       number;
+  total_fees:        number;
+  total_net:         number;
+  imported_at:       string;
+  status:            'draft' | 'synced_to_pl';
+  created_at:        string;
+  updated_at:        string;
+  deleted_at:        string | null;
+}
+
+export interface ShopeeSettlement {
+  id:                string;
+  company_id:        string;
+  batch_id:          string;
+  channel_config_id: string | null;
+  order_id:          string;
+  order_date:        string;
+  product_name:      string | null;
+  sku:               string | null;
+  qty:               number;
+  unit_price:        number;
+  gross_revenue:     number;
+  commission_fee:    number;
+  admin_fee:         number;
+  transaction_fee:   number;
+  ppn:               number;
+  total_fee:         number;
+  net_earnings:      number;
+  status:            'pending' | 'synced';
+  created_at:        string;
+  updated_at:        string;
+  deleted_at:        string | null;
+}
+
+// ─── Migration 003 — Product Blackbox tables ───────────────────────────────────
+
+export interface ProductBatchDb {
+  id:              string;
+  product_id:      string;
+  company_id:      string;
+  batch_number:    string;
+  quantity:        number;
+  hpp:             number;
+  selling_price:   number;
+  production_date: string;
+  notes:           string | null;
+  status:          string;
+  created_at:      string;
+  deleted_at:      string | null;
+}
+
+export interface ProductAssetDb {
+  id:           string;
+  product_id:   string;
+  company_id:   string;
+  url:          string;
+  storage_path: string;
+  asset_type:   string;
+  label:        string | null;
+  sort_order:   number;
+  size_bytes:   number | null;
+  created_at:   string;
+  deleted_at:   string | null;
+}
+
+export interface ProductJournalDb {
+  id:         string;
+  product_id: string;
+  company_id: string;
+  title:      string;
+  content:    string;
+  image_urls: string[];
+  tags:       string[];
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface ProductPricingHistoryDb {
+  id:         string;
+  product_id: string;
+  company_id: string;
+  old_price:  number | null;
+  new_price:  number;
+  old_hpp:    number | null;
+  new_hpp:    number | null;
+  reason:     string | null;
+  changed_at: string;
+  changed_by: string | null;
+  deleted_at: string | null;
+}
+
+export interface ProductTimelineEventDb {
+  id:          string;
+  product_id:  string;
+  company_id:  string;
+  event_type:  string;
+  title:       string;
+  description: string | null;
+  metadata:    Json | null;
+  event_date:  string;
+  created_at:  string;
+  deleted_at:  string | null;
+}
+
+export interface ProductDescriptionDb {
+  id:                    string;
+  product_id:            string;
+  company_id:            string;
+  short_description:     string | null;
+  long_description:      string | null;
+  specifications:        string | null;
+  product_story:         string | null;
+  care_instructions:     string | null;
+  shopee_description:    string | null;
+  tokopedia_description: string | null;
+  instagram_caption:     string | null;
+  website_description:   string | null;
+  updated_at:            string;
+  deleted_at:            string | null;
+}
+
+export interface ProductTag {
+  id:         string;
+  product_id: string;
+  company_id: string;
+  tag:        string;
+  created_at: string;
+  deleted_at: string | null;
+}
+
 // ─── Database interface (untuk createClient<Database>) ─────────────────────
 export interface Database {
   public: {
@@ -397,8 +588,20 @@ export interface Database {
       assets:                  { Row: Asset;                Insert: Omit<Asset, 'id'|'created_at'>;                            Update: Partial<Omit<Asset, 'id'|'created_at'>>                };
       cashflow_transactions:   { Row: CashflowTransaction;  Insert: Omit<CashflowTransaction, 'id'|'created_at'>;              Update: Partial<Omit<CashflowTransaction, 'id'|'created_at'>>  };
       hpp_records:             { Row: HppRecord;            Insert: Omit<HppRecord, 'id'|'created_at'|'margin_pct'>;           Update: Partial<Omit<HppRecord, 'id'|'created_at'>>            };
-      ai_settings:             { Row: AiSettings;           Insert: Omit<AiSettings, 'id'|'created_at'|'updated_at'>;          Update: Partial<Omit<AiSettings, 'id'|'created_at'>>           };
-      audit_logs:              { Row: AuditLog;             Insert: Omit<AuditLog, 'id'|'created_at'>;                        Update: never                                                   };
+      ai_settings:                 { Row: AiSettings;                Insert: Omit<AiSettings, 'id'|'created_at'|'updated_at'>;                    Update: Partial<Omit<AiSettings, 'id'|'created_at'>>                    };
+      audit_logs:                  { Row: AuditLog;                  Insert: Omit<AuditLog, 'id'|'created_at'>;                                  Update: never                                                             };
+      tax_config:                  { Row: TaxConfig;                 Insert: Omit<TaxConfig, 'id'|'created_at'|'updated_at'>;                     Update: Partial<Omit<TaxConfig, 'id'|'created_at'>>                     };
+      ai_usage:                    { Row: AiUsage;                   Insert: Omit<AiUsage, 'id'|'created_at'|'updated_at'>;                       Update: Partial<Omit<AiUsage, 'id'|'created_at'>>                       };
+      shopee_channels:             { Row: ShopeeChannel;             Insert: Omit<ShopeeChannel, 'id'|'created_at'|'updated_at'>;                 Update: Partial<Omit<ShopeeChannel, 'id'|'created_at'>>                 };
+      shopee_import_batches:       { Row: ShopeeImportBatch;         Insert: Omit<ShopeeImportBatch, 'created_at'|'updated_at'|'imported_at'>;    Update: Partial<Omit<ShopeeImportBatch, 'id'|'created_at'>>             };
+      shopee_settlements:          { Row: ShopeeSettlement;          Insert: Omit<ShopeeSettlement, 'id'|'created_at'|'updated_at'>;              Update: Partial<Omit<ShopeeSettlement, 'id'|'created_at'>>              };
+      product_batches:             { Row: ProductBatchDb;            Insert: Omit<ProductBatchDb, 'id'|'created_at'>;                             Update: never                                                             };
+      product_assets:              { Row: ProductAssetDb;            Insert: Omit<ProductAssetDb, 'id'|'created_at'>;                             Update: Partial<Omit<ProductAssetDb, 'id'|'created_at'>>                };
+      product_journals:            { Row: ProductJournalDb;          Insert: Omit<ProductJournalDb, 'id'|'created_at'|'updated_at'>;              Update: Partial<Omit<ProductJournalDb, 'id'|'created_at'>>              };
+      product_pricing_history:     { Row: ProductPricingHistoryDb;   Insert: Omit<ProductPricingHistoryDb, 'id'|'changed_at'>;                    Update: never                                                             };
+      product_timeline_events:     { Row: ProductTimelineEventDb;    Insert: Omit<ProductTimelineEventDb, 'id'|'created_at'>;                     Update: never                                                             };
+      product_descriptions:        { Row: ProductDescriptionDb;      Insert: Omit<ProductDescriptionDb, 'id'|'updated_at'>;                       Update: Partial<Omit<ProductDescriptionDb, 'id'>>                       };
+      product_tags:                { Row: ProductTag;                Insert: Omit<ProductTag, 'id'|'created_at'>;                                 Update: never                                                             };
     };
     Views: {
       material_stock: { Row: MaterialStock };

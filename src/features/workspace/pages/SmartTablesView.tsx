@@ -1,7 +1,10 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { create, all } from 'mathjs';
+const math = create(all, { number: 'number' });
 import { useERP } from '../../../app/store/ERPContext';
 import { toast } from '../../../shared/ui/Toast';
 import CurrencyInput from '../../../shared/components/CurrencyInput';
+import NumberInput from '../../../shared/ui/NumberInput';
 import { 
   Database, 
   Grid3X3, 
@@ -325,7 +328,7 @@ export default function SmartTablesView() {
     return baseCols[key];
   };
 
-  const activeColor = config?.customAccentColor || '#d4af37';
+  const activeColor = config?.customAccentColor || '#7c3aed';
   const tableFontSize = config?.tableFontSize || 11;
   const tablePadding = config?.tableRowPadding || 8;
   const appScale = config?.appScale || 100;
@@ -379,10 +382,9 @@ export default function SmartTablesView() {
         return String(row[inner] || inner).toUpperCase();
       }
 
-      // Secure local Arithmetic calculations
+      // Safe arithmetic via mathjs (replaces eval)
       const sanitized = expression.replace(/[^0-9+\-*/().\s]/g, '');
-      // eslint-disable-next-line no-eval
-      const result = eval(sanitized);
+      const result = math.evaluate(sanitized);
       return typeof result === 'number' ? result : formula;
     } catch (err) {
       return '#REF!';
@@ -1501,29 +1503,23 @@ export default function SmartTablesView() {
                 <div className="grid grid-cols-2 gap-3 text-[10px]">
                   <div>
                     <label className="text-[var(--color-text-muted)] block pb-1">Font Size</label>
-                    <input 
-                      type="number" 
-                      min="9" 
-                      max="16" 
-                      value={tableFontSize === 0 ? '' : tableFontSize} 
-                      onChange={(e) => {
-                        const parsed = parseInt(e.target.value, 10);
-                        updateConfig({ tableFontSize: isNaN(parsed) ? 11 : parsed });
-                      }}
+                    <NumberInput
+                      value={tableFontSize}
+                      onChange={(n) => updateConfig({ tableFontSize: n || 11 })}
+                      allowDecimal={false}
+                      min={9}
+                      max={16}
                       className="w-full bg-[var(--color-card-bg)] border border-white/10 px-2 py-1 text-white rounded focus:outline-none"
                     />
                   </div>
                   <div>
                     <label className="text-[var(--color-text-muted)] block pb-1">Row padding</label>
-                    <input 
-                      type="number" 
-                      min="2" 
-                      max="20" 
-                      value={tablePadding === 0 ? '' : tablePadding} 
-                      onChange={(e) => {
-                        const parsed = parseInt(e.target.value, 10);
-                        updateConfig({ tableRowPadding: isNaN(parsed) ? 8 : parsed });
-                      }}
+                    <NumberInput
+                      value={tablePadding}
+                      onChange={(n) => updateConfig({ tableRowPadding: n || 8 })}
+                      allowDecimal={false}
+                      min={2}
+                      max={20}
                       className="w-full bg-[var(--color-card-bg)] border border-white/10 px-2 py-1 text-white rounded focus:outline-none"
                     />
                   </div>

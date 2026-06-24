@@ -75,7 +75,7 @@ export default function GlobalSearch({ open, onClose, onNavigate }: Props) {
   const { activeBusiness } = useBusiness();
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const accent = config?.customAccentColor || '#0071e3';
+  const accent = config?.customAccentColor || '#7c3aed';
 
   useEffect(() => {
     if (open) { setQuery(''); setTimeout(() => inputRef.current?.focus(), 80); }
@@ -166,28 +166,29 @@ export default function GlobalSearch({ open, onClose, onNavigate }: Props) {
           onClick={e => e.stopPropagation()}
         >
           {/* Search input */}
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[var(--color-border-line)]">
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--color-border-line)]">
             <Search size={18} className="text-[var(--color-text-muted)] shrink-0"/>
             <input
               ref={inputRef}
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Cari halaman, produk, material, pelanggan..."
-              className="flex-1 bg-transparent text-sm text-[var(--color-text-main)] focus:outline-none placeholder:text-[var(--color-text-muted)]"
+              style={{ fontSize: '15px', letterSpacing: '-0.01em' }}
+              className="flex-1 bg-transparent text-[var(--color-text-main)] focus:outline-none placeholder:text-[var(--color-text-muted)]"
             />
             {query && (
-              <button onClick={() => setQuery('')} className="p-0.5 rounded cursor-pointer">
-                <X size={15} className="text-[var(--color-text-muted)]"/>
+              <button onClick={() => setQuery('')} className="p-1 rounded-lg cursor-pointer hover:bg-white/5">
+                <X size={16} className="text-[var(--color-text-muted)]"/>
               </button>
             )}
-            <kbd className="text-[10px] border border-[var(--color-border-line)] rounded px-1.5 py-0.5 text-[var(--color-text-muted)] shrink-0">ESC</kbd>
+            <kbd style={{ fontSize: '12px' }} className="border border-[var(--color-border-line)] rounded-lg px-2 py-1 text-[var(--color-text-muted)] shrink-0">ESC</kbd>
           </div>
 
           {/* Results */}
           <div className="flex-1 overflow-y-auto">
             {!query ? (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-semibold text-[var(--color-text-muted)] mb-2">PINTASAN</p>
+                <p style={{ fontSize: '11px' }} className="font-semibold text-[var(--color-text-muted)] mb-3 tracking-wide uppercase">Pintasan</p>
                 {[
                   { label:'Dashboard', icon:'⊞', desc:'Ringkasan bisnis' },
                   { label:'Sales Tracking', icon:'📊', desc:'Rekap penjualan' },
@@ -197,9 +198,9 @@ export default function GlobalSearch({ open, onClose, onNavigate }: Props) {
                   <button key={item.label} onClick={() => handleSelect(item.label)}
                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--color-background)] cursor-pointer transition-colors text-left group">
                     <span className="text-base">{item.icon}</span>
-                    <span className="text-sm text-[var(--color-text-main)] flex-1">{item.label}</span>
-                    <span className="text-xs text-[var(--color-text-muted)]">{item.desc}</span>
-                    <ArrowRight size={13} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100"/>
+                    <span style={{ fontSize: '14px', letterSpacing: '-0.01em' }} className="text-[var(--color-text-main)] flex-1">{item.label}</span>
+                    <span style={{ fontSize: '12px' }} className="text-[var(--color-text-muted)]">{item.desc}</span>
+                    <ArrowRight size={15} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100"/>
                   </button>
                 ))}
               </div>
@@ -212,16 +213,16 @@ export default function GlobalSearch({ open, onClose, onNavigate }: Props) {
               <div className="p-2">
                 {Object.entries(grouped).map(([group, items]) => (
                   <div key={group} className="mb-3">
-                    <p className="text-[9px] font-semibold text-[var(--color-text-muted)] px-2 py-1">{group.toUpperCase()} ({items.length})</p>
+                    <p style={{ fontSize: '11px' }} className="font-semibold text-[var(--color-text-muted)] px-2 py-1.5 uppercase tracking-wide">{group} ({items.length})</p>
                     {items.slice(0,5).map(item => (
                       <button key={item.id} onClick={() => handleSelect(item.route)}
-                        className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--color-background)] cursor-pointer transition-colors text-left group">
-                        <span className="text-base shrink-0">{item.icon}</span>
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--color-background)] cursor-pointer transition-colors text-left group">
+                        <span className="text-lg shrink-0">{item.icon}</span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[var(--color-text-main)] truncate">{item.title}</p>
-                          {item.subtitle && <p className="text-[10px] text-[var(--color-text-muted)] truncate">{item.subtitle}</p>}
+                          <p style={{ fontSize: '14px', letterSpacing: '-0.01em' }} className="font-medium text-[var(--color-text-main)] truncate">{item.title}</p>
+                          {item.subtitle && <p style={{ fontSize: '12px' }} className="text-[var(--color-text-muted)] truncate mt-0.5">{item.subtitle}</p>}
                         </div>
-                        <ArrowRight size={13} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 shrink-0"/>
+                        <ArrowRight size={15} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 shrink-0"/>
                       </button>
                     ))}
                   </div>
@@ -231,11 +232,11 @@ export default function GlobalSearch({ open, onClose, onNavigate }: Props) {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-[var(--color-border-line)] flex items-center gap-3">
-            <span className="text-[10px] text-[var(--color-text-muted)]">{results.length > 0 ? `${results.length} hasil` : 'Ketik untuk mencari'}</span>
-            <span className="text-[10px] text-[var(--color-text-muted)] ml-auto">
-              <kbd className="border border-[var(--color-border-line)] rounded px-1 mr-1">↑↓</kbd> navigasi
-              <kbd className="border border-[var(--color-border-line)] rounded px-1 mx-1">↵</kbd> buka
+          <div className="px-5 py-3 border-t border-[var(--color-border-line)] flex items-center gap-3">
+            <span style={{ fontSize: '12px' }} className="text-[var(--color-text-muted)]">{results.length > 0 ? `${results.length} hasil` : 'Ketik untuk mencari'}</span>
+            <span style={{ fontSize: '12px' }} className="text-[var(--color-text-muted)] ml-auto flex items-center gap-1.5">
+              <kbd className="border border-[var(--color-border-line)] rounded-md px-1.5 py-0.5">↑↓</kbd> navigasi
+              <kbd className="border border-[var(--color-border-line)] rounded-md px-1.5 py-0.5">↵</kbd> buka
             </span>
           </div>
         </motion.div>

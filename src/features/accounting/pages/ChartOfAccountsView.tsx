@@ -45,7 +45,7 @@ const DEFAULT_ACCOUNTS = [
 export default function ChartOfAccountsView() {
   const { activeBusiness, currentColor } = useBusiness();
   const { config } = useERP();
-  const accent  = currentColor || config?.customAccentColor || '#0071e3';
+  const accent  = currentColor || config?.customAccentColor || '#7c3aed';
   const bizId   = activeBusiness?.id || 'default';
   const repo    = getRepo<Account>('chart_of_accounts');
 

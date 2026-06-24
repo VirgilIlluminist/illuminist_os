@@ -28,7 +28,7 @@ interface BizKPI {
 export default function ExecutiveCommandCenter({ onNavigate, onSwitchBusiness }: Props) {
   const { businesses, activeBusiness, switchBusiness } = useBusiness();
   const { computedSales, computedCashflow, config, formatMoney } = useERP();
-  const accent = config?.customAccentColor || '#0071e3';
+  const accent = config?.customAccentColor || '#7c3aed';
 
   const [aiSummary, setAiSummary] = useState('');
   const [aiLoading, setAiLoading] = useState(false);

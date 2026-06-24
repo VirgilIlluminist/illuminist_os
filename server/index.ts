@@ -1,5 +1,5 @@
 /**
- * server/index.ts — NEVAEH AI OS v12 Backend
+ * server/index.ts — ILLUMINIST OS v12 Backend
  *
  * V12 Architecture:
  * - Structured API routes (replaces monolithic server.ts)
@@ -127,7 +127,7 @@ async function startServer() {
 
   // ── Start ────────────────────────────────────────────────────────────────
   app.listen(ENV.PORT, () => {
-    logger.info('Server', `NEVAEH AI OS v${ENV.APP_VERSION} running on http://localhost:${ENV.PORT}`);
+    logger.info('Server', `ILLUMINIST OS v${ENV.APP_VERSION} running on http://localhost:${ENV.PORT}`);
     logger.info('Server', `Environment: ${ENV.NODE_ENV}`);
     logger.info('Server', `AI endpoints: http://localhost:${ENV.PORT}/api/ai/chat`);
     logger.info('Server', `Health check: http://localhost:${ENV.PORT}/health`);

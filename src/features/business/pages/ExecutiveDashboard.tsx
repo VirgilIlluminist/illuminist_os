@@ -23,7 +23,7 @@ interface BizStat {
 export default function ExecutiveDashboard() {
   const { businesses, switchBusiness } = useBusiness();
   const { formatMoney, config } = useERP();
-  const accent = config?.customAccentColor || '#d4af37';
+  const accent = config?.customAccentColor || '#7c3aed';
 
   // Simulated consolidated data (akan terisi dari Supabase business_kpis)
   const childBiz = businesses.filter(b => b.parent_id);

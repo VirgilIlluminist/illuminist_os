@@ -43,7 +43,7 @@ export const ENV = {
   AI_RATE_LIMIT_MAX:     parseInt(optional('AI_RATE_LIMIT_MAX', '20')),
 
   // App
-  APP_NAME:    optional('APP_NAME', 'NEVAEH AI OS'),
+  APP_NAME:    optional('APP_NAME', 'ILLUMINIST OS'),
   APP_VERSION: optional('APP_VERSION', '1.0.0'),
 
   // Supabase (server-side, pakai service role key)

@@ -23,7 +23,7 @@ export default function HPPEngineView() {
   const [campaignBudgetMultiplier, setCampaignBudgetMultiplier] = useState(1.0);
   const [simulatedRetailPrice, setSimulatedRetailPrice]     = useState(0);
 
-  const accentHex = config?.customAccentColor || '#d4af37';
+  const accentHex = config?.customAccentColor || '#7c3aed';
 
   const activeProduct = useMemo(() => {
     const prod = computedProducts.find(p => p.id === selectedProductId);

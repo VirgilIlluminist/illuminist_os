@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ILLUMINIST OS — Design Tokens
+   Single source of truth for the new theme system (wallpaper + glass + accent).
+   Coexists with the legacy --color-* tokens used by older pages.
+   The active theme is selected via the [data-theme] attribute on <html>,
+   driven by useTheme() (src/shared/hooks/useTheme.ts).
+═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── BACKGROUND SYSTEM ───────────────────────────────────────────────── */
+  /* Full-bleed wallpaper behind the glass shell. Theme presets override this. */
+  --bg-wallpaper:
+    radial-gradient(ellipse 80% 70% at 15% 10%, rgba(108, 60, 220, 0.40) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 20%, rgba(80, 40, 180, 0.30) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 50% 90%, rgba(50, 20, 140, 0.22) 0%, transparent 55%),
+    linear-gradient(145deg, #0d0820 0%, #090618 25%, #060412 55%, #0b0720 80%, #090420 100%);
+
+  /* ALL transparent — glass-shell's single backdrop-filter does ALL the blur.
+     Inner areas use semi-transparent fills with NO nested backdrop-filter. */
+  --bg-content: transparent;
+  --bg-sidebar: rgba(0, 0, 0, 0.28);
+  --bg-topbar: rgba(0, 0, 0, 0.18);
+  --bg-surface: rgba(255, 255, 255, 0.05);
+  --bg-surface-hover: rgba(255, 255, 255, 0.09);
+  --bg-surface-active: rgba(124, 111, 205, 0.18);
+  --bg-elevated: rgba(255, 255, 255, 0.07);
+  --bg-modal: rgba(10, 8, 20, 0.96);
+
+  /* NO blur on inner elements — glass-shell is the ONLY blur layer */
+  --blur-sidebar: 0px;
+  --blur-topbar: 0px;
+
+  /* ── BORDER SYSTEM ───────────────────────────────────────────────────── */
+  --border-subtle: rgba(255, 255, 255, 0.055);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-accent: rgba(124, 111, 205, 0.35);
+  --border-focus: rgba(124, 111, 205, 0.6);
+
+  /* ── TEXT SYSTEM ─────────────────────────────────────────────────────── */
+  --text-primary: rgba(255, 255, 255, 0.94);
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-tertiary: rgba(255, 255, 255, 0.30);
+  --text-quaternary: rgba(255, 255, 255, 0.16);
+  --text-accent: #9b8fdd;
+  --text-success: #4ade80;
+  --text-warning: #fbbf24;
+  --text-danger: #f87171;
+  --text-info: #60a5fa;
+
+  /* ── ACCENT COLORS ───────────────────────────────────────────────────── */
+  --accent-primary: #7c3aed;
+  --accent-primary-hover: #9061f0;
+  --accent-primary-muted: rgba(124, 58, 237, 0.18);
+  --accent-primary-glow: rgba(130, 70, 240, 0.30);
+  --accent-green: #4ade80;
+  --accent-green-muted: rgba(74, 222, 128, 0.12);
+  --accent-red: #f87171;
+  --accent-red-muted: rgba(248, 113, 113, 0.12);
+  --accent-amber: #fbbf24;
+  --accent-amber-muted: rgba(251, 191, 36, 0.12);
+  --accent-blue: #60a5fa;
+  --accent-blue-muted: rgba(96, 165, 250, 0.12);
+
+  /* ── SIZING ──────────────────────────────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* ── SHADOWS ─────────────────────────────────────────────────────────── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --shadow-accent: 0 0 20px rgba(124, 58, 237, 0.2);
+
+  /* ── TRANSITIONS ─────────────────────────────────────────────────────── */
+  --transition-fast: 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── SPACING ─────────────────────────────────────────────────────────── */
+  --card-padding: 20px 24px;
+  --cell-padding: 10px 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME PRESETS — selected via [data-theme] on <html>
+═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="midnight"] {
+  /* default — same as :root above, kept explicit for clarity */
+  --bg-wallpaper:
+    radial-gradient(ellipse 80% 70% at 15% 10%, rgba(108, 60, 220, 0.40) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 20%, rgba(80, 40, 180, 0.30) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 50% 90%, rgba(50, 20, 140, 0.22) 0%, transparent 55%),
+    linear-gradient(145deg, #0d0820 0%, #090618 25%, #060412 55%, #0b0720 80%, #090420 100%);
+  --accent-primary: #7c3aed;
+  --accent-primary-hover: #9061f0;
+  --accent-primary-muted: rgba(124, 58, 237, 0.18);
+  --accent-primary-glow: rgba(130, 70, 240, 0.30);
+  --border-accent: rgba(124, 58, 237, 0.35);
+  --text-accent: #9b8fdd;
+  --bg-content: transparent;
+}
+
+[data-theme="ocean"] {
+  --bg-wallpaper:
+    radial-gradient(ellipse 80% 70% at 15% 10%, rgba(40, 110, 220, 0.34) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 20%, rgba(20, 80, 180, 0.26) 0%, transparent 50%),
+    linear-gradient(145deg, #020b18 0%, #051525 40%, #020d1f 70%, #030e20 100%);
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #60a5fa;
+  --accent-primary-muted: rgba(59, 130, 246, 0.18);
+  --accent-primary-glow: rgba(59, 130, 246, 0.28);
+  --bg-surface-active: rgba(59, 130, 246, 0.15);
+  --border-accent: rgba(59, 130, 246, 0.35);
+  --text-accent: #93c5fd;
+  --bg-content: transparent;
+  --bg-sidebar: rgba(0, 0, 0, 0.28);
+}
+
+[data-theme="forest"] {
+  --bg-wallpaper:
+    radial-gradient(ellipse 80% 70% at 15% 10%, rgba(34, 160, 94, 0.30) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 20%, rgba(20, 120, 70, 0.22) 0%, transparent 50%),
+    linear-gradient(145deg, #020e08 0%, #041208 40%, #021008 70%, #030e07 100%);
+  --accent-primary: #22c55e;
+  --accent-primary-hover: #4ade80;
+  --accent-primary-muted: rgba(34, 197, 94, 0.18);
+  --accent-primary-glow: rgba(34, 197, 94, 0.26);
+  --bg-surface-active: rgba(34, 197, 94, 0.15);
+  --border-accent: rgba(34, 197, 94, 0.35);
+  --text-accent: #86efac;
+  --bg-content: transparent;
+  --bg-sidebar: rgba(0, 0, 0, 0.28);
+}
+
+[data-theme="rose"] {
+  --bg-wallpaper:
+    radial-gradient(ellipse 80% 70% at 15% 10%, rgba(225, 29, 72, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 20%, rgba(190, 20, 60, 0.20) 0%, transparent 50%),
+    linear-gradient(145deg, #140508 0%, #1a0608 40%, #120408 70%, #140608 100%);
+  --accent-primary: #e11d48;
+  --accent-primary-hover: #f43f5e;
+  --accent-primary-muted: rgba(225, 29, 72, 0.18);
+  --accent-primary-glow: rgba(225, 29, 72, 0.26);
+  --bg-surface-active: rgba(225, 29, 72, 0.15);
+  --border-accent: rgba(225, 29, 72, 0.35);
+  --text-accent: #fda4af;
+  --bg-content: transparent;
+  --bg-sidebar: rgba(0, 0, 0, 0.28);
+}
+
+[data-theme="light"] {
+  --bg-wallpaper: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 40%, #e2e8f0 70%, #f8fafc 100%);
+  --bg-content: #f4f5f8;
+  --bg-sidebar: rgba(248, 250, 252, 0.92);
+  --bg-topbar: rgba(255, 255, 255, 0.70);
+  --bg-surface: rgba(0, 0, 0, 0.03);
+  --bg-surface-hover: rgba(0, 0, 0, 0.055);
+  --bg-surface-active: rgba(124, 58, 237, 0.12);
+  --bg-elevated: rgba(0, 0, 0, 0.05);
+  --bg-modal: rgba(255, 255, 255, 0.98);
+  --border-subtle: rgba(0, 0, 0, 0.07);
+  --border-default: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.2);
+  --text-primary: rgba(0, 0, 0, 0.88);
+  --text-secondary: rgba(0, 0, 0, 0.55);
+  --text-tertiary: rgba(0, 0, 0, 0.35);
+  --text-quaternary: rgba(0, 0, 0, 0.2);
+  --accent-primary-glow: rgba(124, 58, 237, 0.12);
+}

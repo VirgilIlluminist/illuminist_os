@@ -94,7 +94,7 @@ app.post('/api/gemini/chat', async (req, res) => {
       // Mock dark luxury AI response when key isn't set up yet
       setTimeout(() => {
         res.json({
-          text: `### [NEVAEH AI OS Offline Mode]
+          text: `### [ILLUMINIST OS Offline Mode]
 
 I detected that the \`GEMINI_API_KEY\` is not present in your Workspace Secrets. To experience full, real-time advanced operations reasoning, configure your key inside the **Settings > Secrets** panel.
 
@@ -107,9 +107,9 @@ Here is an analysis based on local client diagnostics:
       return;
     }
 
-    // Build the rich context prompt representing NEVAEH OS
-    const systemInstruction = `You are 'NEVAEH AI', the sophisticated, futuristic AI Chief Operating Officer and Operations Strategist for NEVAEH, an avant-garde luxury dark fashion-tech label.
-Your objective is to help the brand operators optimize their supply chain, understand margins, analyze campaign returns, suggest material reorders, and highlight operational risks with absolute precision.
+    // Build the rich context prompt representing ILLUMINIST OS
+    const systemInstruction = `You are 'ILLUMINIST AI', the Chief of Staff for ILLUMINIST OS — an AI-powered multi-business operating system for a founder running several businesses under one holding. Adapt to whichever business the owner is currently working in; never assume a single industry.
+Your objective is to help the owner optimize supply chain and operations, understand margins, analyze campaign returns, suggest reorders, and highlight operational risks across the business with absolute precision.
 
 You have access to the current live relational ERP database snapshot provided below:
 
@@ -196,7 +196,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`NEVAEH AI OS fullstack server running on http://0.0.0.0:${PORT}`);
+    console.log(`ILLUMINIST OS fullstack server running on http://0.0.0.0:${PORT}`);
   });
 }
 

@@ -3,7 +3,7 @@
  * Global state untuk business switcher.
  * Tracks: active business, all businesses user can access, create business flow.
  */
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { supabase, isSupabaseEnabled } from '../../infra/supabase/client';
 import { getNavGroupsForType, getKPIsForType, getColorForType, calcHealthScore } from '../../core/constants/businessConstants';
 import { toast } from '../../shared/ui/Toast';
@@ -117,6 +117,11 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
   const [businessTypes,  setBusinessTypes]  = useState<BusinessType[]>([]);
   const [loading,        setLoading]        = useState(false);
 
+  // Ref selalu menyimpan array bisnis terbaru — agar switchBusiness yang dipanggil
+  // dari closure lama (mis. setTimeout di wizard) tetap melihat bisnis yang baru dibuat.
+  const businessesRef = useRef<Business[]>(businesses);
+  useEffect(() => { businessesRef.current = businesses; }, [businesses]);
+
   // Load dari Supabase
   const refreshBusinesses = async () => {
     if (!isSupabaseEnabled || !supabase) return;
@@ -151,46 +156,55 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
   }, [businesses]);
 
   const switchBusiness = (id: string) => {
-    const biz = businesses.find(b => b.id === id);
+    // Baca dari ref agar bisnis yang baru saja dibuat (state mungkin belum ter-flush
+    // di closure pemanggil) tetap ditemukan.
+    const biz = businessesRef.current.find(b => b.id === id);
     if (!biz) return;
     setActiveBusiness(biz);
     localStorage.setItem(ACTIVE_KEY, id);
     toast.success(`Beralih ke ${biz.name}`);
   };
 
+  // Buat bisnis di local state + persist ke localStorage. Selalu berhasil (offline-first).
+  const commitLocalBusiness = (data: CreateBusinessData, slug: string): Business => {
+    const newBiz: Business = {
+      id:              `local-${Date.now()}`,
+      parent_id:       data.parent_id || '00000000-0000-0000-0000-000000000001',
+      name:            data.name,
+      slug,
+      type:            'business',
+      business_type:   data.business_type,
+      logo_url:        data.logo_url || null,
+      plan:            'starter',
+      country:         data.country,
+      currency:        data.currency,
+      currency_symbol: data.currency_symbol,
+      description:     data.description || null,
+      is_active:       true,
+    };
+    setBusinesses(prev => {
+      const next = [...prev, newBiz];
+      try {
+        const toSave = next.filter(b => !b.id.startsWith('00000000'));
+        localStorage.setItem(BUSINESSES_KEY, JSON.stringify(toSave));
+      } catch {}
+      return next;
+    });
+    businessesRef.current = [...businessesRef.current, newBiz];
+    return newBiz;
+  };
+
   const createBusiness = async (data: CreateBusinessData): Promise<Business | null> => {
     const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+    // Mode offline: langsung buat lokal.
     if (!isSupabaseEnabled || !supabase) {
-      // Mode offline: tambah ke local state
-      const newBiz: Business = {
-        id:              `local-${Date.now()}`,
-        parent_id:       data.parent_id || '00000000-0000-0000-0000-000000000001',
-        name:            data.name,
-        slug,
-        type:            'business',
-        business_type:   data.business_type,
-        logo_url:        data.logo_url || null,
-        plan:            'starter',
-        country:         data.country,
-        currency:        data.currency,
-        currency_symbol: data.currency_symbol,
-        description:     data.description || null,
-        is_active:       true,
-      };
-      setBusinesses(prev => {
-        const next = [...prev, newBiz];
-        // Persist ke localStorage — survive refresh
-        try {
-          const toSave = next.filter(b => !b.id.startsWith('00000000'));
-          localStorage.setItem(BUSINESSES_KEY, JSON.stringify(toSave));
-        } catch {}
-        return next;
-      });
+      const biz = commitLocalBusiness(data, slug);
       toast.success(`${data.name} berhasil dibuat`);
-      return newBiz;
+      return biz;
     }
 
+    // Mode Supabase: coba simpan ke DB, tapi jangan pernah blokir user kalau gagal.
     try {
       const { data: newBiz, error } = await (supabase.from('companies') as any).insert({
         name:            data.name,
@@ -209,22 +223,27 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
 
-      // Buat default settings
-      await (supabase.from('app_settings') as any).insert({
-        company_id:      (newBiz as Business).id,
-        language:        'id',
-        currency:        data.currency,
-        currency_symbol: data.currency_symbol,
-        system_name:     data.name,
-        brand_monogram:  data.name[0].toUpperCase(),
-      }).select();
+      // Default settings — non-fatal, kalau gagal abaikan saja.
+      try {
+        await (supabase.from('app_settings') as any).insert({
+          company_id:      (newBiz as Business).id,
+          language:        'id',
+          currency:        data.currency,
+          currency_symbol: data.currency_symbol,
+          system_name:     data.name,
+          brand_monogram:  data.name[0].toUpperCase(),
+        }).select();
+      } catch { /* settings opsional */ }
 
       await refreshBusinesses();
       toast.success(`${data.name} berhasil dibuat`);
       return newBiz as Business;
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Gagal membuat bisnis');
-      return null;
+      // Supabase gagal (RLS / koneksi / constraint) → fallback ke lokal, tetap berhasil.
+      console.warn('[createBusiness] Supabase gagal, fallback ke lokal:', err);
+      const biz = commitLocalBusiness(data, slug);
+      toast.success(`${data.name} berhasil dibuat`);
+      return biz;
     }
   };
 

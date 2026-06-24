@@ -26,7 +26,7 @@ export default function AIInsightPanel() {
   } = useERP();
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading,  setLoading]  = useState(false);
-  const accentHex = config?.customAccentColor || '#d4af37';
+  const accentHex = config?.customAccentColor || '#7c3aed';
 
   // Manual analysis — always runs (AI-independent)
   const generateManualInsights = (): Insight[] => {

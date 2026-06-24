@@ -89,7 +89,7 @@ export interface SmartTableProps {
 // currencySymbol dikirim dari komponen induk untuk mendukung multi-currency (IDR/USD/EUR/dll)
 export const getColumnIcon = (type: ColumnType = 'text', currencySymbol?: string) => {
   switch (type) {
-    case 'text': return <AlignLeft size={13} className="text-[var(--color-text-muted)] group-hover:text-[#d4af37]" />;
+    case 'text': return <AlignLeft size={13} className="text-[var(--color-text-muted)] group-hover:text-[var(--accent-primary)]" />;
     case 'longText': return <Type size={13} className="text-[var(--color-text-muted)]" />;
     case 'number': return <Hash size={13} className="text-blue-400" />;
     case 'currency': return <span className="text-xs font-bold text-emerald-400">{currencySymbol || 'Rp'}</span>;
@@ -106,7 +106,7 @@ export const getColumnIcon = (type: ColumnType = 'text', currencySymbol?: string
     case 'phone': return <Phone size={13} className="text-violet-400" />;
     case 'image': return <ImageIcon size={13} className="text-teal-400" />;
     case 'file': return <FileText size={13} className="text-[var(--color-text-main)]" />;
-    case 'formula': return <Calculator size={13} className="text-[#d4af37]" />;
+    case 'formula': return <Calculator size={13} className="text-[var(--accent-primary)]" />;
     case 'relation': return <Share2 size={13} className="text-pink-400" />;
     case 'aiSummary':
     case 'aiForecast':
@@ -1252,8 +1252,8 @@ export default function SmartTable({
       <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-[var(--color-background)]/65 border border-white/[0.04] rounded-lg shadow-xl backdrop-blur-md">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 bg-[var(--color-card-bg)] border border-white/5 px-2 py-1 rounded-md">
-            <span className="text-[#d4af37] font-semibold tracking-wider text-[11px] uppercase flex items-center gap-1.5">
-              <Sparkles size={13} className="animate-spin text-[#d4af37]" /> {title || "Notion Studio Database"}
+            <span className="text-[var(--color-text-main)] font-semibold text-[12px] flex items-center gap-1.5">
+              <Sparkles size={12} className="text-[var(--accent-primary)]" /> {title || "Database"}
             </span>
           </div>
           
@@ -1264,7 +1264,7 @@ export default function SmartTable({
               placeholder="Search databases indexes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="py-1.5 pl-8 pr-3 w-56 text-xs bg-[var(--color-card-bg)] focus:bg-[var(--color-background)] text-white hover:text-white border border-white/5 rounded-md focus:border-[#d4af37] focus:outline-none transition-all placeholder-[var(--color-text-muted)] font-sans"
+              className="py-1.5 pl-8 pr-3 w-56 text-xs bg-[var(--color-card-bg)] focus:bg-[var(--color-background)] text-white hover:text-white border border-white/5 rounded-md focus:border-[var(--accent-primary)] focus:outline-none transition-all placeholder-[var(--color-text-muted)] font-sans"
             />
           </div>
 
@@ -1273,12 +1273,12 @@ export default function SmartTable({
               onClick={() => setShowFilterPanel(!showFilterPanel)}
               className={`px-2.5 py-1.5 rounded-md text-[10px] font-bold tracking-tight uppercase transition-all flex items-center gap-1 ${
                 showFilterPanel || activeFilters.length > 0
-                  ? 'bg-amber-500/15 text-[#d4af37] border border-amber-500/30'
+                  ? 'bg-amber-500/15 text-[var(--accent-primary)] border border-amber-500/30'
                   : 'bg-[var(--color-card-bg)] text-[var(--color-text-muted)] border border-white/5 hover:bg-[var(--color-background)]'
               }`}
               title="Configure advanced multi-column decision filters"
             >
-              <SlidersHorizontal size={11} className={activeFilters.length > 0 ? 'text-[#d4af37]' : ''} />
+              <SlidersHorizontal size={11} className={activeFilters.length > 0 ? 'text-[var(--accent-primary)]' : ''} />
               <span>Smart Filters {activeFilters.length > 0 ? `(${activeFilters.length})` : ''}</span>
             </button>
 
@@ -1303,7 +1303,7 @@ export default function SmartTable({
                   setGroupByCol(e.target.value);
                   logAuditAction("GROUPBY_ALIGN", e.target.value ? `Grouped table rows by column "${e.target.value}"` : "Disabled row grouping");
                 }}
-                className="bg-transparent text-[10px] text-[#d4af37] focus:outline-none focus:ring-0 border-none p-0 cursor-pointer font-sans"
+                className="bg-transparent text-[10px] text-[var(--accent-primary)] focus:outline-none focus:ring-0 border-none p-0 cursor-pointer font-sans"
               >
                 <option value="" className="bg-[var(--color-background)] text-[var(--color-text-main)]">Flat Grid</option>
                 {columnsConfig.filter(c => c.type === 'status' || c.type === 'priority' || c.key === 'category' || c.key === 'tier' || c.key === 'factory' || c.key === 'channel' || c.key === 'qcStatus' || c.key === 'productionStatus').map(c => (
@@ -1319,7 +1319,7 @@ export default function SmartTable({
           {allowImport && !readOnly && (
             <div className="flex items-center gap-1.5 border-r border-white/10 pr-2">
               <label className="px-2.5 py-1.5 bg-[var(--color-card-bg)] text-[var(--color-text-main)] hover:text-[var(--color-text-main)] border border-white/5 hover:bg-[var(--color-background)] rounded-md transition-all flex items-center gap-1.5 cursor-pointer text-[10px] font-bold">
-                <Upload size={12} className="text-[#d4af37]" />
+                <Upload size={12} className="text-[var(--accent-primary)]" />
                 <span>CSV</span>
                 <input type="file" accept=".csv" onChange={handleCSVImport} className="hidden" />
               </label>
@@ -1347,7 +1347,7 @@ export default function SmartTable({
                 className="p-1.5 bg-[var(--color-card-bg)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] border border-white/5 hover:bg-[var(--color-background)] rounded-md transition-all" 
                 title="Excel sheets snapshot (.xlsx)"
               >
-                <FileSpreadsheet size={13} className="text-[#d4af37]" />
+                <FileSpreadsheet size={13} className="text-[var(--accent-primary)]" />
               </button>
             </div>
           )}
@@ -1356,7 +1356,7 @@ export default function SmartTable({
           <button
             onClick={() => setShowColSettings(!showColSettings)}
             className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide border rounded-md transition-all flex items-center gap-1.5 ${
-              showColSettings ? 'bg-[#d4af37]/20 border-[#d4af37]/30 text-[#d4af37]' : 'bg-[var(--color-card-bg)] border-white/5 text-[var(--color-text-muted)] hover:bg-[var(--color-background)]'
+              showColSettings ? 'bg-[var(--accent-primary)]/20 border-[var(--accent-primary)]/30 text-[var(--accent-primary)]' : 'bg-[var(--color-card-bg)] border-white/5 text-[var(--color-text-muted)] hover:bg-[var(--color-background)]'
             }`}
           >
             <SlidersHorizontal size={12} />
@@ -1380,7 +1380,7 @@ export default function SmartTable({
       {showFilterPanel && (
         <div className="p-3 bg-[#0a0a0d] border border-amber-500/20 rounded-lg shadow-xl backdrop-blur-md space-y-3 text-[var(--color-text-main)]">
           <div className="flex items-center justify-between border-b border-white/5 pb-2">
-            <span className="text-[10px] font-bold text-[#d4af37] tracking-widest uppercase flex items-center gap-1.5">
+            <span className="text-[10px] font-bold text-[var(--accent-primary)] tracking-widest uppercase flex items-center gap-1.5">
               <SlidersHorizontal size={12} /> Decision-Support Database Rule Builder
             </span>
             <button onClick={() => setShowFilterPanel(false)} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
@@ -1397,7 +1397,7 @@ export default function SmartTable({
                   const label = columnsConfig.find(c => c.key === flt.colKey)?.label || flt.colKey;
                   return (
                     <div key={idx} className="flex items-center gap-1.5 bg-[var(--color-card-bg)] border border-white/[0.05] rounded px-2 py-0.5 text-[10px]">
-                      <span className="text-[#d4af37] font-semibold">{label}</span>
+                      <span className="text-[var(--accent-primary)] font-semibold">{label}</span>
                       <span className="text-[var(--color-text-muted)] font-sans">{flt.operator.replace('_', ' ')}</span>
                       <span className="text-[var(--color-text-main)] font-mono">{flt.value || '(empty)'}</span>
                       <button 
@@ -1452,7 +1452,7 @@ export default function SmartTable({
                 id="filter-value-input"
                 type="text"
                 placeholder="Match condition cell value..."
-                className="bg-[var(--color-background)] border border-white/10 text-[10px] text-white rounded px-2 py-1 w-44 focus:outline-none focus:border-[#d4af37]"
+                className="bg-[var(--color-background)] border border-white/10 text-[10px] text-white rounded px-2 py-1 w-44 focus:outline-none focus:border-[var(--accent-primary)]"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     const addBtn = document.getElementById('add-filter-rule-btn');
@@ -1478,7 +1478,7 @@ export default function SmartTable({
                     if (valInp) valInp.value = '';
                   }
                 }}
-                className="px-2.5 py-1 bg-[#d4af37]/25 hover:bg-[#d4af37]/40 text-[#d4af37] border border-[#d4af37]/35 rounded text-[9px] font-bold uppercase transition-all"
+                className="px-2.5 py-1 bg-[var(--accent-primary)]/25 hover:bg-[var(--accent-primary)]/40 text-[var(--accent-primary)] border border-[var(--accent-primary)]/35 rounded text-[9px] font-bold uppercase transition-all"
               >
                 Add Constraint
               </button>
@@ -1523,7 +1523,7 @@ export default function SmartTable({
           {/* Saved Layouts List */}
           {savedFilters.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/[0.03]">
-              <span className="text-[9px] text-[#d4af37] font-semibold uppercase">Saved Templates:</span>
+              <span className="text-[9px] text-[var(--accent-primary)] font-semibold uppercase">Saved Templates:</span>
               {savedFilters.map((lay, layIdx) => (
                 <div key={layIdx} className="inline-flex items-center bg-[var(--color-card-bg)] border border-white/5 rounded pl-2 pr-1 py-0.5 text-[9px]">
                   <button
@@ -1531,7 +1531,7 @@ export default function SmartTable({
                       setActiveFilters(lay.filters);
                       logAuditAction("FILTER_LOAD", `Applied filter template: "${lay.name}"`);
                     }}
-                    className="text-[var(--color-text-main)] hover:text-[#d4af37] font-semibold truncate max-w-[120px]"
+                    className="text-[var(--color-text-main)] hover:text-[var(--accent-primary)] font-semibold truncate max-w-[120px]"
                   >
                     {lay.name}
                   </button>
@@ -1571,7 +1571,7 @@ export default function SmartTable({
               auditLogs.map((log, logIdx) => (
                 <div key={logIdx} className="flex items-center justify-between py-1 text-[9px] font-mono hover:bg-[rgba(255,255,255,0.01)]">
                   <span className="text-purple-400 w-24 shrink-0">{log.timestamp}</span>
-                  <span className="text-[#d4af37] font-bold border border-[#d4af37]/20 rounded px-1.5 text-[8px] tracking-tight mr-2 uppercase shrink-0">{log.action}</span>
+                  <span className="text-[var(--accent-primary)] font-bold border border-[var(--accent-primary)]/20 rounded px-1.5 text-[8px] tracking-tight mr-2 uppercase shrink-0">{log.action}</span>
                   <span className="text-[var(--color-text-main)] truncate flex-1 text-left">{log.details}</span>
                 </div>
               ))
@@ -1582,9 +1582,9 @@ export default function SmartTable({
 
       {/* BULK SELECTION ACTION WORKSPACE */}
       {selectedRows.size > 0 && (
-        <div className="p-3 bg-[var(--color-background)] border border-[#d4af37]/30 rounded-lg shadow-2xl backdrop-blur-md flex flex-wrap items-center justify-between gap-4 border-t-2 border-t-[#d4af37]">
+        <div className="p-3 bg-[var(--color-background)] border border-[var(--accent-primary)]/30 rounded-lg shadow-2xl backdrop-blur-md flex flex-wrap items-center justify-between gap-4 border-t-2 border-t-[var(--accent-primary)]">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#d4af37] animate-ping" />
+            <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-ping" />
             <span className="text-[10px] font-bold text-[var(--color-text-main)] uppercase tracking-wider">
               {selectedRows.size} Database Process Records Selected
             </span>
@@ -1614,7 +1614,7 @@ export default function SmartTable({
                     logAuditAction("BULK_STATUS_MUT", `Mass assigned selected registers rows count ${selectedRows.size} status to "${statusVal}"`);
                     e.target.value = '';
                   }}
-                  className="bg-transparent text-[10px] text-[#d4af37] border-none focus:ring-0 p-0 cursor-pointer font-sans"
+                  className="bg-transparent text-[10px] text-[var(--accent-primary)] border-none focus:ring-0 p-0 cursor-pointer font-sans"
                 >
                   <option value="" className="bg-[var(--color-background)]">Set Status...</option>
                   {(columnsConfig.find(c => c.type === 'status')?.selectOptions || ['Passed', 'Approved', 'Failed', 'Under Auditing', 'Completed', 'Operational', 'Under Maintenance', 'DRAFT', 'Silver Member', 'Gold Sovereign', 'Arch Elite VIP']).map(opt => (
@@ -1641,7 +1641,7 @@ export default function SmartTable({
               }}
               className="px-3 py-1 bg-emerald-800/80 hover:bg-emerald-700/80 border border-emerald-500/20 text-[var(--color-text-main)] text-[10px] font-bold rounded uppercase transition-all flex items-center gap-1"
             >
-              <CheckCircle2 size={12} className="text-[#d4af37]" />
+              <CheckCircle2 size={12} className="text-[var(--accent-primary)]" />
               <span>Mass Approve</span>
             </button>
 
@@ -1677,7 +1677,7 @@ export default function SmartTable({
       {showColSettings && (
         <div className="p-4 bg-[var(--color-background)]/90 border border-white/[0.05] rounded-lg animate-fadeIn text-[var(--color-text-main)]">
           <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/5">
-            <span className="text-[11px] font-bold tracking-widest text-[#d4af37] uppercase flex items-center gap-1.5">
+            <span className="text-[11px] font-bold tracking-widest text-[var(--accent-primary)] uppercase flex items-center gap-1.5">
               <Settings size={13} /> Relational Column Architecture
             </span>
             <button onClick={() => setShowColSettings(false)} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
@@ -1724,7 +1724,7 @@ export default function SmartTable({
                         const val = e.target.checked;
                         handleColumnsChange(columnsConfig.map(c => c.key === col.key ? { ...c, visible: val } : c));
                       }}
-                      className="accent-[#d4af37]"
+                      className="accent-[var(--accent-primary)]"
                     />
                     <span>Visible</span>
                   </label>
@@ -1786,7 +1786,7 @@ export default function SmartTable({
                             setSelectedRows(new Set(processedData.map(r => String(r.id || r.sku || r.name))));
                           }
                         }}
-                        className="accent-[#d4af37] scale-100 cursor-pointer"
+                        className="accent-[var(--accent-primary)] scale-100 cursor-pointer"
                         title="Select all rows"
                       />
                       <span className="text-[9px]">#</span>
@@ -1853,7 +1853,7 @@ export default function SmartTable({
                         {/* Col border drags resize action node */}
                         <div
                           onMouseDown={(e) => handleColResizeStart(e, col.key, col.width || 150)}
-                          className="absolute right-0 top-0 bottom-0 w-1 px-1.5 cursor-col-resize hover:bg-[#d4af37]/60 group-hover/header:bg-[rgba(255,255,255,0.06)] z-30 transition-all select-none"
+                          className="absolute right-0 top-0 bottom-0 w-1 px-1.5 cursor-col-resize hover:bg-[var(--accent-primary)]/60 group-hover/header:bg-[rgba(255,255,255,0.06)] z-30 transition-all select-none"
                         />
                       </th>
                     );
@@ -1906,14 +1906,14 @@ export default function SmartTable({
                         }
                         setSelectedRows(next);
                       }}
-                      className="accent-[#d4af37] scale-90 cursor-pointer shrink-0"
+                      className="accent-[var(--accent-primary)] scale-90 cursor-pointer shrink-0"
                     />
                     <span className="text-[10px] tabular-nums text-[var(--color-text-muted)]">{index + 1}</span>
                     
                     {/* Row drags resize handles */}
                     <div
                       onMouseDown={(e) => handleRowResizeStart(e, index, customHeight)}
-                      className="absolute bottom-0 left-0 right-0 h-1 hover:bg-[#d4af37]/40 cursor-row-resize z-20"
+                      className="absolute bottom-0 left-0 right-0 h-1 hover:bg-[var(--accent-primary)]/40 cursor-row-resize z-20"
                     />
                   </div>
 
@@ -1946,7 +1946,7 @@ export default function SmartTable({
                     const renderCellContents = () => {
                       if (col.type === 'formula' && col.formulaExpr) {
                         const calc = getEvaluatedFormula(col.formulaExpr, row);
-                        return <span className="text-[#d4af37] font-bold font-mono">{calc}</span>;
+                        return <span className="text-[var(--accent-primary)] font-bold font-mono">{calc}</span>;
                       }
 
                       if (col.type === 'checkbox') {
@@ -1960,7 +1960,7 @@ export default function SmartTable({
                               next[index] = { ...next[index], [cellKey]: e.target.checked };
                               handleDataChange(next);
                             }}
-                            className="accent-[#d4af37] cursor-pointer scale-110"
+                            className="accent-[var(--accent-primary)] cursor-pointer scale-110"
                           />
                         );
                       }
@@ -2015,7 +2015,7 @@ export default function SmartTable({
                               alt="thumb" 
                               referrerPolicy="no-referrer"
                               onClick={() => setEnlargedImage(rawVal)}
-                              className="w-6 h-6 object-cover rounded border border-white/10 hover:border-[#d4af37] cursor-zoom-in"
+                              className="w-6 h-6 object-cover rounded border border-white/10 hover:border-[var(--accent-primary)] cursor-zoom-in"
                             />
                             <span className="text-[10px] text-[var(--color-text-muted)] truncate block max-w-[80px]">{rawVal}</span>
                           </div>
@@ -2025,7 +2025,7 @@ export default function SmartTable({
                       if (col.type === 'file') {
                         return rawVal ? (
                           <span className="inline-flex items-center gap-1 text-[10px] bg-[var(--color-card-bg)] border border-white/5 py-0.5 px-1.5 rounded text-[var(--color-text-main)] hover:text-[var(--color-text-main)]">
-                            <FileText size={10} className="text-[#d4af37]" /> {String(rawVal).substring(0, 15)}
+                            <FileText size={10} className="text-[var(--accent-primary)]" /> {String(rawVal).substring(0, 15)}
                           </span>
                         ) : '-';
                       }
@@ -2056,7 +2056,7 @@ export default function SmartTable({
                               {!readOnly && (
                                 <button 
                                   onClick={() => runAICellAction(index, cellKey, col.type as any)}
-                                  className="opacity-0 group-hover/ai:opacity-100 p-0.5 hover:text-[#d4af37] ml-auto shrink-0 cursor-pointer"
+                                  className="opacity-0 group-hover/ai:opacity-100 p-0.5 hover:text-[var(--accent-primary)] ml-auto shrink-0 cursor-pointer"
                                   title="Re-run core intelligence reasoning"
                                 >
                                   <RefreshCw size={9} />
@@ -2107,7 +2107,7 @@ export default function SmartTable({
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
                                 onBlur={commitCellEdit}
-                                className="w-full bg-[var(--color-card-bg)] border border-white/20 text-[var(--color-text-main)] rounded px-1.5 py-0.5 text-xs focus:ring-1 focus:ring-[#d4af37] focus:outline-none font-sans"
+                                className="w-full bg-[var(--color-card-bg)] border border-white/20 text-[var(--color-text-main)] rounded px-1.5 py-0.5 text-xs focus:ring-1 focus:ring-[var(--accent-primary)] focus:outline-none font-sans"
                                 autoFocus
                               >
                                 <option value="">-- select option --</option>
@@ -2121,13 +2121,13 @@ export default function SmartTable({
                                 onChange={(e) => setEditValue(e.target.value)}
                                 onBlur={commitCellEdit}
                                 rows={2}
-                                className="w-full bg-[var(--color-card-bg)] border border-[#d4af37] text-white rounded p-1 text-xs focus:outline-none resize-none font-sans"
+                                className="w-full bg-[var(--color-card-bg)] border border-[var(--accent-primary)] text-white rounded p-1 text-xs focus:outline-none resize-none font-sans"
                                 autoFocus
                               />
                             ) : (
                               <input
                                 type="text"
-                                className="w-full bg-[var(--color-card-bg)] border border-[#d4af37] text-white rounded px-1.5 py-0.5 text-xs focus:outline-none font-sans select-all"
+                                className="w-full bg-[var(--color-card-bg)] border border-[var(--accent-primary)] text-white rounded px-1.5 py-0.5 text-xs focus:outline-none font-sans select-all"
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
                                 onBlur={commitCellEdit}
@@ -2209,7 +2209,7 @@ export default function SmartTable({
                 onClick={handleAddNewRow}
                 className="px-3 py-1.5 rounded bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] text-[var(--color-text-main)] hover:text-[var(--color-text-main)] flex items-center gap-1.5 font-bold text-[10px] tracking-wide uppercase transition-all"
               >
-                <Plus size={13} className="text-[#d4af37]" />
+                <Plus size={13} className="text-[var(--accent-primary)]" />
                 <span>Append Operational Database Row</span>
               </button>
             </div>
@@ -2226,7 +2226,7 @@ export default function SmartTable({
         >
           {contextMenu.type === 'cell' && contextMenu.rowIndex !== undefined && (
             <>
-              <div className="px-2 py-1 text-[9px] text-[#d4af37] font-bold border-b border-white/5 uppercase tracking-wider select-none">
+              <div className="px-2 py-1 text-[9px] text-[var(--accent-primary)] font-bold border-b border-white/5 uppercase tracking-wider select-none">
                 Cell Index #{contextMenu.rowIndex + 1} Action
               </div>
               <button
@@ -2236,7 +2236,7 @@ export default function SmartTable({
                   }
                   setContextMenu(null);
                 }}
-                className="text-left px-2 py-1 hover:bg-[#d4af37]/15 hover:text-white rounded text-xs cursor-pointer flex items-center gap-1.5"
+                className="text-left px-2 py-1 hover:bg-[var(--accent-primary)]/15 hover:text-white rounded text-xs cursor-pointer flex items-center gap-1.5"
               >
                 <span>✎ Edit Cell Inline</span>
               </button>
@@ -2281,7 +2281,7 @@ export default function SmartTable({
 
           {contextMenu.type === 'header' && contextMenu.colKey && (
             <>
-              <div className="px-2 py-1 text-[9px] text-[#d4af37] font-bold border-b border-white/5 uppercase tracking-wider select-none">
+              <div className="px-2 py-1 text-[9px] text-[var(--accent-primary)] font-bold border-b border-white/5 uppercase tracking-wider select-none">
                 Column Ops: {contextMenu.colKey.toUpperCase()}
               </div>
               <button
@@ -2343,7 +2343,7 @@ export default function SmartTable({
       {showAddColModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
           <div className="bg-[#0b0b0d] border border-white/10 p-5 rounded-lg max-w-sm w-full space-y-4 text-[var(--color-text-main)]">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-[#d4af37] border-b border-white/5 pb-2">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--accent-primary)] border-b border-white/5 pb-2">
               Inject Custom Database Column
             </h4>
             
@@ -2355,7 +2355,7 @@ export default function SmartTable({
                   placeholder="e.g. TAX_RATE"
                   value={newColLabel}
                   onChange={(e) => setNewColLabel(e.target.value)}
-                  className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 focus:border-[#d4af37] focus:outline-none uppercase text-white"
+                  className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 focus:border-[var(--accent-primary)] focus:outline-none uppercase text-white"
                 />
               </div>
 
@@ -2364,7 +2364,7 @@ export default function SmartTable({
                 <select
                   value={newColType}
                   onChange={(e) => setNewColType(e.target.value as ColumnType)}
-                  className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 focus:border-[#d4af37] focus:outline-none text-white font-sans"
+                  className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 focus:border-[var(--accent-primary)] focus:outline-none text-white font-sans"
                 >
                   <option value="text">Short Text (📝)</option>
                   <option value="longText">Paragraph Text (📓)</option>
@@ -2396,10 +2396,10 @@ export default function SmartTable({
                       setNewColFormula(e.target.value);
                       setFormulaError(null);
                     }}
-                    className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
+                    className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent-primary)]"
                   />
                   <span className="text-[8px] text-[var(--color-text-muted)] leading-tight mt-1 block">
-                    Use braces to encapsulate column names like <code className="text-[#d4af37] font-bold">{"{VAL}"}</code>. Simple symbols supported: +, -, *, /, %, (, ).
+                    Use braces to encapsulate column names like <code className="text-[var(--accent-primary)] font-bold">{"{VAL}"}</code>. Simple symbols supported: +, -, *, /, %, (, ).
                   </span>
                   {formulaError && (
                     <p className="text-[10px] text-red-400 font-mono mt-1.5 bg-red-950/20 border border-red-500/10 rounded p-1.5 animate-fadeIn">
@@ -2417,7 +2417,7 @@ export default function SmartTable({
                     placeholder="DRAFT, SHIPPED, PENDING"
                     value={newColOptions}
                     onChange={(e) => setNewColOptions(e.target.value)}
-                    className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#d4af37]"
+                    className="w-full bg-[var(--color-card-bg)] border border-white/10 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent-primary)]"
                   />
                 </div>
               )}

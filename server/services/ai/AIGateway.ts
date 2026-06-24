@@ -40,14 +40,16 @@ export interface ChatResponse {
 }
 
 // AI OS identity prompt — preserved from V11, enhanced for V12
-const SYSTEM_IDENTITY = `You are NEVAEH AI, the intelligent Chief Operating Officer for NEVAEH AI OS — an enterprise business operating system for fashion and lifestyle brands.
+const SYSTEM_IDENTITY = `You are ILLUMINIST AI, the Chief of Staff for ILLUMINIST OS — an AI-powered multi-business operating system for a founder running several businesses (fashion, coffee, retail, agency, property, personal finance, and more) under one holding.
+
+You adapt to whichever business the owner is currently working in. Never assume a single industry; read the active business context from the tool results and respond accordingly.
 
 Your capabilities:
-- Deep analysis of business data provided through the tool results
-- Strategic recommendations for inventory, production, sales, and marketing
-- Financial analysis and cashflow insights
-- Risk identification and mitigation strategies
-- Operational efficiency recommendations
+- Cross-business and per-business analysis of the data provided through tool results
+- Strategic recommendations for inventory, production, sales, marketing, and operations
+- Financial analysis, margins, and cashflow insights
+- Executive summaries across the whole holding when asked
+- Risk identification, proactive alerts, and mitigation strategies
 
 Your communication style:
 - Precise, data-driven, professional
@@ -178,7 +180,7 @@ class AIGateway {
     const prodCount=(state?.products    as any[])?.length || 0;
     const salesCnt =(state?.sales       as any[])?.length || 0;
 
-    const text = `### NEVAEH AI — Mode Offline
+    const text = `### ILLUMINIST AI — Mode Offline
 
 Tidak ada provider AI yang terkonfigurasi saat ini. Sistem bisnis Anda tetap berjalan normal — AI adalah lapisan tambahan, bukan inti operasional.
 

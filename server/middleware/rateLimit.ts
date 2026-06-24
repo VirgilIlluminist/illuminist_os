@@ -1,41 +1,51 @@
 /**
- * rateLimit.ts — Simple in-memory rate limiter
- * No external packages needed. Replace with express-rate-limit in production.
+ * rateLimit.ts — Per-user + per-IP rate limiter (in-memory).
+ * Key: userId (when authenticated) OR IP (anonymous fallback).
+ * Sets standard RateLimit-* headers on every response.
  */
 import { Request, Response, NextFunction } from 'express';
 import { ENV } from '../config/env';
 
-interface RateLimitStore {
-  [key: string]: { count: number; resetAt: number };
-}
+interface RateLimitEntry { count: number; resetAt: number }
+const store = new Map<string, RateLimitEntry>();
 
-const store: RateLimitStore = {};
-
-function cleanup() {
+// Periodic cleanup to avoid unbounded memory growth
+setInterval(() => {
   const now = Date.now();
-  Object.keys(store).forEach(k => {
-    if (store[k].resetAt < now) delete store[k];
-  });
+  store.forEach((v, k) => { if (v.resetAt < now) store.delete(k); });
+}, 60_000);
+
+function identity(req: Request): string {
+  // Prefer authenticated user ID — prevents shared-IP abuse hiding behind anon rate
+  const userId = req.user?.userId;
+  return userId ? `user:${userId}` : `ip:${req.ip}`;
 }
 
-setInterval(cleanup, 60000);
-
-export function rateLimit(maxRequests: number, windowMs: number) {
+export function rateLimit(maxRequests: number, windowMs: number, scope = 'api') {
   return (req: Request, res: Response, next: NextFunction) => {
-    const key = req.ip + ':' + req.path;
+    const key = `${scope}:${identity(req)}`;
     const now = Date.now();
 
-    if (!store[key] || store[key].resetAt < now) {
-      store[key] = { count: 1, resetAt: now + windowMs };
-      return next();
+    let entry = store.get(key);
+    if (!entry || entry.resetAt < now) {
+      entry = { count: 0, resetAt: now + windowMs };
+      store.set(key, entry);
     }
+    entry.count++;
 
-    store[key].count++;
-    if (store[key].count > maxRequests) {
+    const remaining = Math.max(0, maxRequests - entry.count);
+    const resetSecs  = Math.ceil((entry.resetAt - now) / 1000);
+
+    res.setHeader('RateLimit-Limit',     maxRequests);
+    res.setHeader('RateLimit-Remaining', remaining);
+    res.setHeader('RateLimit-Reset',     resetSecs);
+
+    if (entry.count > maxRequests) {
+      res.setHeader('Retry-After', resetSecs);
       return res.status(429).json({
-        success:   false,
-        error:     'Too many requests. Please wait.',
-        retryAfter: Math.ceil((store[key].resetAt - now) / 1000),
+        success:    false,
+        error:      'Too many requests. Please wait before retrying.',
+        retryAfter: resetSecs,
         timestamp:  new Date().toISOString(),
       });
     }
@@ -43,6 +53,6 @@ export function rateLimit(maxRequests: number, windowMs: number) {
   };
 }
 
-export const apiLimiter  = rateLimit(ENV.RATE_LIMIT_MAX,    ENV.RATE_LIMIT_WINDOW_MS);
-export const aiLimiter   = rateLimit(ENV.AI_RATE_LIMIT_MAX, ENV.RATE_LIMIT_WINDOW_MS);
-export const strictLimiter= rateLimit(5, 60000);
+export const apiLimiter   = rateLimit(ENV.RATE_LIMIT_MAX,    ENV.RATE_LIMIT_WINDOW_MS, 'api');
+export const aiLimiter    = rateLimit(ENV.AI_RATE_LIMIT_MAX, ENV.RATE_LIMIT_WINDOW_MS, 'ai');
+export const strictLimiter= rateLimit(5, 60_000, 'strict');

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import aiService from '../../infra/api/ai.service';
+import { AIUsageTracker } from '../services/AIUsageTracker';
 
 export interface AIMessage {
   role:      'user' | 'assistant' | 'system';
@@ -8,8 +9,10 @@ export interface AIMessage {
 }
 
 export interface UseAIOptions {
-  sessionId?: string;
-  erpState?:  Record<string, unknown>;
+  sessionId?:  string;
+  erpState?:   Record<string, unknown>;
+  companyId?:  string;  // enables usage tracking when provided
+  context?:    string;  // 'chat' | 'insight' | 'auto'
 }
 
 export function useAI(options: UseAIOptions = {}) {
@@ -34,6 +37,18 @@ export function useAI(options: UseAIOptions = {}) {
         timestamp: new Date().toISOString(),
       }]);
       setIsOffline(Boolean(response.isOffline));
+      if (options.companyId) {
+        AIUsageTracker.record({
+          companyId:    options.companyId,
+          sessionId:    sessionRef.current,
+          provider:     response.provider,
+          model:        response.model,
+          inputTokens:  response.inputTokens,
+          outputTokens: response.outputTokens,
+          cost:         response.cost,
+          context:      options.context ?? 'chat',
+        }).catch(() => {});
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gagal mendapat respons AI';
       setError(msg);

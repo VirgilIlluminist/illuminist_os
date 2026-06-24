@@ -1,5 +1,5 @@
 /**
- * api.client.ts — Base API client for NEVAEH AI OS
+ * api.client.ts — Base API client for ILLUMINIST OS
  * All frontend API calls go through this. Handles auth headers,
  * error normalization, and timeout.
  */

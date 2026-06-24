@@ -22,7 +22,7 @@ export default function AISettingsPanel() {
   const [testResults, setTestResults] = useState<Record<string, { ok: boolean; latencyMs: number; error?: string }>>({});
   const [showKeys,  setShowKeys]  = useState<Record<string, boolean>>({});
   const [loading,   setLoading]   = useState(true);
-  const accentHex = config?.customAccentColor || '#d4af37';
+  const accentHex = config?.customAccentColor || '#7c3aed';
 
   useEffect(() => {
     loadProviders();
