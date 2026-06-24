@@ -27,7 +27,7 @@ Buka http://localhost:3000
 ## Struktur Project
 
 ```
-nevaeh-ai-os/
+illuminist-ai-os/
 ├── server/                        Backend V12
 │   ├── config/env.ts              Environment config
 │   ├── middleware/                auth, rateLimit, audit, errorHandler
@@ -202,4 +202,4 @@ npm run clean        # Hapus dist/
 
 ---
 
-**NEVAEH AI OS v12** · Built with ❤️ for Fashion Brands
+**ILLUMINIST AI OS v12** · Built with ❤️ for Fashion Brands
