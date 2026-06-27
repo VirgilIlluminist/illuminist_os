@@ -55,60 +55,60 @@ export default function CreateBusinessModal({ open, onClose, onCreated }: Props)
     }
   };
 
-  const inputCls = "w-full px-3 py-2.5 text-xs font-mono bg-[var(--color-background)] border border-[var(--color-border-line)] text-[var(--color-text-main)] rounded-lg focus:outline-none focus:border-[var(--color-accent-highlight)] transition-colors";
+  const inputCls = "w-full px-4 py-2.5 text-sm bg-white/[0.06] border border-white/[0.10] text-white rounded-xl focus:outline-none focus:border-white/25 transition-colors";
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{background:'rgba(0,0,0,0.75)',backdropFilter:'blur(8px)'}}
+          style={{ background: 'rgba(0,0,0,0.65)' }}
           onClick={e => e.target === e.currentTarget && onClose()}
         >
           <motion.div initial={{scale:0.95,y:12}} animate={{scale:1,y:0}} exit={{scale:0.95,y:8}}
             transition={{duration:0.2,ease:[0.16,1,0.3,1]}}
-            className="w-full max-w-lg bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-2xl shadow-2xl overflow-hidden"
+            className="w-full max-w-lg overflow-hidden"
+            style={{ background: 'rgba(14,10,28,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', boxShadow: '0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)' }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-[var(--color-border-line)]"
-                 style={{borderTopColor:'var(--color-accent-highlight)',borderTopWidth:2}}>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.08]">
               <div>
-                <h2 className="text-sm font-display font-bold uppercase tracking-widest text-[var(--color-text-main)]">
+                <h2 className="text-base font-semibold tracking-tight text-white">
                   Buat Bisnis Baru
                 </h2>
-                <p className="text-[10px] font-mono text-[var(--color-text-muted)] mt-0.5">
+                <p className="text-xs text-white/40 mt-0.5">
                   Langkah {step} dari 2
                 </p>
               </div>
-              <button onClick={onClose} className="p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer transition-colors">
+              <button onClick={onClose} className="p-1.5 text-white/40 hover:text-white cursor-pointer transition-colors rounded-lg hover:bg-white/5">
                 <X size={16} />
               </button>
             </div>
 
             {/* Body */}
-            <div className="p-5">
+            <div className="p-6">
               {step === 1 && (
                 <div className="space-y-4">
-                  <p className="text-xs font-mono text-[var(--color-text-muted)]">Pilih tipe bisnis:</p>
+                  <p className="text-sm text-white/50">Pilih tipe bisnis:</p>
                   <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
                     {BUSINESS_TYPES.map(t => (
                       <button key={t.id} onClick={() => set('business_type', t.id)}
                         className={`flex items-start gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
                           form.business_type === t.id
-                            ? 'border-[var(--color-accent-highlight)] bg-[var(--color-accent-highlight)]/5'
-                            : 'border-[var(--color-border-line)] hover:border-[var(--color-accent-highlight)]/40 hover:bg-white/[0.02]'
+                            ? 'border-white/25 bg-white/[0.08]'
+                            : 'border-white/[0.07] hover:border-white/15 hover:bg-white/[0.04]'
                         }`}
                       >
                         <span className="text-xl mt-0.5">{t.icon}</span>
                         <div className="min-w-0">
-                          <p className={`text-xs font-semibold font-mono leading-tight ${form.business_type===t.id?'text-[var(--color-accent-highlight)]':'text-[var(--color-text-main)]'}`}>{t.label}</p>
-                          <p className="text-[9px] text-[var(--color-text-muted)] leading-tight mt-0.5">{t.desc}</p>
+                          <p className={`text-sm font-medium leading-tight ${form.business_type===t.id?'text-white':'text-white/70'}`}>{t.label}</p>
+                          <p className="text-xs text-white/40 leading-tight mt-0.5">{t.desc}</p>
                         </div>
                       </button>
                     ))}
                   </div>
                   <button onClick={() => setStep(2)} disabled={!form.business_type}
-                    className="w-full py-2.5 text-xs font-mono font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer"
+                    className="w-full py-3 text-sm font-semibold rounded-xl transition-all cursor-pointer disabled:opacity-40"
                     style={{background:'var(--color-accent-highlight)',color:'#000'}}>
                     Lanjut →
                   </button>
@@ -116,18 +116,18 @@ export default function CreateBusinessModal({ open, onClose, onCreated }: Props)
               )}
 
               {step === 2 && (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] block mb-1.5">Nama Bisnis *</label>
+                    <label className="text-sm font-medium text-white/50 block mb-2">Nama Bisnis *</label>
                     <input value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Contoh: NEVAEH Studio" className={inputCls} autoFocus />
                   </div>
                   <div>
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] block mb-1.5">Deskripsi</label>
+                    <label className="text-sm font-medium text-white/50 block mb-2">Deskripsi</label>
                     <input value={form.description||''} onChange={e=>set('description',e.target.value)} placeholder="Opsional" className={inputCls} />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] block mb-1.5">Mata Uang</label>
+                      <label className="text-sm font-medium text-white/50 block mb-2">Mata Uang</label>
                       <select value={form.currency} onChange={e=>{
                         const cur = CURRENCIES.find(c=>c.code===e.target.value);
                         set('currency',e.target.value);
@@ -137,22 +137,22 @@ export default function CreateBusinessModal({ open, onClose, onCreated }: Props)
                       </select>
                     </div>
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] block mb-1.5">Negara</label>
+                      <label className="text-sm font-medium text-white/50 block mb-2">Negara</label>
                       <input value={form.country} onChange={e=>set('country',e.target.value)} className={inputCls} />
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] block mb-1.5">Under Company</label>
+                    <label className="text-sm font-medium text-white/50 block mb-2">Under Company</label>
                     <select value={form.parent_id||''} onChange={e=>set('parent_id',e.target.value)} className={inputCls+" cursor-pointer"}>
                       {businesses.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}
                     </select>
                   </div>
-                  <div className="flex gap-3 pt-2">
-                    <button onClick={()=>setStep(1)} className="flex-1 py-2.5 text-xs font-mono uppercase tracking-wider border border-[var(--color-border-line)] text-[var(--color-text-muted)] rounded-lg hover:text-[var(--color-text-main)] transition-all cursor-pointer">
+                  <div className="flex gap-3 pt-1">
+                    <button onClick={()=>setStep(1)} className="flex-1 py-3 text-sm border border-white/[0.10] text-white/50 rounded-xl hover:text-white transition-all cursor-pointer">
                       ← Kembali
                     </button>
                     <button onClick={handleCreate} disabled={!form.name.trim()||loading}
-                      className="flex-2 flex-grow py-2.5 text-xs font-mono font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer disabled:opacity-40"
+                      className="flex-grow py-3 text-sm font-semibold rounded-xl transition-all cursor-pointer disabled:opacity-40"
                       style={{background:'var(--color-accent-highlight)',color:'#000'}}>
                       {loading ? 'Membuat...' : '✓ Buat Bisnis'}
                     </button>

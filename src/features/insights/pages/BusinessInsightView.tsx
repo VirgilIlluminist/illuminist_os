@@ -156,7 +156,7 @@ Tanyakan apa saja tentang bisnis Anda — saya akan menjawab berdasarkan data ny
           </div>
         </div>
         <button onClick={resetChat} className="flex items-center gap-1.5 px-3 py-2 text-xs rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-          <RefreshCw size={12}/> Reset
+          <RefreshCw size={14}/> Reset
         </button>
       </div>
 
@@ -197,7 +197,7 @@ Tanyakan apa saja tentang bisnis Anda — saya akan menjawab berdasarkan data ny
                     line.replace(/\*\*(.*?)\*\*/g, '$1')
                   }</p>
                 ))}
-                <p className="text-[10px] mt-1 opacity-50">
+                <p className="text-xs mt-1 opacity-50">
                   {new Date(msg.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}
                 </p>
               </div>

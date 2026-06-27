@@ -80,7 +80,7 @@ export function HeaderBtn({
               borderRadius: '10px', padding: '9px 18px',
               fontSize: '14px', fontWeight: 500, letterSpacing: '-0.01em',
               cursor: 'pointer', transition: 'background 0.15s ease',
-              boxShadow: '0 2px 12px rgba(124,58,237,0.30)',
+              boxShadow: 'var(--shadow-accent)',
             }
           : {
               display: 'flex', alignItems: 'center', gap: '7px',

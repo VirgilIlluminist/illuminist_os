@@ -28,14 +28,14 @@ export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => v
     return (
       <button
         onClick={() => { switchBusiness(biz.id); setOpen(false); }}
-        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-mono transition-all cursor-pointer text-left ${indent ? 'ml-4 w-[calc(100%-16px)]' : ''} ${isActive ? 'bg-[var(--color-accent-highlight)]/10 text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)] hover:bg-white/[0.04] hover:text-[var(--color-text-main)]'}`}
+        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all cursor-pointer text-left ${indent ? 'ml-4 w-[calc(100%-16px)]' : ''} ${isActive ? 'bg-[var(--color-accent-highlight)]/10 text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)] hover:bg-white/[0.04] hover:text-[var(--color-text-main)]'}`}
       >
         <span className="text-sm">{TYPE_ICONS[biz.business_type] || '🏢'}</span>
         <div className="flex-1 min-w-0">
           <p className="font-semibold truncate leading-tight">{biz.name}</p>
-          <p className="text-[9px] opacity-60 capitalize leading-tight">{biz.business_type?.replace('_',' ')}</p>
+          <p className="text-xs opacity-60 capitalize leading-tight">{biz.business_type?.replace('_',' ')}</p>
         </div>
-        {isActive && <Check size={11} style={{ color:'var(--color-accent-highlight)', flexShrink:0 }} />}
+        {isActive && <Check size={14} style={{ color:'var(--color-accent-highlight)', flexShrink:0 }} />}
       </button>
     );
   };
@@ -49,11 +49,11 @@ export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => v
           <p className="text-[12px] font-semibold text-[var(--color-text-main)] truncate leading-tight">
             {activeBusiness?.name || 'Select Business'}
           </p>
-          <p className="text-[9px] font-mono text-[var(--color-text-muted)] capitalize leading-tight">
+          <p className="text-xs text-[var(--color-text-muted)] capitalize leading-tight">
             {activeBusiness?.business_type?.replace('_',' ') || ''}
           </p>
         </div>
-        <ChevronDown size={13} className={`text-[var(--color-text-muted)] transition-transform shrink-0 ${open?'rotate-180':''}`} />
+        <ChevronDown size={14} className={`text-[var(--color-text-muted)] transition-transform shrink-0 ${open?'rotate-180':''}`} />
       </button>
 
       <AnimatePresence>
@@ -79,8 +79,8 @@ export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => v
             </div>
             <div className="border-t border-[var(--color-border-line)] p-2">
               <button onClick={() => { setOpen(false); onCreateNew(); }}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-mono text-[var(--color-text-muted)] hover:text-[var(--color-accent-highlight)] hover:bg-[var(--color-accent-highlight)]/5 transition-all cursor-pointer">
-                <Plus size={13} /><span>Tambah Bisnis Baru</span>
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[var(--color-text-muted)] hover:text-[var(--color-accent-highlight)] hover:bg-[var(--color-accent-highlight)]/5 transition-all cursor-pointer">
+                <Plus size={14} /><span>Tambah Bisnis Baru</span>
               </button>
             </div>
           </motion.div>

@@ -229,7 +229,7 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
   ];
 
   // ── Shared UI ─────────────────────────────────────────────────────────────────
-  const inputCls = 'w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)] text-xs font-mono';
+  const inputCls = 'w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)] text-xs';
 
   const tabBtn = (key: typeof activeTab, label: string, count: number) => (
     <button onClick={() => { setActiveTab(key); setSearch(''); }}
@@ -283,8 +283,8 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
     });
   };
 
-  const modalOverlay: React.CSSProperties = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', zIndex: 50 };
-  const modalCard: React.CSSProperties = { width: '100%', maxWidth: '500px', background: 'rgba(18,14,34,0.97)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: '16px', padding: '28px', boxShadow: '0 32px 80px rgba(0,0,0,0.60)', maxHeight: '90vh', overflowY: 'auto' };
+  const modalOverlay: React.CSSProperties = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', zIndex: 50 };
+  const modalCard: React.CSSProperties = { width: '100%', maxWidth: '500px', background: 'rgba(14,10,28,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', padding: '32px', boxShadow: '0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)', maxHeight: '90vh', overflowY: 'auto' };
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -297,10 +297,10 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
             {activeTab === 'sales' && <HeaderBtn onClick={() => {
               if (products.length) setNewSale(s => ({ ...s, productId: products[0].id, pricePerPcs: products[0].sellingPrice }));
               setShowAddSale(true);
-            }} label={t('sales_btn_add_sale')} icon={<Plus size={12}/>}/>}
-            {activeTab === 'ops'  && <HeaderBtn onClick={() => setShowAddOps(true)}  label={t('sales_btn_add_ops')} icon={<Plus size={12}/>}/>}
-            {activeTab === 'ads'  && <HeaderBtn onClick={() => setShowAddAds(true)}  label="Tambah Campaign" icon={<Plus size={12}/>}/>}
-            {activeTab === 'kol'  && <HeaderBtn onClick={() => setShowAddKol(true)}  label="Tambah KOL" icon={<Plus size={12}/>}/>}
+            }} label={t('sales_btn_add_sale')} icon={<Plus size={14}/>}/>}
+            {activeTab === 'ops'  && <HeaderBtn onClick={() => setShowAddOps(true)}  label={t('sales_btn_add_ops')} icon={<Plus size={14}/>}/>}
+            {activeTab === 'ads'  && <HeaderBtn onClick={() => setShowAddAds(true)}  label="Tambah Campaign" icon={<Plus size={14}/>}/>}
+            {activeTab === 'kol'  && <HeaderBtn onClick={() => setShowAddKol(true)}  label="Tambah KOL" icon={<Plus size={14}/>}/>}
           </div>
         }
       />
@@ -315,7 +315,7 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
 
       {/* Search */}
       <div style={{ position: 'relative', maxWidth: '360px' }}>
-        <Search size={13} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
+        <Search size={14} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
         <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Cari order, customer, produk..."
           style={{ width: '100%', paddingLeft: '32px', paddingRight: '12px', paddingTop: '8px', paddingBottom: '8px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9px', color: 'rgba(255,255,255,0.8)', fontSize: '12.5px', outline: 'none', boxSizing: 'border-box' }}
@@ -392,7 +392,7 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Produk</label>
                 <select
                   value={editingSale ? editingSale.productId : newSale.productId}
                   onChange={e => {
@@ -405,7 +405,7 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Variant SKU</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Variant SKU</label>
                 <select
                   value={editingSale ? editingSale.variantSku : newSale.variantSku}
                   onChange={e => editingSale ? setEditingSale({ ...editingSale, variantSku: e.target.value }) : setNewSale({ ...newSale, variantSku: e.target.value })}
@@ -417,14 +417,14 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
                 </select>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama Pembeli</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Nama Pembeli</label>
                 <input type="text"
                   value={editingSale ? editingSale.customerName : newSale.customerName}
                   onChange={e => editingSale ? setEditingSale({ ...editingSale, customerName: e.target.value }) : setNewSale({ ...newSale, customerName: e.target.value })}
                   placeholder="e.g. Rina Marlina" className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Channel</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Channel</label>
                 <select
                   value={editingSale ? editingSale.channel : newSale.channel}
                   onChange={e => editingSale ? setEditingSale({ ...editingSale, channel: e.target.value }) : setNewSale({ ...newSale, channel: e.target.value })}
@@ -433,42 +433,42 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Qty</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Qty</label>
                 <NumberInput allowDecimal={false}
                   value={editingSale ? editingSale.qtySold : newSale.qtySold}
                   onChange={n => editingSale ? setEditingSale({ ...editingSale, qtySold: n }) : setNewSale({ ...newSale, qtySold: n })}
                   className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Harga/PCS ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Harga/PCS ({currencySymbol})</label>
                 <CurrencyInput
                   value={editingSale ? editingSale.pricePerPcs : newSale.pricePerPcs}
                   onChange={v => editingSale ? setEditingSale({ ...editingSale, pricePerPcs: v }) : setNewSale({ ...newSale, pricePerPcs: v })}
                   className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Platform Fee ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Platform Fee ({currencySymbol})</label>
                 <CurrencyInput
                   value={editingSale ? editingSale.platformFee : newSale.platformFee}
                   onChange={v => editingSale ? setEditingSale({ ...editingSale, platformFee: v }) : setNewSale({ ...newSale, platformFee: v })}
                   className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Diskon ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Diskon ({currencySymbol})</label>
                 <CurrencyInput
                   value={editingSale ? editingSale.discount : newSale.discount}
                   onChange={v => editingSale ? setEditingSale({ ...editingSale, discount: v }) : setNewSale({ ...newSale, discount: v })}
                   className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tanggal</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Tanggal</label>
                 <input type="date"
                   value={editingSale ? editingSale.date : newSale.date}
                   onChange={e => editingSale ? setEditingSale({ ...editingSale, date: e.target.value }) : setNewSale({ ...newSale, date: e.target.value })}
                   className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Status</label>
                 <select
                   value={editingSale ? editingSale.status : newSale.status}
                   onChange={e => editingSale ? setEditingSale({ ...editingSale, status: e.target.value as SalesRecord['status'] }) : setNewSale({ ...newSale, status: e.target.value as SalesRecord['status'] })}
@@ -527,40 +527,40 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kategori</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Kategori</label>
                 <select value={newOps.category} onChange={e => setNewOps({ ...newOps, category: e.target.value })} className={inputCls}>
                   {opsCategories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Jumlah ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Jumlah ({currencySymbol})</label>
                 <CurrencyInput value={newOps.amount} onChange={v => setNewOps({ ...newOps, amount: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Platform</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Platform</label>
                 <input type="text" value={newOps.platform} placeholder="Meta Ads, Shopee, dll..."
                   onChange={e => setNewOps({ ...newOps, platform: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tanggal</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Tanggal</label>
                 <input type="date" value={newOps.date} onChange={e => setNewOps({ ...newOps, date: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk Terkait</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Produk Terkait</label>
                 <select value={newOps.productId} onChange={e => setNewOps({ ...newOps, productId: e.target.value })} className={inputCls}>
                   <option value="">General (semua produk)</option>
                   {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Campaign ID</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Campaign ID</label>
                 <input type="text" value={newOps.campaignId} placeholder="opsional"
                   onChange={e => setNewOps({ ...newOps, campaignId: e.target.value })} className={inputCls}/>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Catatan</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Catatan</label>
                 <textarea value={newOps.notes} onChange={e => setNewOps({ ...newOps, notes: e.target.value })}
-                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none text-xs font-mono"/>
+                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded-xl focus:outline-none text-xs"/>
               </div>
             </div>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
@@ -589,12 +589,12 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama Campaign</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Nama Campaign</label>
                 <input type="text" value={newAds.name} placeholder="e.g. Summer Drop 2025"
                   onChange={e => setNewAds({ ...newAds, name: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Platform</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Platform</label>
                 <select value={newAds.platform} onChange={e => setNewAds({ ...newAds, platform: e.target.value as AdsCampaign['platform'] })} className={inputCls}>
                   <option value="Meta Ads">Meta Ads</option>
                   <option value="TikTok Ads">TikTok Ads</option>
@@ -603,26 +603,26 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Produk</label>
                 <select value={newAds.productId} onChange={e => setNewAds({ ...newAds, productId: e.target.value })} className={inputCls}>
                   <option value="">Semua produk</option>
                   {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Spend ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Spend ({currencySymbol})</label>
                 <CurrencyInput value={newAds.spend} onChange={v => setNewAds({ ...newAds, spend: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Revenue ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Revenue ({currencySymbol})</label>
                 <CurrencyInput value={newAds.revenue} onChange={v => setNewAds({ ...newAds, revenue: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">CTR (%)</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">CTR (%)</label>
                 <NumberInput value={newAds.ctr} onChange={n => setNewAds({ ...newAds, ctr: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">CVR (%)</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">CVR (%)</label>
                 <NumberInput value={newAds.conversionRate} onChange={n => setNewAds({ ...newAds, conversionRate: n })} className={inputCls}/>
               </div>
             </div>
@@ -651,12 +651,12 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama KOL</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Nama KOL</label>
                 <input type="text" value={newKol.name} placeholder="e.g. @influencer_name"
                   onChange={e => setNewKol({ ...newKol, name: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Platform</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Platform</label>
                 <select value={newKol.platform} onChange={e => setNewKol({ ...newKol, platform: e.target.value as KolTracking['platform'] })} className={inputCls}>
                   <option value="Instagram">Instagram</option>
                   <option value="TikTok">TikTok</option>
@@ -665,25 +665,25 @@ export default function SalesAndCostsView({ initialSubTab = 'sales' }: SalesAndC
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Followers</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Followers</label>
                 <NumberInput value={newKol.followers} allowDecimal={false}
                   onChange={n => setNewKol({ ...newKol, followers: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Fee ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Fee ({currencySymbol})</label>
                 <CurrencyInput value={newKol.cost} onChange={v => setNewKol({ ...newKol, cost: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Revenue Track ({currencySymbol})</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Revenue Track ({currencySymbol})</label>
                 <CurrencyInput value={newKol.revenueGenerated} onChange={v => setNewKol({ ...newKol, revenueGenerated: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kode Promo</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Kode Promo</label>
                 <input type="text" value={newKol.campaignId} placeholder="NAMAXXXXXXX"
                   onChange={e => setNewKol({ ...newKol, campaignId: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <label className="text-[var(--color-text-muted)] uppercase text-xs mb-1 block">Status</label>
                 <select value={newKol.status} onChange={e => setNewKol({ ...newKol, status: e.target.value as KolTracking['status'] })} className={inputCls}>
                   <option value="Negotiation">Negotiation</option>
                   <option value="Contracted">Contracted</option>

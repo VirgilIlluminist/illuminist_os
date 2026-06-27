@@ -1,5 +1,7 @@
 import { getTxEngine } from '../../core/services/TransactionEngine';
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import type { AnyGraphNode, HPPCostNode, ProductCostBreakdown } from '../../core/graph/types';
+import { recomputeGraph, getProductHPP, getProductCostBreakdown, buildSeedGraph } from '../../core/graph/engine';
 import { useBusiness } from './BusinessContext';
 import { storageMode } from '../../core/repositories/index';
 import { isSupabaseEnabled } from '../../infra/supabase/client';
@@ -194,6 +196,14 @@ interface ERPContextType {
   formatPercent: (val: number | string, customDecimals?: number) => string;
   convertCurrency: (val: number, from: 'IDR' | 'USD', to: 'IDR' | 'USD') => number;
   t: (key: string) => string;
+
+  // Graph Core System — HPP Engine
+  graphNodes: AnyGraphNode[];
+  updateGraphNode: (id: string, patch: Partial<AnyGraphNode>) => void;
+  addGraphNode: (node: AnyGraphNode) => void;
+  removeGraphNode: (id: string) => void;
+  getProductHPP: (productId: string) => HPPCostNode | undefined;
+  getProductCostBreakdown: (productId: string) => ProductCostBreakdown;
 
   // Multi-business & connection info
   activeCompanyId: string;
@@ -464,6 +474,17 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
     return merged;
   });
 
+  // ─── Graph Core System ────────────────────────────────────────────────────
+  // The graph is a computation cache — runs regardless of Supabase mode.
+  // Key uses 'illuminist_graph_v1' to avoid being wiped by the Supabase cleanup.
+  const [graphNodes, setGraphNodes] = useState<AnyGraphNode[]>(() => {
+    try {
+      const stored = localStorage.getItem('illuminist_graph_v1');
+      if (stored) return JSON.parse(stored) as AnyGraphNode[];
+    } catch {}
+    return buildSeedGraph(initialProducts, initialMaterials, initialProduction);
+  });
+
   const [moodboard, setMoodboard] = useState<MoodboardItem[]>(() => {
     const local = localStorage.getItem(`${LOCAL_STORAGE_KEY}_moodboard`);
     return local ? JSON.parse(local) : initialMoodboard;
@@ -492,6 +513,7 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_config`,       JSON.stringify(config));       }, [config]);
   // BUG-03: moodboard bisa berisi gambar base64 besar → pakai safeSetItem untuk graceful fail
   useEffect(() => { safeSetItem(`${LOCAL_STORAGE_KEY}_moodboard`,    JSON.stringify(moodboard));    }, [moodboard]);
+  useEffect(() => { safeSetItem('illuminist_graph_v1', JSON.stringify(graphNodes)); }, [graphNodes]);
 
   // ── Supabase: clean slate + hydration ──────────────────────────────────────
   // One-time purge of legacy dummy keys (nevaeh_erp_state_v2_idr_*) and the
@@ -883,6 +905,38 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
   const deleteMoodboardItem = (id: string) => {
     setMoodboard(prev => prev.filter(m => m.id !== id));
   };
+
+  // ─── Graph Core mutations ─────────────────────────────────────────────────
+  const updateGraphNode = (id: string, patch: Partial<AnyGraphNode>) => {
+    setGraphNodes(prev => {
+      const target = prev.find(n => n.id === id);
+      if (!target) return prev;
+      const updated = prev.map(n => n.id === id ? { ...n, ...patch } as AnyGraphNode : n);
+      return recomputeGraph(target.productId, updated);
+    });
+  };
+
+  const addGraphNode = (node: AnyGraphNode) => {
+    setGraphNodes(prev => {
+      const next = [...prev.filter(n => n.id !== node.id), node];
+      return recomputeGraph(node.productId, next);
+    });
+  };
+
+  const removeGraphNode = (id: string) => {
+    setGraphNodes(prev => {
+      const target = prev.find(n => n.id === id);
+      if (!target) return prev;
+      const next = prev.filter(n => n.id !== id && !n.dependencies.includes(id));
+      return recomputeGraph(target.productId, next);
+    });
+  };
+
+  const getProductHPPNode = (productId: string): HPPCostNode | undefined =>
+    getProductHPP(productId, graphNodes);
+
+  const getProductCostBreakdownFn = (productId: string): ProductCostBreakdown =>
+    getProductCostBreakdown(productId, graphNodes);
 
   // --- CONNECTED REALTIME RELATIONAL DATABASE FORMULAS ---
 
@@ -1442,7 +1496,14 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
       moodboard,
       addMoodboardItem,
       deleteMoodboardItem,
- 
+
+      graphNodes,
+      updateGraphNode,
+      addGraphNode,
+      removeGraphNode,
+      getProductHPP: getProductHPPNode,
+      getProductCostBreakdown: getProductCostBreakdownFn,
+
       setMaterials,
       setProducts,
       setSamples,

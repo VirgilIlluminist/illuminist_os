@@ -172,7 +172,7 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
           <div className="flex items-center gap-2 mb-3">
             <Sparkles size={14} style={{ color:accent }}/>
             <p className="text-xs font-semibold text-[var(--color-text-main)]">AI Executive Summary</p>
-            {aiSummary && <button onClick={fetchAISummary} className="ml-auto text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer"><RefreshCw size={12}/></button>}
+            {aiSummary && <button onClick={fetchAISummary} className="ml-auto text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer"><RefreshCw size={14}/></button>}
           </div>
           {aiLoading
             ? <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)]"><div className="w-4 h-4 rounded-full border-2 border-[var(--color-border-line)] border-t-[var(--color-accent-highlight)] animate-spin"/> Menganalisa semua bisnis...</div>
@@ -186,11 +186,11 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
         {KPICards.map((kpi,i) => (
           <motion.div key={i} initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }} transition={{ delay:i*0.05 }} className={`${card} p-4`}>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background:`${kpi.color}15`, color:kpi.color }}>{kpi.icon}</div>
             </div>
             <p className="text-2xl font-bold text-[var(--color-text-main)] tracking-tight tabular-nums">{kpi.value}</p>
-            <p className="text-[10px] text-[var(--color-text-muted)] mt-1">{kpi.sub}</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">{kpi.sub}</p>
           </motion.div>
         ))}
       </div>
@@ -199,7 +199,7 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
       <div className={`${card} p-5`}>
         <div className="flex items-center justify-between mb-5">
           <p className="text-sm font-semibold text-[var(--color-text-main)]">Perbandingan Bisnis</p>
-          <span className="text-[10px] text-[var(--color-text-muted)]">Bulan ini · klik untuk switch</span>
+          <span className="text-xs text-[var(--color-text-muted)]">Bulan ini · klik untuk switch</span>
         </div>
         {bizKPIs.length === 0 ? (
           <div className="text-center py-8">
@@ -220,15 +220,15 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-semibold text-[var(--color-text-main)] truncate">{biz.name}</p>
-                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white shrink-0"
+                        <span className="text-xs font-bold px-1.5 py-0.5 rounded-full text-white shrink-0"
                           style={{ background:biz.healthScore.color }}>{biz.healthScore.grade} · {biz.healthScore.score}</span>
-                        {biz.id === activeBusiness?.id && <span className="text-[9px] px-1.5 py-0.5 rounded-full border border-[var(--color-border-line)] text-[var(--color-text-muted)] shrink-0">Aktif</span>}
+                        {biz.id === activeBusiness?.id && <span className="text-xs px-1.5 py-0.5 rounded-full border border-[var(--color-border-line)] text-[var(--color-text-muted)] shrink-0">Aktif</span>}
                       </div>
-                      <p className="text-[10px] text-[var(--color-text-muted)] capitalize">{biz.type.replace('_',' ')}</p>
+                      <p className="text-xs text-[var(--color-text-muted)] capitalize">{biz.type.replace('_',' ')}</p>
                     </div>
                     <div className="text-right shrink-0">
                       <p className="text-sm font-bold text-[var(--color-text-main)] tabular-nums">{formatMoney(biz.revenue)}</p>
-                      <p className="text-[10px] tabular-nums" style={{ color:biz.profit>=0?'#34c759':'#ff3b30' }}>
+                      <p className="text-xs tabular-nums" style={{ color:biz.profit>=0?'#34c759':'#ff3b30' }}>
                         {biz.profit>=0?'+':''}{formatMoney(biz.profit)}
                       </p>
                     </div>
@@ -239,8 +239,8 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
                       className="h-full rounded-full" style={{ background:biz.color }}/>
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-[9px] text-[var(--color-text-muted)]">{share.toFixed(1)}% revenue</span>
-                    <span className="text-[9px] text-[var(--color-text-muted)]">{biz.healthScore.label}</span>
+                    <span className="text-xs text-[var(--color-text-muted)]">{share.toFixed(1)}% revenue</span>
+                    <span className="text-xs text-[var(--color-text-muted)]">{biz.healthScore.label}</span>
                   </div>
                 </motion.div>
               );
@@ -282,7 +282,7 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
               <div className="w-24 h-1.5 bg-[var(--color-background)] rounded-full overflow-hidden">
                 <div className="h-full rounded-full" style={{ width:`${b.healthScore.score}%`, background:b.healthScore.color }}/>
               </div>
-              <span className="text-[10px] font-bold w-6 text-right" style={{ color:b.healthScore.color }}>{b.healthScore.grade}</span>
+              <span className="text-xs font-bold w-6 text-right" style={{ color:b.healthScore.color }}>{b.healthScore.grade}</span>
             </div>
           ))}
         </div>
@@ -302,14 +302,14 @@ Insight: apa yang baik, apa yang perlu diperhatikan, 1–2 rekomendasi.`;
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--color-background)] transition-all cursor-pointer text-left group">
                 <span className="text-base">{a.icon}</span>
                 <span className="text-sm text-[var(--color-text-main)] flex-1">{a.label}</span>
-                <ChevronRight size={13} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 transition-opacity"/>
+                <ChevronRight size={14} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100 transition-opacity"/>
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      <p className="text-[10px] text-[var(--color-text-muted)] text-center">
+      <p className="text-xs text-[var(--color-text-muted)] text-center">
         Data per bisnis diambil dari Transaction Engine · Sync real-time saat ada transaksi baru
       </p>
     </div>

@@ -122,8 +122,8 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: () => void
       animate={{ opacity: 1, x: 0,  scale: 1    }}
       exit={{    opacity: 0, x: 60, scale: 0.95  }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className={`pointer-events-auto flex items-start gap-2.5 px-4 py-3 rounded-xl border bg-[var(--color-card-bg)] shadow-2xl backdrop-blur-md ${BORDER[item.type]}`}
-      style={{ backdropFilter: 'blur(12px)' }}
+      className={`pointer-events-auto flex items-start gap-2.5 px-4 py-3 rounded-xl border shadow-2xl ${BORDER[item.type]}`}
+      style={{ background: 'rgba(14,10,28,0.95)' }}
     >
       {ICON[item.type]}
       <span className="text-xs text-[var(--color-text-main)] flex-1 leading-relaxed">{item.message}</span>
@@ -144,30 +144,31 @@ function ConfirmCard({ item, onResolve }: {
       animate={{ opacity: 1 }}
       exit={{    opacity: 0 }}
       className="fixed inset-0 z-[9998] flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)' }}
+      style={{ background: 'rgba(0,0,0,0.65)' }}
     >
       <motion.div
         initial={{ scale: 0.92, y: 12 }}
         animate={{ scale: 1,    y: 0  }}
         exit={{    scale: 0.92, y: 8  }}
         transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-xl p-6 shadow-2xl"
+        className="w-full max-w-sm rounded-2xl p-6 shadow-2xl"
+        style={{ background: 'rgba(14,10,28,0.92)', border: '1px solid rgba(255,255,255,0.12)' }}
       >
         <div className="flex gap-3 items-start mb-5">
           <AlertTriangle size={18} className="text-yellow-500 shrink-0 mt-0.5" />
-          <p className="text-sm text-[var(--color-text-main)] leading-relaxed">{item.message}</p>
+          <p className="text-sm text-white/80 leading-relaxed">{item.message}</p>
         </div>
         <div className="flex justify-end gap-3">
           <button
             onClick={() => onResolve(item.id, false)}
-            className="px-4 py-2 text-xs font-mono uppercase tracking-wider text-[var(--color-text-muted)] border border-[var(--color-border-line)] rounded hover:text-[var(--color-text-main)] transition-all cursor-pointer"
+            className="px-4 py-2.5 text-sm font-medium text-white/50 border border-white/[0.10] rounded-xl hover:text-white transition-all cursor-pointer"
           >
             Batal
           </button>
           <button
             onClick={() => onResolve(item.id, true)}
-            className="px-4 py-2 text-xs font-mono uppercase tracking-wider font-semibold rounded transition-all cursor-pointer"
-            style={{ background: 'var(--color-accent-highlight)', color: 'var(--color-background)' }}
+            className="px-4 py-2.5 text-sm font-semibold rounded-xl transition-all cursor-pointer"
+            style={{ background: 'var(--color-accent-highlight)', color: '#000' }}
           >
             Ya, Lanjutkan
           </button>

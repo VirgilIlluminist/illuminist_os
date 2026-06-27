@@ -7,9 +7,19 @@
  */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronRight, ChevronLeft, Check, Sparkles, Zap } from 'lucide-react';
+import {
+  X, ChevronRight, ChevronLeft, Check, Sparkles, Zap,
+  Shirt, Coffee, UtensilsCrossed, Store, Briefcase, Wrench, Building2, Wallet, TrendingUp, Building,
+} from 'lucide-react';
 import { useBusiness } from '../../../app/store/BusinessContext';
-import { ALL_BUSINESS_TYPES, getModulesForType } from '../../../core/constants/businessConstants';
+import { ALL_BUSINESS_TYPES, getModulesForType, type BusinessTypeId } from '../../../core/constants/businessConstants';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BIZ_ICONS: Record<BusinessTypeId, React.ComponentType<any>> = {
+  fashion: Shirt, coffee: Coffee, restaurant: UtensilsCrossed, retail: Store,
+  agency: Briefcase, service: Wrench, property: Building2,
+  personal_finance: Wallet, investment: TrendingUp, holding: Building, custom: Zap,
+};
 import { toast } from '../../../shared/ui/Toast';
 
 interface Props { open: boolean; onClose: () => void }
@@ -119,36 +129,37 @@ export default function BusinessWizard({ open, onClose }: Props) {
   if (!open) return null;
 
   const accent = selectedType?.colorHex || '#0071e3';
-  const card = 'bg-[var(--color-card-bg)] border border-[var(--color-border-line)]';
+  const inputCls = 'w-full px-4 py-2.5 text-sm bg-white/[0.06] border border-white/[0.10] text-white rounded-xl focus:outline-none focus:border-white/25 transition-colors placeholder:text-white/30';
+  const labelCls = 'text-sm font-medium text-white/50 mb-2 block';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.65)' }}>
       <motion.div
         initial={{ opacity:0, scale:0.95, y:16 }}
         animate={{ opacity:1, scale:1,    y:0 }}
         exit={{ opacity:0, scale:0.95 }}
         transition={{ type:'spring', stiffness:400, damping:36 }}
-        className={`${card} rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden`}
-        style={{ maxHeight:'90vh', display:'flex', flexDirection:'column' }}
+        className="w-full max-w-2xl rounded-2xl overflow-hidden"
+        style={{ maxHeight:'90vh', display:'flex', flexDirection:'column', background:'rgba(14,10,28,0.92)', border:'1px solid rgba(255,255,255,0.12)', boxShadow:'0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)' }}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-[var(--color-border-line)] flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 border-b border-white/[0.08] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-lg" style={{ background:`${accent}20` }}>
-              {selectedType?.icon || '⚡'}
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background:`${accent}20`, color: accent }}>
+              {React.createElement(BIZ_ICONS[bizType as BusinessTypeId] ?? Zap, { size: 16 })}
             </div>
             <div>
-              <p className="text-sm font-semibold text-[var(--color-text-main)]">Buat Bisnis Baru</p>
-              <p className="text-[10px] text-[var(--color-text-muted)]">Langkah {step} dari 4 — {STEPS[step-1]}</p>
+              <p className="text-sm font-semibold text-white">Buat Bisnis Baru</p>
+              <p className="text-xs text-white/40">Langkah {step} dari 4 — {STEPS[step-1]}</p>
             </div>
           </div>
-          <button onClick={() => { onClose(); resetWizard(); }} className="p-1.5 rounded-lg hover:bg-[var(--color-background)] cursor-pointer">
-            <X size={15} className="text-[var(--color-text-muted)]"/>
+          <button onClick={() => { onClose(); resetWizard(); }} className="p-1.5 rounded-lg hover:bg-white/[0.06] cursor-pointer">
+            <X size={15} className="text-white/40"/>
           </button>
         </div>
 
         {/* Progress */}
-        <div className="h-0.5 bg-[var(--color-border-line)] shrink-0">
+        <div className="h-0.5 bg-white/[0.06] shrink-0">
           <motion.div className="h-full rounded-full" style={{ background:accent }}
             animate={{ width:`${(step/4)*100}%` }} transition={{ duration:0.4 }}/>
         </div>
@@ -163,17 +174,19 @@ export default function BusinessWizard({ open, onClose }: Props) {
               {/* STEP 1 — Tipe Bisnis */}
               {step === 1 && (
                 <div>
-                  <p className="text-xs text-[var(--color-text-muted)] mb-4">Pilih template yang paling sesuai bisnis Anda</p>
+                  <p className="text-sm text-white/40 mb-4">Pilih template yang paling sesuai bisnis Anda</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                     {ALL_BUSINESS_TYPES.map(t => (
                       <button key={t.id} onClick={() => setBizType(t.id)}
                         className={`p-4 rounded-xl text-left border-2 cursor-pointer transition-all ${bizType===t.id ? 'shadow-md' : 'border-[var(--color-border-line)] hover:border-[var(--color-text-muted)] border'}`}
                         style={bizType===t.id ? { borderColor:t.colorHex, background:`${t.colorHex}10` } : {}}>
-                        <span className="text-xl block mb-2">{t.icon}</span>
-                        <p className="text-xs font-semibold text-[var(--color-text-main)] leading-tight">{t.label}</p>
-                        <p className="text-[9px] text-[var(--color-text-muted)] mt-0.5 leading-tight">{t.description}</p>
+                        <span className="block mb-2" style={{ color: bizType===t.id ? t.colorHex : 'rgba(255,255,255,0.55)' }}>
+                          {React.createElement(BIZ_ICONS[t.id as BusinessTypeId] ?? Zap, { size: 20 })}
+                        </span>
+                        <p className="text-sm font-medium text-white leading-tight">{t.label}</p>
+                        <p className="text-xs text-white/40 mt-0.5 leading-tight">{t.description}</p>
                         {bizType === t.id && (
-                          <span className="mt-1.5 inline-flex text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white" style={{ background:t.colorHex }}>✓ Dipilih</span>
+                          <span className="mt-1.5 inline-flex text-xs font-bold px-1.5 py-0.5 rounded-full text-white" style={{ background:t.colorHex }}>✓ Dipilih</span>
                         )}
                       </button>
                     ))}
@@ -184,45 +197,45 @@ export default function BusinessWizard({ open, onClose }: Props) {
               {/* STEP 2 — Branding */}
               {step === 2 && (
                 <div className="space-y-4">
-                  <p className="text-xs text-[var(--color-text-muted)] mb-4">Atur identitas bisnis Anda</p>
+                  <p className="text-sm text-white/40 mb-4">Atur identitas bisnis Anda</p>
                   <div>
-                    <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">Nama Bisnis <span className="text-red-500">*</span></label>
+                    <label className={labelCls}>Nama Bisnis <span className="text-red-400">*</span></label>
                     <input value={bizName} onChange={e => { setBizName(e.target.value); setNameEdited(true); }} autoFocus
                       placeholder={selectedType?.defaultName}
-                      className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] focus:outline-none"/>
+                      className={inputCls}/>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">Deskripsi (opsional)</label>
+                    <label className={labelCls}>Deskripsi (opsional)</label>
                     <textarea value={bizDesc} onChange={e => setBizDesc(e.target.value)} rows={2}
                       placeholder="Singkat tentang bisnis ini..."
-                      className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] focus:outline-none resize-none"/>
+                      className={`${inputCls} resize-none`}/>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">Mata Uang</label>
+                      <label className={labelCls}>Mata Uang</label>
                       <select value={currency} onChange={e => setCurrency(e.target.value)}
-                        className="w-full px-3 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] cursor-pointer">
-                        {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
+                        className={`${inputCls} cursor-pointer`}>
+                        {CURRENCIES.map(c => <option key={c.code} value={c.code} className="bg-[#0e0a1c]">{c.label}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">Zona Waktu</label>
+                      <label className={labelCls}>Zona Waktu</label>
                       <select value={timezone} onChange={e => setTimezone(e.target.value)}
-                        className="w-full px-3 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] cursor-pointer">
-                        {TIMEZONES.map(tz => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
+                        className={`${inputCls} cursor-pointer`}>
+                        {TIMEZONES.map(tz => <option key={tz.value} value={tz.value} className="bg-[#0e0a1c]">{tz.label}</option>)}
                       </select>
                     </div>
                   </div>
                   {/* Preview */}
-                  <div className="p-4 rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)]">
-                    <p className="text-[10px] text-[var(--color-text-muted)] mb-2 font-medium">PREVIEW</p>
+                  <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.03]">
+                    <p className="text-xs text-[var(--color-text-muted)] mb-2 font-medium">PREVIEW</p>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background:`${accent}18` }}>
-                        {selectedType?.icon}
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background:`${accent}18`, color: accent }}>
+                        {React.createElement(BIZ_ICONS[bizType as BusinessTypeId] ?? Zap, { size: 20 })}
                       </div>
                       <div>
                         <p className="text-sm font-bold text-[var(--color-text-main)]">{bizName || selectedType?.defaultName}</p>
-                        <p className="text-[10px] text-[var(--color-text-muted)]">{selectedType?.label} · {currency}</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">{selectedType?.label} · {currency}</p>
                       </div>
                     </div>
                   </div>
@@ -233,8 +246,8 @@ export default function BusinessWizard({ open, onClose }: Props) {
               {step === 3 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-xs text-[var(--color-text-muted)]">Aktifkan modul yang dibutuhkan · bisa diubah di Settings</p>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background:`${accent}15`, color:accent }}>{modules.size} aktif</span>
+                    <p className="text-sm text-white/40">Aktifkan modul yang dibutuhkan · bisa diubah di Settings</p>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background:`${accent}15`, color:accent }}>{modules.size} aktif</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {ALL_MODULES.map(mod => {
@@ -242,18 +255,18 @@ export default function BusinessWizard({ open, onClose }: Props) {
                       const isDefault = getModulesForType(bizType).includes(mod.id);
                       return (
                         <button key={mod.id} onClick={() => toggleModule(mod.id)}
-                          className={`flex items-center gap-2.5 p-3 rounded-xl cursor-pointer transition-all text-left border ${isOn ? 'border-2' : 'border-[var(--color-border-line)] opacity-55 hover:opacity-90'}`}
+                          className={`flex items-center gap-2.5 p-3 rounded-xl cursor-pointer transition-all text-left border ${isOn ? 'border-2' : 'border-white/[0.08] opacity-55 hover:opacity-90'}`}
                           style={isOn ? { borderColor:accent, background:`${accent}08` } : {}}>
                           <span className="text-base shrink-0">{mod.icon}</span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-[var(--color-text-main)] flex items-center gap-1.5 truncate">
+                            <p className="text-xs font-semibold text-white flex items-center gap-1.5 truncate">
                               {mod.label}
-                              {isDefault && <span className="text-[8px] px-1 py-0.5 rounded-sm bg-[var(--color-border-line)] text-[var(--color-text-muted)]">Default</span>}
+                              {isDefault && <span className="text-xs px-1 py-0.5 rounded-sm bg-white/[0.08] text-white/50">Default</span>}
                             </p>
                           </div>
                           <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${isOn ? 'border-0' : 'border-[var(--color-border-line)]'}`}
                             style={isOn ? { background:accent } : {}}>
-                            {isOn && <Check size={9} className="text-white"/>}
+                            {isOn && <Check size={14} className="text-white"/>}
                           </div>
                         </button>
                       );
@@ -275,8 +288,8 @@ export default function BusinessWizard({ open, onClose }: Props) {
                     </motion.div>
                   ) : (
                     <>
-                      <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4" style={{ background:`${accent}15` }}>
-                        {selectedType?.icon}
+                      <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4" style={{ background:`${accent}15`, color: accent }}>
+                        {React.createElement(BIZ_ICONS[bizType as BusinessTypeId] ?? Zap, { size: 32 })}
                       </div>
                       <p className="text-lg font-bold text-[var(--color-text-main)]">{bizName}</p>
                       <p className="text-sm text-[var(--color-text-muted)] mb-6">{selectedType?.tagline}</p>
@@ -287,9 +300,9 @@ export default function BusinessWizard({ open, onClose }: Props) {
                           { label:'Mata Uang',    value: currency },
                           { label:'Modul Aktif',  value: `${modules.size} modul` },
                         ].map(item => (
-                          <div key={item.label} className="p-3 rounded-xl bg-[var(--color-background)] border border-[var(--color-border-line)]">
-                            <p className="text-[9px] text-[var(--color-text-muted)]">{item.label}</p>
-                            <p className="text-xs font-semibold text-[var(--color-text-main)] mt-0.5">{item.value}</p>
+                          <div key={item.label} className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+                            <p className="text-xs text-white/40">{item.label}</p>
+                            <p className="text-xs font-semibold text-white mt-0.5">{item.value}</p>
                           </div>
                         ))}
                       </div>
@@ -312,14 +325,14 @@ export default function BusinessWizard({ open, onClose }: Props) {
 
         {/* Footer nav */}
         {!done && (
-          <div className="px-6 py-4 border-t border-[var(--color-border-line)] flex justify-between shrink-0">
+          <div className="px-6 py-4 border-t border-white/[0.08] flex justify-between shrink-0">
             <button onClick={() => setStep(s => Math.max(1,s-1))} disabled={step===1}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] disabled:opacity-30 cursor-pointer">
+              className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium rounded-xl border border-white/[0.10] text-white/50 hover:text-white disabled:opacity-30 cursor-pointer transition-colors">
               <ChevronLeft size={14}/> Kembali
             </button>
             {step < 4 ? (
               <button onClick={() => { if (!canNext()) { toast.error(step===2?'Nama bisnis wajib diisi':'Pilih minimal 1 modul'); return; } setStep(s=>s+1); }}
-                className="flex items-center gap-1.5 px-5 py-2 text-sm font-medium rounded-xl text-white cursor-pointer" style={{ background:accent }}>
+                className="flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold rounded-xl text-white cursor-pointer" style={{ background:accent }}>
                 {step===3?'Review':'Lanjut'} <ChevronRight size={14}/>
               </button>
             ) : null}

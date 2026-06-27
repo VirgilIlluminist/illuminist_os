@@ -75,24 +75,24 @@ export default function ProductListView() {
     return data;
   }, [enriched, search, statusFilter, stockFilter, categoryFilter, sort]);
 
-  const SELECT = 'bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-1.5 text-[10px] font-mono text-[var(--color-text-main)] focus:outline-none cursor-pointer';
+  const SELECT = 'bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-1.5 text-xs text-[var(--color-text-main)] focus:outline-none cursor-pointer';
 
   return (
     <div className="space-y-5 animate-fadeIn">
       {/* Header */}
       <div className="border-b border-[var(--color-border-line)] pb-5">
         <div className="flex items-center gap-2 mb-1">
-          <TrendingUp size={13} style={{ color: accent }}/>
+          <TrendingUp size={14} style={{ color: accent }}/>
           <span className="text-xs font-mono tracking-widest uppercase text-[var(--color-text-muted)]">Product Intelligence</span>
         </div>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)]">Products</h2>
           <button
             onClick={() => navigate('/app/products/new')}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-mono font-bold text-black cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold text-black cursor-pointer"
             style={{ background: accent }}
           >
-            <Plus size={11}/> Produk Baru
+            <Plus size={14}/> Produk Baru
           </button>
         </div>
       </div>
@@ -100,7 +100,7 @@ export default function ProductListView() {
       {/* Search + Filter */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="relative flex-1 min-w-48">
-          <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"/>
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"/>
           <input
             type="text"
             placeholder="Cari produk, SKU..."
@@ -111,8 +111,8 @@ export default function ProductListView() {
         </div>
 
         <button onClick={() => setShowFilters(v => !v)}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-mono cursor-pointer border transition-colors ${showFilters ? 'border-white/30 text-[var(--color-text-main)]' : 'border-[var(--color-border-line)] text-[var(--color-text-muted)]'}`}>
-          <Filter size={10}/> Filter
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs cursor-pointer border transition-colors ${showFilters ? 'border-white/30 text-[var(--color-text-main)]' : 'border-[var(--color-border-line)] text-[var(--color-text-muted)]'}`}>
+          <Filter size={14}/> Filter
         </button>
 
         <select value={sort} onChange={e => setSort(e.target.value as SortKey)} className={SELECT}>
@@ -145,7 +145,7 @@ export default function ProductListView() {
       )}
 
       {/* Count */}
-      <p className="text-[9px] font-mono text-[var(--color-text-muted)]">
+      <p className="text-xs text-[var(--color-text-muted)]">
         {filtered.length} dari {products.length} produk
       </p>
 
@@ -181,27 +181,27 @@ export default function ProductListView() {
                 {/* Content */}
                 <div className="p-3 space-y-2">
                   <div>
-                    <p className="text-xs font-mono font-bold text-[var(--color-text-main)] truncate">{p.name}</p>
-                    <p className="text-[8px] font-mono text-[var(--color-text-muted)]">{p.id} · {p.category}</p>
+                    <p className="text-xs font-bold text-[var(--color-text-main)] truncate">{p.name}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{p.id} · {p.category}</p>
                   </div>
 
                   {/* Metrics */}
                   <div className="grid grid-cols-3 gap-1">
                     <div>
-                      <p className="text-[7px] font-mono uppercase text-[var(--color-text-muted)]">HPP</p>
-                      <p className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                      <p className="text-xs uppercase text-[var(--color-text-muted)]">HPP</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">
                         {p.finalHPP > 0 ? `${currency}${Math.round(p.finalHPP / 1000)}k` : '—'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[7px] font-mono uppercase text-[var(--color-text-muted)]">Harga</p>
-                      <p className="text-[9px] font-mono text-[var(--color-text-main)] font-semibold">
+                      <p className="text-xs uppercase text-[var(--color-text-muted)]">Harga</p>
+                      <p className="text-xs text-[var(--color-text-main)] font-semibold">
                         {currency}{Math.round(p.sellingPrice / 1000)}k
                       </p>
                     </div>
                     <div>
-                      <p className="text-[7px] font-mono uppercase text-[var(--color-text-muted)]">Margin</p>
-                      <p className={`text-[9px] font-mono font-bold ${p.margin < 20 ? 'text-red-400' : p.margin < 35 ? 'text-yellow-400' : 'text-green-400'}`}>
+                      <p className="text-xs uppercase text-[var(--color-text-muted)]">Margin</p>
+                      <p className={`text-xs font-bold ${p.margin < 20 ? 'text-red-400' : p.margin < 35 ? 'text-yellow-400' : 'text-green-400'}`}>
                         {p.finalHPP > 0 ? `${p.margin.toFixed(1)}%` : '—'}
                       </p>
                     </div>
@@ -210,7 +210,7 @@ export default function ProductListView() {
                   {/* Stock indicator */}
                   <div className="flex items-center gap-1.5">
                     <div className={`w-1.5 h-1.5 rounded-full ${stockDot}`}/>
-                    <span className={`text-[8px] font-mono ${stockColor}`}>{p.totalStock} pcs</span>
+                    <span className={`text-xs ${stockColor}`}>{p.totalStock} pcs</span>
                   </div>
                 </div>
               </div>

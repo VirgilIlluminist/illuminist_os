@@ -25,7 +25,7 @@ export const DEFAULT_THEME: ThemeSettings = {
   themeId: 'midnight',
   wallpaperType: 'gradient',
   glassOpacity: 96,
-  sidebarOpacity: 82,
+  sidebarOpacity: 5,
 };
 
 function loadSettings(): ThemeSettings {
@@ -63,8 +63,14 @@ export function applyThemeSettings(s: ThemeSettings): void {
   const [cr, cg, cb] = CONTENT_BASE[s.themeId] ?? CONTENT_BASE.midnight;
   root.style.setProperty('--bg-content', `rgba(${cr}, ${cg}, ${cb}, ${s.glassOpacity / 100})`);
 
-  const [sr, sg, sb] = SIDEBAR_BASE[s.themeId] ?? SIDEBAR_BASE.midnight;
-  root.style.setProperty('--bg-sidebar', `rgba(${sr}, ${sg}, ${sb}, ${s.sidebarOpacity / 100})`);
+  // For dark themes: sidebar is transparent so glass-shell blur shows through uniformly.
+  // For light theme: use the sidebar base colour with opacity.
+  if (s.themeId === 'light') {
+    const [sr, sg, sb] = SIDEBAR_BASE.light;
+    root.style.setProperty('--bg-sidebar', `rgba(${sr}, ${sg}, ${sb}, ${s.sidebarOpacity / 100})`);
+  } else {
+    root.style.setProperty('--bg-sidebar', 'transparent');
+  }
 
   // Custom wallpaper overrides the preset gradient.
   if (s.wallpaperType === 'color' && s.customColor) {

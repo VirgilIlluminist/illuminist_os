@@ -21,6 +21,8 @@ import SmartTablesView        from '../../features/workspace/pages/SmartTablesVi
 import NotificationCenterView from '../../features/notifications/pages/NotificationCenterView';
 import SettingsView           from '../../features/settings/pages/SettingsView';
 import TeamPage               from '../../features/settings/pages/TeamPage';
+import PayrollPage            from '../../features/hr/pages/PayrollPage';
+import AttendancePage         from '../../features/hr/pages/AttendancePage';
 import BusinessInsightView    from '../../features/insights/pages/BusinessInsightView';
 import PersonalFinanceView    from '../../features/personal/pages/PersonalFinanceView';
 import OwnerFinanceView       from '../../features/personal/pages/OwnerFinanceView';
@@ -90,10 +92,10 @@ export default function App() {
                   {/* ── HR & TEAM ────────────────────────────────── */}
                   <Route path="/app/team"                 element={<TeamPage />} />
                   <Route path="/app/hr"                   element={<TeamPage />} />
-                  <Route path="/app/payroll"              element={<TeamPage />} />
-                  <Route path="/app/salary-sim"           element={<TeamPage />} />
+                  <Route path="/app/payroll"              element={<PayrollPage />} />
+                  <Route path="/app/salary-sim"           element={<PayrollPage />} />
                   <Route path="/app/employees"            element={<TeamPage />} />
-                  <Route path="/app/attendance"           element={<TeamPage />} />
+                  <Route path="/app/attendance"           element={<AttendancePage />} />
 
                   {/* ── WORKSPACE ────────────────────────────────── */}
                   <Route path="/app/smart-tables"         element={<SmartTablesView />} />

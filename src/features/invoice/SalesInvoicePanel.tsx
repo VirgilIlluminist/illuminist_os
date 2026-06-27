@@ -26,30 +26,30 @@ export default function SalesInvoicePanel({ sales, products }: Props) {
     <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText size={12} style={{ color: accent }}/>
-          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[var(--color-text-main)]">
+          <FileText size={16} style={{ color: accent }}/>
+          <span className="text-sm font-semibold text-[var(--color-text-main)]">
             Generate Invoice PDF
           </span>
         </div>
         <button
           onClick={() => setOpen(v => !v)}
-          className="text-[9px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] flex items-center gap-1 cursor-pointer"
+          className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] flex items-center gap-1 cursor-pointer"
         >
           {open ? 'Sembunyikan' : 'Tampilkan'}
-          <ChevronDown size={10} className={`transition-transform ${open ? 'rotate-180' : ''}`}/>
+          <ChevronDown size={14} className={`transition-transform ${open ? 'rotate-180' : ''}`}/>
         </button>
       </div>
 
       {open && (
         <div className="mt-4 space-y-3">
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-1 block">
+            <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">
               Pilih Pesanan
             </label>
             <select
               value={selectedId}
               onChange={e => setSelectedId(e.target.value)}
-              className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-xs font-mono text-[var(--color-text-main)] focus:outline-none cursor-pointer"
+              className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-xl px-4 py-2.5 text-sm text-[var(--color-text-main)] focus:outline-none cursor-pointer"
             >
               <option value="">— Pilih order untuk dibuat invoice —</option>
               {completedSales.map(s => (
@@ -62,16 +62,16 @@ export default function SalesInvoicePanel({ sales, products }: Props) {
 
           {selectedSale && (
             <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-[var(--color-border-line)]">
-              <div className="text-[9px] font-mono text-[var(--color-text-muted)] space-y-0.5">
+              <div className="text-sm text-[var(--color-text-muted)] space-y-0.5">
                 <p><span className="text-[var(--color-text-main)]">{selectedSale.customerName}</span> · {selectedSale.channel}</p>
                 <p>Qty {selectedSale.qtySold} × Rp{selectedSale.pricePerPcs.toLocaleString('id')} · {selectedSale.date}</p>
               </div>
               <button
                 onClick={() => setShowModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-mono font-bold text-black cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-black cursor-pointer"
                 style={{ background: accent }}
               >
-                <FileText size={11}/> Buat Invoice
+                <FileText size={14}/> Buat Invoice
               </button>
             </div>
           )}

@@ -84,18 +84,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
+    <>
+      <style>{`
+        .login-bg {
+          background:
+            radial-gradient(ellipse 80% 70% at 15% 10%, color-mix(in srgb, var(--accent-primary) 40%, transparent) 0%, transparent 55%),
+            radial-gradient(ellipse 60% 60% at 85% 20%, color-mix(in srgb, var(--accent-primary) 25%, transparent) 0%, transparent 50%),
+            linear-gradient(145deg, #0d0820 0%, #090618 40%, #0b0720 100%);
+        }
+        .login-glow {
+          background: radial-gradient(circle, color-mix(in srgb, var(--accent-primary) 28%, transparent) 0%, transparent 70%);
+        }
+      `}</style>
+    <div className="login-bg" style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '24px', position: 'relative', overflow: 'hidden',
-      background:
-        'radial-gradient(ellipse 80% 70% at 15% 10%, rgba(108,60,220,0.40) 0%, transparent 55%),' +
-        'radial-gradient(ellipse 60% 60% at 85% 20%, rgba(80,40,180,0.30) 0%, transparent 50%),' +
-        'linear-gradient(145deg, #0d0820 0%, #090618 40%, #0b0720 100%)',
     }}>
       {/* Glow */}
-      <div style={{
+      <div className="login-glow" style={{
         position: 'absolute', top: '-5%', right: '5%', width: '500px', height: '500px',
-        background: 'radial-gradient(circle, rgba(130,70,240,0.30) 0%, transparent 70%)',
         borderRadius: '50%', filter: 'blur(50px)', pointerEvents: 'none',
       }}/>
 
@@ -114,10 +121,10 @@ export default function LoginPage() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             width: '56px', height: '56px',
-            background: 'linear-gradient(135deg, #8b5cf6, #5b21b6)',
+            background: 'var(--accent-primary)',
             borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '24px', margin: '0 auto 18px',
-            boxShadow: '0 8px 28px rgba(124,58,237,0.40)',
+            boxShadow: 'var(--shadow-accent)',
           }}>◆</div>
           <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'rgba(255,255,255,0.95)', letterSpacing: '-0.04em', margin: '0 0 6px' }}>
             ILLUMINIST OS
@@ -142,9 +149,9 @@ export default function LoginPage() {
                 flex: 1, padding: '10px', borderRadius: '10px', fontSize: '14px', fontWeight: 600,
                 cursor: 'pointer', border: 'none', transition: 'all 0.15s ease',
                 letterSpacing: '-0.01em',
-                background: mode === m ? 'linear-gradient(135deg, #8b5cf6, #5b21b6)' : 'transparent',
+                background: mode === m ? 'var(--accent-primary)' : 'transparent',
                 color: mode === m ? 'white' : 'rgba(255,255,255,0.45)',
-                boxShadow: mode === m ? '0 2px 12px rgba(124,58,237,0.35)' : 'none',
+                boxShadow: mode === m ? 'var(--shadow-accent)' : 'none',
               }}
             >
               {m === 'signin' ? 'Masuk' : 'Daftar'}
@@ -155,7 +162,7 @@ export default function LoginPage() {
         {notice && (
           <div style={{
             marginBottom: '16px', padding: '10px 12px', borderRadius: '10px',
-            background: 'rgba(139,92,246,0.10)', border: '1px solid rgba(139,92,246,0.25)',
+            background: 'var(--accent-primary-muted)', border: '1px solid var(--border-accent)',
             fontSize: '13px', letterSpacing: '-0.01em', color: 'rgba(196,181,253,0.95)', lineHeight: 1.6,
           }}>
             {notice}
@@ -184,11 +191,11 @@ export default function LoginPage() {
             type="submit" disabled={loading}
             style={{
               width: '100%', padding: '14px',
-              background: loading ? 'rgba(124,58,237,0.5)' : 'linear-gradient(135deg, #8b5cf6, #5b21b6)',
+              background: loading ? 'var(--accent-primary-muted)' : 'var(--accent-primary)',
               border: 'none', borderRadius: '12px', color: 'white', fontSize: '15px', fontWeight: 600,
               letterSpacing: '-0.02em',
               cursor: loading ? 'not-allowed' : 'pointer', marginTop: '4px',
-              boxShadow: loading ? 'none' : '0 4px 16px rgba(124,58,237,0.35)',
+              boxShadow: loading ? 'none' : 'var(--shadow-accent)',
               transition: 'all 0.15s ease',
             }}
           >
@@ -214,5 +221,6 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+    </>
   );
 }

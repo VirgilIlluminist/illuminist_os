@@ -37,7 +37,7 @@ export default function Tabs({
   className = '',
   layoutId = 'tab-indicator',
 }: TabsProps) {
-  const textSize = size === 'sm' ? 'text-[10px]' : 'text-[10.5px]';
+  const textSize = size === 'sm' ? 'text-sm' : 'text-sm';
 
   return (
     <div className={`flex gap-0.5 overflow-x-auto border-b border-[var(--color-border-line)] ${className}`}>
@@ -57,7 +57,7 @@ export default function Tabs({
             {tab.icon && <span className="shrink-0">{tab.icon}</span>}
             <span>{tab.label}</span>
             {tab.count != null && (
-              <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
+              <span className={`text-xs px-1.5 py-0.5 rounded font-bold ${
                 isActive
                   ? 'bg-[var(--color-border-line)] text-[var(--color-text-main)]'
                   : 'bg-[var(--color-border-line)] text-[var(--color-text-muted)]'

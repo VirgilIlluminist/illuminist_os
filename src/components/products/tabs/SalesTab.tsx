@@ -52,16 +52,16 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
           { label: 'Bulan Terbaik',  value: bestMonth?.month ?? '-', sub: bestMonth ? `${currency}${Math.round(bestMonth.revenue / 1_000_000)}jt` : '' },
         ].map(({ label, value, sub }) => (
           <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
-            <p className="text-[8px] font-mono uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
+            <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
             <p className="text-lg font-mono font-bold text-[var(--color-text-main)]">{value}</p>
-            {sub && <p className="text-[8px] font-mono text-[var(--color-text-muted)]">{sub}</p>}
+            {sub && <p className="text-xs text-[var(--color-text-muted)]">{sub}</p>}
           </div>
         ))}
       </div>
 
       {/* Monthly bar chart */}
       <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
-        <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-4">Revenue 12 Bulan Terakhir</p>
+        <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-4">Revenue 12 Bulan Terakhir</p>
         <div className="flex items-end gap-1.5 h-24">
           {last12.map(m => {
             const pct = m.revenue / maxRevenue;
@@ -69,7 +69,7 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
               <div key={m.key} className="flex flex-col items-center gap-1 flex-1">
                 <div className="w-full rounded-t-sm transition-all" title={`${m.label}: ${currency}${Math.round(m.revenue / 1000)}k`}
                   style={{ height: `${Math.max(2, pct * 80)}px`, background: pct > 0 ? accent : 'rgba(255,255,255,0.05)' }}/>
-                <span className="text-[7px] font-mono text-[var(--color-text-muted)] w-full text-center">{m.label}</span>
+                <span className="text-xs text-[var(--color-text-muted)] w-full text-center">{m.label}</span>
               </div>
             );
           })}
@@ -79,11 +79,11 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
       {/* Channel breakdown */}
       {channels.length > 0 ? (
         <div className="rounded-xl border border-[var(--color-border-line)] overflow-hidden">
-          <table className="w-full text-[10px] font-mono">
+          <table className="w-full text-xs">
             <thead>
               <tr className="bg-white/[0.02] border-b border-[var(--color-border-line)]">
                 {['Channel', 'Units', 'Gross Revenue', 'Fees', 'Net Revenue'].map(h => (
-                  <th key={h} className="px-3 py-2.5 text-left text-[9px] uppercase text-[var(--color-text-muted)]">{h}</th>
+                  <th key={h} className="px-3 py-2.5 text-left text-xs uppercase text-[var(--color-text-muted)]">{h}</th>
                 ))}
               </tr>
             </thead>

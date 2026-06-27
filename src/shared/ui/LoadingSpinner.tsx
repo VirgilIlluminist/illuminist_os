@@ -17,7 +17,7 @@ export default function LoadingSpinner({ size = 'md', label, fullPage = false }:
     </div>
   );
   if (fullPage) return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[var(--color-background)]/80 z-50 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: 'rgba(0,0,0,0.65)' }}>
       {content}
     </div>
   );

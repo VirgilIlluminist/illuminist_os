@@ -49,27 +49,27 @@ function ChannelForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label className="block md:col-span-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Nama Channel</span>
+          <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Nama Channel</span>
           <input value={form.name} onChange={e => set('name', e.target.value)} required placeholder="Shopee Official Store"
             className="mt-1 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"/>
         </label>
         <label className="block">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Komisi (%)</span>
+          <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Komisi (%)</span>
           <NumberInput value={form.commission_rate} onChange={v => set('commission_rate', v)} min={0} max={30}
             className="mt-1 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"/>
         </label>
         <label className="block">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Admin Fee (%)</span>
+          <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Admin Fee (%)</span>
           <NumberInput value={form.admin_fee_rate} onChange={v => set('admin_fee_rate', v)} min={0} max={10}
             className="mt-1 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"/>
         </label>
         <label className="block">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Transaksi Fee (%)</span>
+          <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Transaksi Fee (%)</span>
           <NumberInput value={form.transaction_fee_rate} onChange={v => set('transaction_fee_rate', v)} min={0} max={10}
             className="mt-1 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"/>
         </label>
         <label className="block">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">PPN (%)</span>
+          <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">PPN (%)</span>
           <NumberInput value={form.ppn_rate} onChange={v => set('ppn_rate', v)} min={0} max={12}
             className="mt-1 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"/>
         </label>
@@ -77,7 +77,7 @@ function ChannelForm({
 
       {/* Live preview */}
       <div className="rounded-lg border border-[var(--color-border-line)] bg-white/[0.02] p-4">
-        <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-3">
+        <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">
           Preview: Gross Rp 100.000
         </p>
         <div className="space-y-1.5">
@@ -88,15 +88,15 @@ function ChannelForm({
             ['PPN',          preview.ppn],
           ].map(([label, val]) => (
             <div key={label as string} className="flex justify-between text-xs">
-              <span className="text-[var(--color-text-muted)] font-mono">{label as string}</span>
+              <span className="text-[var(--color-text-muted)]">{label as string}</span>
               <span className="text-red-400 font-mono">- Rp {(val as number).toLocaleString('id')}</span>
             </div>
           ))}
           <div className="border-t border-[var(--color-border-line)] pt-1.5 flex justify-between text-xs font-bold">
-            <span className="text-[var(--color-text-muted)] font-mono">Net ke Penjual</span>
+            <span className="text-[var(--color-text-muted)]">Net ke Penjual</span>
             <span className="font-mono" style={{ color: accent }}>Rp {preview.net.toLocaleString('id')}</span>
           </div>
-          <p className="text-[9px] font-mono text-[var(--color-text-muted)] text-right">
+          <p className="text-xs text-[var(--color-text-muted)] text-right">
             Effective rate: {ShopeeFeeEngine.effectiveRate(form).toFixed(2)}%
           </p>
         </div>
@@ -104,11 +104,11 @@ function ChannelForm({
 
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel}
-          className="px-4 py-2 rounded-lg border border-[var(--color-border-line)] text-xs font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all cursor-pointer">
+          className="px-4 py-2 rounded-lg border border-[var(--color-border-line)] text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all cursor-pointer">
           Batal
         </button>
         <button type="submit" disabled={saving}
-          className="px-4 py-2 rounded-lg text-xs font-mono font-bold text-white transition-all cursor-pointer disabled:opacity-50"
+          className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all cursor-pointer disabled:opacity-50"
           style={{ background: accent }}>
           {saving ? 'Menyimpan...' : 'Simpan Channel'}
         </button>
@@ -151,9 +151,9 @@ function CSVDropZone({ onFile }: { onFile: (name: string, text: string) => void 
       className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${dragging ? 'border-white/40 bg-white/[0.04]' : 'border-[var(--color-border-line)] hover:border-white/20 hover:bg-white/[0.02]'}`}
     >
       <Upload size={28} className="mx-auto mb-3 text-[var(--color-text-muted)]"/>
-      <p className="text-sm font-mono text-[var(--color-text-main)]">Drop CSV settlement Shopee di sini</p>
-      <p className="text-xs font-mono text-[var(--color-text-muted)] mt-1">atau klik untuk memilih file</p>
-      <p className="text-[9px] font-mono text-[var(--color-text-muted)] mt-2">Export dari Shopee Seller Center → Pendapatan → Laporan Pendapatan</p>
+      <p className="text-sm text-[var(--color-text-main)]">Drop CSV settlement Shopee di sini</p>
+      <p className="text-xs text-[var(--color-text-muted)] mt-1">atau klik untuk memilih file</p>
+      <p className="text-xs text-[var(--color-text-muted)] mt-2">Export dari Shopee Seller Center → Pendapatan → Laporan Pendapatan</p>
       <input ref={inputRef} type="file" accept=".csv" className="hidden" onChange={onInput}/>
     </div>
   );
@@ -163,11 +163,11 @@ function CSVDropZone({ onFile }: { onFile: (name: string, text: string) => void 
 
 function SettlementTable({ settlements, currency }: { settlements: ShopeeSettlement[]; currency: string }) {
   if (settlements.length === 0) return (
-    <div className="text-center py-10 text-xs font-mono text-[var(--color-text-muted)]">Tidak ada data</div>
+    <div className="text-center py-10 text-xs text-[var(--color-text-muted)]">Tidak ada data</div>
   );
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-[10px] font-mono">
+      <table className="w-full text-xs">
         <thead>
           <tr className="border-b border-[var(--color-border-line)]">
             {['Order ID','Tanggal','Produk','Qty','Gross','Fee','Net','Status'].map(h => (
@@ -186,7 +186,7 @@ function SettlementTable({ settlements, currency }: { settlements: ShopeeSettlem
               <td className="py-1.5 px-2 text-red-400 text-right whitespace-nowrap">-{currency}{s.total_fee.toLocaleString('id')}</td>
               <td className="py-1.5 px-2 text-green-400 text-right whitespace-nowrap font-bold">{currency}{s.net_earnings.toLocaleString('id')}</td>
               <td className="py-1.5 px-2">
-                <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${s.status === 'synced' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                <span className={`px-1.5 py-0.5 rounded-xl text-xs font-bold uppercase ${s.status === 'synced' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                   {s.status === 'synced' ? 'Synced' : 'Pending'}
                 </span>
               </td>
@@ -288,10 +288,10 @@ export default function ShopeeChannelView() {
       <div className="border-b border-[var(--color-border-line)] pb-5">
         <div className="flex items-center gap-2 mb-1">
           <ShoppingBag size={14} style={{ color: accent }}/>
-          <span className="text-xs font-mono tracking-widest uppercase text-[var(--color-text-muted)]">Sales Channel Engine</span>
+          <span className="text-xs tracking-widest uppercase text-[var(--color-text-muted)]">Sales Channel Engine</span>
         </div>
         <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)]">Shopee</h2>
-        <p className="text-xs font-mono text-[var(--color-text-muted)] mt-0.5">
+        <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
           Konfigurasi fee rates → import settlement CSV → otomatis ke P&L
         </p>
       </div>
@@ -300,7 +300,7 @@ export default function ShopeeChannelView() {
       <div className="flex gap-1 border-b border-[var(--color-border-line)]">
         {([['config', 'Konfigurasi'], ['import', 'Import CSV'], ['history', 'History']] as [Tab, string][]).map(([t, label]) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-[10px] font-mono uppercase tracking-widest transition-all cursor-pointer border-b-2 -mb-px ${tab === t ? 'border-current font-bold' : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
+            className={`px-4 py-2 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 -mb-px ${tab === t ? 'border-current font-bold' : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
             style={tab === t ? { color: accent, borderColor: accent } : {}}>
             {label}
           </button>
@@ -313,16 +313,16 @@ export default function ShopeeChannelView() {
           {!showForm && (
             <div className="flex justify-end">
               <button onClick={() => { setEditChannel(null); setShowForm(true); }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-widest text-white transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs uppercase tracking-widest text-white transition-all cursor-pointer"
                 style={{ background: accent }}>
-                <Plus size={11}/> Tambah Channel
+                <Plus size={14}/> Tambah Channel
               </button>
             </div>
           )}
 
           {showForm && (
             <div className="border border-[var(--color-border-line)] rounded-xl p-5 bg-white/[0.02]">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--color-text-main)] mb-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-main)] mb-4">
                 {editChannel ? 'Edit Channel' : 'Channel Baru'}
               </h3>
               <ChannelForm
@@ -335,7 +335,7 @@ export default function ShopeeChannelView() {
           )}
 
           {channels.length === 0 && !showForm ? (
-            <div className="text-center py-16 text-sm font-mono text-[var(--color-text-muted)]">
+            <div className="text-center py-16 text-sm text-[var(--color-text-muted)]">
               Belum ada channel. Tambah channel Shopee pertama kamu.
             </div>
           ) : (
@@ -344,10 +344,10 @@ export default function ShopeeChannelView() {
                 <div key={ch.id} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.02] flex flex-col md:flex-row md:items-center gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <ShoppingBag size={12} style={{ color: accent }}/>
+                      <ShoppingBag size={14} style={{ color: accent }}/>
                       <span className="text-sm font-semibold text-[var(--color-text-main)]">{ch.name}</span>
                       {ch.is_active && (
-                        <span className="text-[8px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400">Aktif</span>
+                        <span className="text-xs uppercase px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400">Aktif</span>
                       )}
                     </div>
                     <div className="flex flex-wrap gap-x-4 gap-y-1">
@@ -357,23 +357,23 @@ export default function ShopeeChannelView() {
                         ['Transaksi', ch.transaction_fee_rate],
                         ['PPN', ch.ppn_rate],
                       ].map(([k, v]) => (
-                        <span key={k as string} className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                        <span key={k as string} className="text-xs text-[var(--color-text-muted)]">
                           {k}: <span className="text-[var(--color-text-main)]">{v}%</span>
                         </span>
                       ))}
-                      <span className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                      <span className="text-xs text-[var(--color-text-muted)]">
                         Effective: <span className="text-yellow-400">{ShopeeFeeEngine.effectiveRate(ch).toFixed(2)}%</span>
                       </span>
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button onClick={() => { setEditChannel(ch); setShowForm(true); }}
-                      className="p-1.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all cursor-pointer">
-                      <Edit3 size={12}/>
+                      className="p-1.5 rounded-xl text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all cursor-pointer">
+                      <Edit3 size={14}/>
                     </button>
                     <button onClick={() => handleDeleteChannel(ch.id)}
-                      className="p-1.5 rounded text-[var(--color-text-muted)] hover:text-red-400 transition-all cursor-pointer">
-                      <Trash2 size={12}/>
+                      className="p-1.5 rounded-xl text-[var(--color-text-muted)] hover:text-red-400 transition-all cursor-pointer">
+                      <Trash2 size={14}/>
                     </button>
                   </div>
                 </div>
@@ -388,11 +388,11 @@ export default function ShopeeChannelView() {
         <div className="space-y-5">
           {/* Channel selector */}
           <div>
-            <label className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] block mb-2">
+            <label className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] block mb-2">
               Channel
             </label>
             {channels.length === 0 ? (
-              <p className="text-xs font-mono text-[var(--color-text-muted)]">Buat channel dulu di tab Konfigurasi.</p>
+              <p className="text-xs text-[var(--color-text-muted)]">Buat channel dulu di tab Konfigurasi.</p>
             ) : (
               <select value={selectedChan} onChange={e => setSelectedChan(e.target.value)}
                 className="bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30 cursor-pointer">
@@ -405,7 +405,7 @@ export default function ShopeeChannelView() {
           {importing ? (
             <div className="text-center py-16">
               <RefreshCw size={24} className="mx-auto mb-3 animate-spin text-[var(--color-text-muted)]"/>
-              <p className="text-xs font-mono text-[var(--color-text-muted)]">Memproses CSV...</p>
+              <p className="text-xs text-[var(--color-text-muted)]">Memproses CSV...</p>
             </div>
           ) : (
             <CSVDropZone onFile={handleCSVFile} />
@@ -416,7 +416,7 @@ export default function ShopeeChannelView() {
             <div className="border border-[var(--color-border-line)] rounded-xl p-5 bg-white/[0.02] space-y-4">
               <div className="flex items-center gap-2">
                 <Check size={14} className="text-green-400"/>
-                <span className="text-sm font-mono font-bold text-[var(--color-text-main)]">
+                <span className="text-sm font-semibold text-[var(--color-text-main)]">
                   Import Selesai — {importResult.settlements.length} baris
                 </span>
               </div>
@@ -429,8 +429,8 @@ export default function ShopeeChannelView() {
                   { label: 'Net Earnings',  value: importResult.batch.total_net,   icon: Package,      color: 'text-green-400' },
                 ].map(({ label, value, icon: Icon, color }) => (
                   <div key={label} className="bg-white/[0.03] rounded-lg p-3">
-                    <Icon size={11} className={`mb-1 ${color}`}/>
-                    <p className="text-[9px] font-mono text-[var(--color-text-muted)] uppercase">{label}</p>
+                    <Icon size={14} className={`mb-1 ${color}`}/>
+                    <p className="text-xs text-[var(--color-text-muted)] uppercase">{label}</p>
                     <p className={`text-sm font-mono font-bold ${color}`}>{currency}{value.toLocaleString('id')}</p>
                   </div>
                 ))}
@@ -438,11 +438,11 @@ export default function ShopeeChannelView() {
 
               {importResult.errors.length > 0 && (
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                  <AlertTriangle size={12} className="text-yellow-400 mt-0.5 shrink-0"/>
+                  <AlertTriangle size={14} className="text-yellow-400 mt-0.5 shrink-0"/>
                   <div>
-                    <p className="text-xs font-mono text-yellow-400 font-bold mb-1">{importResult.errors.length} baris dilewati</p>
+                    <p className="text-xs text-yellow-400 font-bold mb-1">{importResult.errors.length} baris dilewati</p>
                     {importResult.errors.slice(0,3).map((e, i) => (
-                      <p key={i} className="text-[9px] font-mono text-yellow-400/70">{e}</p>
+                      <p key={i} className="text-xs text-yellow-400/70">{e}</p>
                     ))}
                   </div>
                 </div>
@@ -458,9 +458,9 @@ export default function ShopeeChannelView() {
                 <button
                   onClick={() => handleSync(importResult.batch.id)}
                   disabled={syncing || importResult.batch.status === 'synced_to_pl'}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-mono font-bold text-white disabled:opacity-50 transition-all cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold text-white disabled:opacity-50 transition-all cursor-pointer"
                   style={{ background: accent }}>
-                  {syncing ? <><RefreshCw size={11} className="animate-spin"/> Menyinkronkan...</> : <><Check size={11}/> Sinkron ke P&L ({importResult.settlements.length} transaksi)</>}
+                  {syncing ? <><RefreshCw size={14} className="animate-spin"/> Menyinkronkan...</> : <><Check size={14}/> Sinkron ke P&L ({importResult.settlements.length} transaksi)</>}
                 </button>
               </div>
             </div>
@@ -472,7 +472,7 @@ export default function ShopeeChannelView() {
       {tab === 'history' && (
         <div className="space-y-4">
           {batches.length === 0 ? (
-            <div className="text-center py-16 text-sm font-mono text-[var(--color-text-muted)]">
+            <div className="text-center py-16 text-sm text-[var(--color-text-muted)]">
               Belum ada import. Upload CSV di tab Import.
             </div>
           ) : (
@@ -488,9 +488,9 @@ export default function ShopeeChannelView() {
                       onClick={() => handleViewBatch(b.id)}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <FileText size={12} className="text-[var(--color-text-muted)]"/>
-                          <span className="text-xs font-mono text-[var(--color-text-main)] font-semibold">{b.filename}</span>
-                          <span className={`text-[8px] font-mono uppercase px-1.5 py-0.5 rounded-full ${b.status === 'synced_to_pl' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                          <FileText size={14} className="text-[var(--color-text-muted)]"/>
+                          <span className="text-xs text-[var(--color-text-main)] font-semibold">{b.filename}</span>
+                          <span className={`text-xs uppercase px-1.5 py-0.5 rounded-full ${b.status === 'synced_to_pl' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                             {b.status === 'synced_to_pl' ? 'Synced ke P&L' : 'Draft'}
                           </span>
                         </div>
@@ -499,27 +499,27 @@ export default function ShopeeChannelView() {
                             <button
                               onClick={e => { e.stopPropagation(); handleSync(b.id); }}
                               disabled={syncing}
-                              className="text-[9px] font-mono uppercase tracking-widest px-2 py-1 rounded border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all cursor-pointer disabled:opacity-50">
+                              className="text-xs uppercase tracking-widest px-2 py-1 rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all cursor-pointer disabled:opacity-50">
                               {syncing ? 'Syncing...' : 'Sync ke P&L'}
                             </button>
                           )}
-                          <ChevronRight size={12} className="text-[var(--color-text-muted)]"/>
+                          <ChevronRight size={14} className="text-[var(--color-text-muted)]"/>
                         </div>
                       </div>
                       <div className="flex gap-x-5 gap-y-1 mt-2 flex-wrap">
-                        <span className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                        <span className="text-xs text-[var(--color-text-muted)]">
                           Channel: <span className="text-[var(--color-text-main)]">{chan?.name ?? '-'}</span>
                         </span>
-                        <span className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                        <span className="text-xs text-[var(--color-text-muted)]">
                           {b.row_count} pesanan
                         </span>
-                        <span className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                        <span className="text-xs text-[var(--color-text-muted)]">
                           Gross: <span className="text-[var(--color-text-main)]">{currency}{b.total_gross.toLocaleString('id')}</span>
                         </span>
-                        <span className="text-[9px] font-mono text-red-400">
+                        <span className="text-xs text-red-400">
                           Fee: -{currency}{b.total_fees.toLocaleString('id')}
                         </span>
-                        <span className="text-[9px] font-mono text-green-400 font-bold">
+                        <span className="text-xs text-green-400 font-bold">
                           Net: {currency}{b.total_net.toLocaleString('id')}
                         </span>
                       </div>
@@ -532,12 +532,12 @@ export default function ShopeeChannelView() {
               {activeBatch && settlements.length > 0 && (
                 <div className="border border-[var(--color-border-line)] rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono font-bold text-[var(--color-text-main)] uppercase">
+                    <span className="text-xs font-bold text-[var(--color-text-main)] uppercase">
                       Detail: {activeBatchData?.filename}
                     </span>
                     <button onClick={() => { setActiveBatch(null); setSettlements([]); }}
                       className="text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-                      <X size={12}/>
+                      <X size={14}/>
                     </button>
                   </div>
                   <SettlementTable settlements={settlements} currency={currency} />

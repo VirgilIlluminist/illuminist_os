@@ -104,7 +104,7 @@ export default function ChartOfAccountsView() {
     toast.success('Akun dihapus'); load();
   };
 
-  const card = 'bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-2xl';
+  const card = 'glass-panel bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-2xl';
 
   return (
     <div className="space-y-5 animate-fadeIn">
@@ -125,7 +125,7 @@ export default function ChartOfAccountsView() {
           <button key={t.id} onClick={() => setFilter(filter===t.id?'':t.id)}
             className={`${card} p-3 text-left cursor-pointer transition-all ${filter===t.id?'ring-2':'hover:border-[var(--color-text-muted)]'}`}
             style={filter===t.id?{ outline:`2px solid ${t.color}`, outlineOffset:'2px' } as React.CSSProperties :{}}>
-            <p className="text-[9px] font-semibold mb-1" style={{color:t.color}}>{t.label.toUpperCase()}</p>
+            <p className="text-xs font-semibold mb-1" style={{color:t.color}}>{t.label.toUpperCase()}</p>
             <p className="text-xl font-bold text-[var(--color-text-main)]">{accounts.filter(a=>a.type===t.id).length}</p>
           </button>
         ))}
@@ -152,13 +152,13 @@ export default function ChartOfAccountsView() {
         return (
           <div key={t.id} className={card}>
             <div className="px-5 py-3 border-b border-[var(--color-border-line)]">
-              <span className="text-xs font-semibold" style={{color:t.color}}>{t.label} ({rows.length})</span>
+              <span className="text-sm font-semibold" style={{color:t.color}}>{t.label} ({rows.length})</span>
             </div>
             <table className="w-full text-sm">
               <thead><tr className="border-b border-[var(--color-border-line)]">
-                <th className="px-4 py-2.5 text-[10px] font-semibold text-[var(--color-text-muted)] text-left">KODE</th>
-                <th className="px-4 py-2.5 text-[10px] font-semibold text-[var(--color-text-muted)] text-left">NAMA AKUN</th>
-                <th className="px-4 py-2.5 text-[10px] font-semibold text-[var(--color-text-muted)] text-left">PARENT</th>
+                <th className="px-4 py-2.5 text-xs font-semibold text-[var(--color-text-muted)] text-left">KODE</th>
+                <th className="px-4 py-2.5 text-xs font-semibold text-[var(--color-text-muted)] text-left">NAMA AKUN</th>
+                <th className="px-4 py-2.5 text-xs font-semibold text-[var(--color-text-muted)] text-left">PARENT</th>
                 <th className="px-4 py-2.5 w-16"/>
               </tr></thead>
               <tbody>
@@ -170,8 +170,8 @@ export default function ChartOfAccountsView() {
                     <td className="px-4 py-2.5">
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 justify-end">
                         <button onClick={() => { setForm({code:acc.code,name:acc.name,type:acc.type,parent_code:acc.parent_code||'',is_active:acc.is_active}); setEditing(acc); setShowForm(true); }}
-                          className="p-1.5 rounded-lg hover:bg-[var(--color-card-bg)] cursor-pointer"><Edit2 size={12} className="text-[var(--color-text-muted)]"/></button>
-                        <button onClick={() => handleDelete(acc)} className="p-1.5 rounded-lg hover:bg-red-50 cursor-pointer"><Trash2 size={12} className="text-red-500"/></button>
+                          className="p-1.5 rounded-lg hover:bg-[var(--color-card-bg)] cursor-pointer"><Edit2 size={14} className="text-[var(--color-text-muted)]"/></button>
+                        <button onClick={() => handleDelete(acc)} className="p-1.5 rounded-lg hover:bg-red-50 cursor-pointer"><Trash2 size={14} className="text-red-500"/></button>
                       </div>
                     </td>
                   </tr>
@@ -184,8 +184,8 @@ export default function ChartOfAccountsView() {
 
       {/* Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={()=>setShowForm(false)}>
-          <div className={`${card} w-full max-w-sm shadow-2xl`} onClick={e=>e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:'rgba(0,0,0,0.65)'}} onClick={()=>setShowForm(false)}>
+          <div className="w-full max-w-sm rounded-2xl border shadow-2xl" style={{background:'rgba(14,10,28,0.92)',borderColor:'rgba(255,255,255,0.12)'}} onClick={e=>e.stopPropagation()}>
             <div className="px-5 py-4 border-b border-[var(--color-border-line)] flex items-center justify-between">
               <p className="text-sm font-semibold text-[var(--color-text-main)]">{editing?'Edit':'Tambah'} Akun</p>
               <button onClick={()=>setShowForm(false)} className="p-1 rounded-lg hover:bg-[var(--color-background)] cursor-pointer"><X size={14}/></button>
@@ -193,21 +193,21 @@ export default function ChartOfAccountsView() {
             <div className="p-5 space-y-3">
               {[{key:'code',label:'Kode *',ph:'1100'},{key:'name',label:'Nama *',ph:'Kas & Bank'}].map(f=>(
                 <div key={f.key}>
-                  <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">{f.label}</label>
+                  <label className="text-sm font-medium text-white/50 mb-2 block">{f.label}</label>
                   <input value={(form as any)[f.key]} onChange={e=>setForm(p=>({...p,[f.key]:e.target.value}))} placeholder={f.ph}
-                    className="w-full px-3 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] focus:outline-none"/>
+                    className="w-full px-4 py-2.5 text-sm rounded-xl border border-white/[0.10] bg-white/[0.06] text-white focus:outline-none"/>
                 </div>
               ))}
               <div>
-                <label className="text-xs font-medium text-[var(--color-text-main)] mb-1.5 block">Tipe</label>
+                <label className="text-sm font-medium text-white/50 mb-2 block">Tipe</label>
                 <select value={form.type} onChange={e=>setForm(p=>({...p,type:e.target.value as Account['type']}))}
-                  className="w-full px-3 py-2.5 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] cursor-pointer">
+                  className="w-full px-4 py-2.5 text-sm rounded-xl border border-white/[0.10] bg-white/[0.06] text-white cursor-pointer focus:outline-none">
                   {TYPES.map(t=><option key={t.id} value={t.id}>{t.label}</option>)}
                 </select>
               </div>
             </div>
             <div className="px-5 pb-5 flex justify-end gap-2">
-              <button onClick={()=>setShowForm(false)} className="px-4 py-2 text-sm rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] cursor-pointer">Batal</button>
+              <button onClick={()=>setShowForm(false)} className="px-4 py-2 text-sm font-medium rounded-xl border border-white/[0.10] text-white/50 cursor-pointer">Batal</button>
               <button onClick={handleSave} className="px-5 py-2 text-sm font-medium rounded-xl text-white cursor-pointer" style={{background:accent}}>
                 {editing?'Simpan':'Tambah'}
               </button>

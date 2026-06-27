@@ -49,9 +49,9 @@ export default function ExecutiveDashboard() {
       className="p-5 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-xl">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-[10px] font-mono text-[var(--color-text-muted)] uppercase tracking-widest">{label}</p>
+          <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest">{label}</p>
           <p className="text-2xl font-display font-bold text-[var(--color-text-main)] mt-2">{value}</p>
-          {sub && <p className="text-[10px] font-mono mt-1" style={{color}}>{sub}</p>}
+          {sub && <p className="text-xs mt-1" style={{color}}>{sub}</p>}
         </div>
         <div className="p-2.5 rounded-xl" style={{background:color+'15'}}>{icon}</div>
       </div>
@@ -62,13 +62,13 @@ export default function ExecutiveDashboard() {
     <div className="space-y-6 animate-fadeIn">
       {/* Header */}
       <div className="border-b border-[var(--color-border-line)] pb-5">
-        <span className="text-xs font-mono tracking-widest uppercase" style={{color:accent}}>
+        <span className="text-xs tracking-widest uppercase" style={{color:accent}}>
           ILLUMINIST HOLDING · EXECUTIVE VIEW
         </span>
         <h1 className="text-3xl font-display font-bold uppercase tracking-tight text-[var(--color-text-main)] mt-1">
           Consolidated Overview
         </h1>
-        <p className="text-xs font-mono text-[var(--color-text-muted)] mt-1">
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">
           {childBiz.length} bisnis aktif · Data konsolidasi bulan ini
         </p>
       </div>
@@ -83,7 +83,7 @@ export default function ExecutiveDashboard() {
 
       {/* Business Cards */}
       <div>
-        <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--color-text-muted)] mb-3">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-muted)] mb-3">
           Performa per Bisnis
         </h3>
         <div className="space-y-3">
@@ -103,7 +103,7 @@ export default function ExecutiveDashboard() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-semibold text-[var(--color-text-main)]">{s.name}</p>
-                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--color-border-line)] text-[var(--color-text-muted)] capitalize">
+                  <span className="text-xs px-1.5 py-0.5 rounded-xl bg-[var(--color-border-line)] text-[var(--color-text-muted)] capitalize">
                     {s.type.replace('_',' ')}
                   </span>
                 </div>
@@ -119,8 +119,8 @@ export default function ExecutiveDashboard() {
               {/* Metrics */}
               <div className="text-right shrink-0 space-y-0.5">
                 <p className="text-sm font-bold font-mono text-[var(--color-text-main)]">{formatMoney(s.revenue)}</p>
-                <p className="text-[10px] font-mono text-emerald-400">Profit: {formatMoney(s.profit)}</p>
-                <p className={`text-[9px] font-mono ${s.growth>=0?'text-emerald-400':'text-red-400'}`}>
+                <p className="text-xs text-emerald-400">Profit: {formatMoney(s.profit)}</p>
+                <p className={`text-xs ${s.growth>=0?'text-emerald-400':'text-red-400'}`}>
                   {s.growth>=0?'↑':'↓'} {Math.abs(s.growth)}% MoM
                 </p>
               </div>
@@ -137,13 +137,13 @@ export default function ExecutiveDashboard() {
 
       {/* Revenue chart (simple bars) */}
       <div className="p-5 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-xl">
-        <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-[var(--color-text-muted)] mb-4">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-muted)] mb-4">
           Revenue Distribution
         </h3>
         <div className="flex items-end gap-3 h-28">
           {stats.map(s => (
             <div key={s.id} className="flex-1 flex flex-col items-center gap-1.5">
-              <p className="text-[9px] font-mono text-[var(--color-text-muted)]">
+              <p className="text-xs text-[var(--color-text-muted)]">
                 {formatMoney(s.revenue).replace(/\s/g,'\u00A0')}
               </p>
               <div className="w-full rounded-t-lg transition-all"
@@ -151,7 +151,7 @@ export default function ExecutiveDashboard() {
                   height:`${Math.max(8,Math.min(80,(s.revenue/totals.revenue)*80))}px`,
                   background:`${accent}${s.id===childBiz[0]?.id?'ff':'60'}`,
                 }} />
-              <p className="text-[9px] font-mono text-[var(--color-text-muted)] text-center truncate w-full">
+              <p className="text-xs text-[var(--color-text-muted)] text-center truncate w-full">
                 {s.name}
               </p>
             </div>
@@ -161,7 +161,7 @@ export default function ExecutiveDashboard() {
 
       {/* Quick note */}
       <div className="p-4 border border-dashed border-[var(--color-border-line)] rounded-xl">
-        <p className="text-[10.5px] font-mono text-[var(--color-text-muted)] text-center">
+        <p className="text-xs text-[var(--color-text-muted)] text-center">
           💡 Klik pada nama bisnis di sidebar untuk masuk ke modul bisnis tersebut. Data akan terkonfigurasi secara otomatis sesuai tipe bisnis.
         </p>
       </div>

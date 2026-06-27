@@ -66,7 +66,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
             { label: 'HPP Terendah',   value: `${currency}${Math.round(minHPP).toLocaleString('id')}` },
           ].map(({ label, value }) => (
             <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-3">
-              <p className="text-[8px] font-mono uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
+              <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
               <p className="text-base font-mono font-bold text-[var(--color-text-main)]">{value}</p>
             </div>
           ))}
@@ -75,20 +75,20 @@ export default function ProductionTab({ productId, batches, currency, accent, on
 
       {/* Add batch button */}
       <div className="flex justify-between items-center">
-        <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">
+        <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
           {batches.length} Batch Produksi
         </p>
         <button onClick={() => setShowForm(v => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-mono font-bold text-black cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black cursor-pointer"
           style={{ background: accent }}>
-          <Plus size={10}/> Batch Baru
+          <Plus size={14}/> Batch Baru
         </button>
       </div>
 
       {/* Add batch form */}
       {showForm && (
         <form onSubmit={handleAdd} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-3">
-          <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">
+          <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
             {nextBatchNumber(batches)}
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -98,7 +98,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
               { label: 'Harga Jual',key: 'sellingPrice', type: 'number' },
             ].map(({ label, key, type }) => (
               <div key={key}>
-                <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">{label}</label>
+                <label className="text-xs text-[var(--color-text-muted)] mb-1 block">{label}</label>
                 <input type={type} value={(form as any)[key]}
                   onChange={e => setForm(f => ({ ...f, [key]: Number(e.target.value) }))}
                   className={INPUT} required/>
@@ -119,9 +119,9 @@ export default function ProductionTab({ productId, batches, currency, accent, on
           </div>
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setShowForm(false)}
-              className="px-3 py-1.5 text-[9px] font-mono text-[var(--color-text-muted)] cursor-pointer">Batal</button>
+              className="px-3 py-1.5 text-xs text-[var(--color-text-muted)] cursor-pointer">Batal</button>
             <button type="submit" disabled={saving}
-              className="px-4 py-1.5 rounded-lg text-[9px] font-mono font-bold text-black disabled:opacity-50 cursor-pointer"
+              className="px-4 py-1.5 rounded-lg text-xs font-bold text-black disabled:opacity-50 cursor-pointer"
               style={{ background: accent }}>
               {saving ? 'Menyimpan...' : 'Simpan Batch'}
             </button>
@@ -134,11 +134,11 @@ export default function ProductionTab({ productId, batches, currency, accent, on
         <div className="text-center py-12 text-xs font-mono text-[var(--color-text-muted)]">Belum ada batch produksi.</div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[var(--color-border-line)]">
-          <table className="w-full text-[10px] font-mono">
+          <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-[var(--color-border-line)] bg-white/[0.02]">
                 {['Batch', 'Tanggal', 'Qty', 'HPP/pcs', 'Harga Jual', 'Status', 'Catatan'].map(h => (
-                  <th key={h} className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">{h}</th>
+                  <th key={h} className="px-3 py-2.5 text-left text-xs uppercase tracking-wider text-[var(--color-text-muted)]">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -151,7 +151,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
                   <td className="px-3 py-2 text-[var(--color-text-main)]">{currency}{b.hpp.toLocaleString('id')}</td>
                   <td className="px-3 py-2 text-[var(--color-text-main)]">{currency}{b.sellingPrice.toLocaleString('id')}</td>
                   <td className="px-3 py-2">
-                    <span className={`text-[8px] px-2 py-0.5 rounded-full font-semibold uppercase ${STATUS_COLOR[b.status]}`}>{b.status}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold uppercase ${STATUS_COLOR[b.status]}`}>{b.status}</span>
                   </td>
                   <td className="px-3 py-2 text-[var(--color-text-muted)] max-w-[120px] truncate">{b.notes ?? '-'}</td>
                 </tr>

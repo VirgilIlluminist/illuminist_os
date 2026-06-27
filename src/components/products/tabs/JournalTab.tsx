@@ -51,11 +51,11 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">{entries.length} Catatan</p>
+        <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">{entries.length} Catatan</p>
         <button onClick={() => setShowForm(v => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-mono font-bold text-black cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black cursor-pointer"
           style={{ background: accent }}>
-          <Plus size={10}/> Catatan Baru
+          <Plus size={14}/> Catatan Baru
         </button>
       </div>
 
@@ -63,23 +63,23 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
       {showForm && (
         <form onSubmit={handleSubmit} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-3">
           <div>
-            <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">Judul</label>
+            <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Judul</label>
             <input type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
               placeholder="Judul catatan..." className={INPUT} required/>
           </div>
           <div>
-            <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">Konten</label>
+            <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Konten</label>
             <textarea value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
               placeholder="Tulis catatan di sini..." rows={5} className={TEXTAREA} required/>
           </div>
           {/* Tags */}
           <div>
-            <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">Tags</label>
+            <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Tags</label>
             <div className="flex flex-wrap gap-1 mb-2">
               {form.tags.map(t => (
-                <span key={t} className="flex items-center gap-1 text-[8px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-[var(--color-text-main)]">
+                <span key={t} className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-white/10 text-[var(--color-text-main)]">
                   {t}
-                  <button type="button" onClick={() => removeTag(t)} className="cursor-pointer"><X size={8}/></button>
+                  <button type="button" onClick={() => removeTag(t)} className="cursor-pointer"><X size={12}/></button>
                 </span>
               ))}
             </div>
@@ -92,7 +92,7 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
             <div className="flex flex-wrap gap-1 mt-2">
               {SUGGESTED_TAGS.map(t => (
                 <button key={t} type="button" onClick={() => addTag(t)}
-                  className="text-[7px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)] hover:bg-white/10 cursor-pointer">
+                  className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)] hover:bg-white/10 cursor-pointer">
                   +{t}
                 </button>
               ))}
@@ -101,9 +101,9 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
 
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setShowForm(false)}
-              className="px-3 py-1.5 text-[9px] font-mono text-[var(--color-text-muted)] cursor-pointer">Batal</button>
+              className="px-3 py-1.5 text-xs text-[var(--color-text-muted)] cursor-pointer">Batal</button>
             <button type="submit" disabled={saving}
-              className="px-4 py-1.5 rounded-lg text-[9px] font-mono font-bold text-black disabled:opacity-50 cursor-pointer"
+              className="px-4 py-1.5 rounded-lg text-xs font-bold text-black disabled:opacity-50 cursor-pointer"
               style={{ background: accent }}>
               {saving ? 'Menyimpan...' : 'Simpan Catatan'}
             </button>
@@ -124,15 +124,15 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <h4 className="text-sm font-mono font-semibold text-[var(--color-text-main)]">{entry.title}</h4>
-                  <p className="text-[8px] font-mono text-[var(--color-text-muted)] mt-0.5">{entry.createdAt.slice(0, 10)}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{entry.createdAt.slice(0, 10)}</p>
                 </div>
                 <div className="flex gap-1.5">
                   <button onClick={() => { setEditing(entry.id); setEditText(entry.content); }}
-                    className="text-[8px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer px-2 py-0.5 rounded bg-white/5">
+                    className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer px-2 py-0.5 rounded-lg bg-white/5">
                     Edit
                   </button>
                   <button onClick={() => setExpanded(expanded === entry.id ? null : entry.id)}
-                    className="text-[8px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer px-2 py-0.5 rounded bg-white/5">
+                    className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer px-2 py-0.5 rounded-lg bg-white/5">
                     {expanded === entry.id ? 'Tutup' : 'Baca'}
                   </button>
                 </div>
@@ -143,11 +143,11 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
                   <textarea value={editText} onChange={e => setEditText(e.target.value)}
                     rows={5} className={TEXTAREA}/>
                   <div className="flex gap-2 justify-end">
-                    <button onClick={() => setEditing(null)} className="px-2 py-1 text-[8px] font-mono text-[var(--color-text-muted)] cursor-pointer">Batal</button>
+                    <button onClick={() => setEditing(null)} className="px-2 py-1 text-xs text-[var(--color-text-muted)] cursor-pointer">Batal</button>
                     <button onClick={() => handleEditSave(entry.id)} disabled={saving}
-                      className="flex items-center gap-1 px-3 py-1 rounded-lg text-[8px] font-mono font-bold text-black cursor-pointer disabled:opacity-50"
+                      className="flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold text-black cursor-pointer disabled:opacity-50"
                       style={{ background: accent }}>
-                      <Check size={9}/> Simpan
+                      <Check size={14}/> Simpan
                     </button>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
               {entry.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-2">
                   {entry.tags.map(t => (
-                    <span key={t} className="text-[7px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{t}</span>
+                    <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{t}</span>
                   ))}
                 </div>
               )}

@@ -111,6 +111,7 @@ export default function DashboardView({ onNavigate }: { onNavigate?: (page: stri
 
   const isId = (config?.language || 'id') === 'id';
   const ownerName = (config as unknown as Record<string, unknown>)?.ownerName as string || 'Virgil';
+  const accent = config?.customAccentColor || '#7c3aed';
 
   const metrics = useMemo(() => {
     const totalRevenue  = computedSales.reduce((s, x) => s + x.netRevenue, 0);
@@ -208,8 +209,8 @@ export default function DashboardView({ onNavigate }: { onNavigate?: (page: stri
               {['1M','3M','6M','1Y'].map((p, i) => (
                 <button key={p} style={{
                   padding: '5px 10px', borderRadius: '8px', fontSize: '12px', fontWeight: 500,
-                  background: i === 0 ? 'rgba(124,58,237,0.22)' : 'rgba(255,255,255,0.05)',
-                  border: i === 0 ? '1px solid rgba(124,58,237,0.32)' : '1px solid rgba(255,255,255,0.08)',
+                  background: i === 0 ? `${accent}38` : 'rgba(255,255,255,0.05)',
+                  border: i === 0 ? `1px solid ${accent}52` : '1px solid rgba(255,255,255,0.08)',
                   color: i === 0 ? 'rgba(255,255,255,0.90)' : 'var(--text-tertiary)',
                   cursor: 'pointer', letterSpacing: '-0.01em',
                 }}>
@@ -229,9 +230,9 @@ export default function DashboardView({ onNavigate }: { onNavigate?: (page: stri
                   flex: 1, height: `${pct}%`, minHeight: '5px',
                   borderRadius: '6px 6px 2px 2px',
                   background: isLast
-                    ? 'linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%)'
-                    : 'rgba(124,58,237,0.35)',
-                  boxShadow: isLast ? '0 0 16px rgba(124,58,237,0.40)' : 'none',
+                    ? `linear-gradient(180deg, ${accent}cc 0%, ${accent} 100%)`
+                    : `${accent}59`,
+                  boxShadow: isLast ? `0 0 16px ${accent}66` : 'none',
                   cursor: 'default', transition: 'background 0.15s ease',
                 }}/>
               );
@@ -253,8 +254,8 @@ export default function DashboardView({ onNavigate }: { onNavigate?: (page: stri
           flex: 1, minWidth: '220px',
           padding: '22px 24px',
           borderRadius: '18px',
-          background: 'rgba(124,58,237,0.07)',
-          border: '1px solid rgba(124,58,237,0.18)',
+          background: `${accent}12`,
+          border: `1px solid ${accent}2e`,
           display: 'flex', flexDirection: 'column',
           boxShadow: '0 2px 20px rgba(0,0,0,0.12)',
         }}>

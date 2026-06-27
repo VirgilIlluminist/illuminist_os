@@ -806,39 +806,39 @@ export default function SmartTablesView() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Database size={16} className="text-[#d4af37]" />
-            <h1 className="text-sm font-mono font-bold tracking-widest text-[#d4af37] uppercase">NEVAEH DATABASE WORKSPACE ENGINE</h1>
-            <span className="bg-red-500/10 text-red-500 border border-red-500/20 text-[9px] font-mono px-1.5 py-0.5 rounded tracking-widest uppercase">Excel Grade</span>
+            <h1 className="text-sm font-bold tracking-widest text-[#d4af37] uppercase">NEVAEH DATABASE WORKSPACE ENGINE</h1>
+            <span className="bg-red-500/10 text-red-500 border border-red-500/20 text-xs px-1.5 py-0.5 rounded-xl tracking-widest uppercase">Excel Grade</span>
           </div>
-          <p className="text-[11px] text-[var(--color-text-muted)] font-mono">
+          <p className="text-xs text-[var(--color-text-muted)]">
             Interactive relational schema linking supply line fabric parameters with aggregate production COGS and real-time HPP tags.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs font-mono">
+        <div className="flex flex-wrap gap-2 text-xs">
           <button
             onClick={() => {
               setInterfaceMode('focus');
               setViewLayout('spreadsheet');
             }}
-            className={`px-3 py-1.5 rounded border transition-all cursor-pointer flex items-center gap-1.5 uppercase font-bold text-[10.5px] ${
+            className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 uppercase font-bold text-xs ${
               interfaceMode === 'focus' ? 'bg-[#d4af37] text-[var(--color-text-main)] border-[#d4af37]' : 'bg-[var(--color-card-bg)] border-white/5 text-[var(--color-text-main)]'
             }`}
           >
-            <Grid3X3 size={12} /> Focus Desk view
+            <Grid3X3 size={14} /> Focus Desk view
           </button>
 
           <button
             onClick={() => setInterfaceMode('sandbox')}
-            className={`px-3 py-1.5 rounded border transition-all cursor-pointer flex items-center gap-1.5 uppercase font-bold text-[10.5px] ${
+            className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 uppercase font-bold text-xs ${
               interfaceMode === 'sandbox' ? 'bg-indigo-600 text-[var(--color-text-main)] border-indigo-600 shadow-[0_0_15px_rgba(99,102,241,0.3)]' : 'bg-[var(--color-card-bg)] border-white/5 text-[var(--color-text-main)]'
             }`}
           >
-            <Sliders size={12} /> Sandbox Glass Canvas
+            <Sliders size={14} /> Sandbox Glass Canvas
           </button>
 
           <button
             onClick={() => setSnapToGrid(!snapToGrid)}
-            className={`px-3 py-1.5 rounded border text-[10.5px] font-bold ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${
               snapToGrid ? 'bg-[var(--color-background)] text-teal-400 border-teal-500/20' : 'bg-transparent border-white/5 text-[var(--color-text-muted)]'
             }`}
           >
@@ -875,10 +875,10 @@ export default function SmartTablesView() {
                   }}
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-mono text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Workspace Segment</span>
+                    <span className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest font-bold">Workspace Segment</span>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.03)] text-[var(--color-text-main)] font-mono font-bold">{tab.count}</span>
                   </div>
-                  <h3 className="text-xs font-mono font-bold text-white mt-2 uppercase flex items-center gap-1.5 group-hover:text-white transition-colors">
+                  <h3 className="text-xs font-bold text-white mt-2 uppercase flex items-center gap-1.5 group-hover:text-white transition-colors">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tab.color }} />
                     {t(tab.label)}
                   </h3>
@@ -890,48 +890,48 @@ export default function SmartTablesView() {
           {/* Quick interactive utility tool list */}
           <div className="glass-panel p-3 rounded-lg border border-white/[0.03] bg-[var(--color-background)]/40 flex flex-wrap justify-between items-center gap-3">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] text-[var(--color-text-muted)] font-mono uppercase flex items-center gap-1 bg-black/40 px-2 py-1 rounded">
-                <Info size={11} className="text-[#d4af37]" /> Double click cell to input Formula or values! Use Right-Click for annotations & coloring.
+              <span className="text-xs text-[var(--color-text-muted)] uppercase flex items-center gap-1 bg-black/40 px-2 py-1 rounded-xl">
+                <Info size={14} className="text-[#d4af37]" /> Double click cell to input Formula or values! Use Right-Click for annotations & coloring.
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-xs font-mono">
+            <div className="flex flex-wrap gap-2 text-xs">
               <button 
                 onClick={() => setShowAIAudit(!showAIAudit)}
-                className="px-3 py-1.5 bg-[var(--color-card-bg)] border border-purple-500/20 hover:border-purple-500/40 text-purple-300 rounded flex items-center gap-1 cursor-pointer transition-all"
+                className="px-3 py-1.5 bg-[var(--color-card-bg)] border border-[var(--color-accent-border)] hover:border-[var(--color-accent-highlight)]/40 text-[var(--color-accent-highlight)] rounded-xl flex items-center gap-1 cursor-pointer transition-all"
               >
-                <Sparkles size={12} className="animate-pulse" /> AI Agent Audit
+                <Sparkles size={14} className="animate-pulse" /> AI Agent Audit
               </button>
 
               <button 
                 onClick={() => setShowFormulaMap(!showFormulaMap)}
-                className="px-3 py-1.5 bg-[var(--color-card-bg)] border border-indigo-400/20 hover:border-indigo-400/40 text-indigo-300 rounded flex items-center gap-1 cursor-pointer transition-all"
+                className="px-3 py-1.5 bg-[var(--color-card-bg)] border border-indigo-400/20 hover:border-indigo-400/40 text-indigo-300 rounded-xl flex items-center gap-1 cursor-pointer transition-all"
               >
-                <Hash size={12} /> Formula builder
+                <Hash size={14} /> Formula builder
               </button>
 
               <button 
                 onClick={() => setShowColorPanel(!showColorPanel)}
-                className="px-3 py-1.5 bg-[var(--color-card-bg)] border border-white/5 rounded flex items-center gap-1 cursor-pointer hover:bg-[var(--color-background)]"
+                className="px-3 py-1.5 bg-[var(--color-card-bg)] border border-white/5 rounded-xl flex items-center gap-1 cursor-pointer hover:bg-[var(--color-background)]"
               >
-                <Palette size={12} /> Layout Preset Lab
+                <Palette size={14} /> Layout Preset Lab
               </button>
             </div>
           </div>
 
           {/* SPREADSHEET FORMULA INPUT BAR */}
-          <div className="glass-panel p-3 rounded-lg border border-white/[0.04] bg-[var(--color-background)]/80 flex items-center gap-3 font-mono text-xs">
-            <div className="bg-[var(--color-card-bg)] px-3 py-1.5 border border-white/5 rounded font-mono text-[#d4af37] font-semibold min-w-[150px] shrink-0 text-center">
+          <div className="glass-panel p-3 rounded-lg border border-white/[0.04] bg-[var(--color-background)]/80 flex items-center gap-3 text-xs">
+            <div className="bg-[var(--color-card-bg)] px-3 py-1.5 border border-white/5 rounded-xl font-mono text-[#d4af37] font-semibold min-w-[150px] shrink-0 text-center">
               {selectedCell ? (
                 <span>{selectedCell.tableKey.toUpperCase()}: Row {selectedCell.rowIndex + 1}, Col {selectedCell.colKey.toUpperCase()}</span>
               ) : (
-                <span className="text-[var(--color-text-muted)] block text-[10px]">SELECT CELL</span>
+                <span className="text-[var(--color-text-muted)] block text-xs">SELECT CELL</span>
               )}
             </div>
             
             <div className="text-[var(--color-text-muted)] font-bold select-none text-sm px-1 shrink-0">ƒ<sub>x</sub></div>
             
-            <div className="flex-1 bg-black/60 border border-white/[0.06] rounded px-3 py-1.5 flex items-center justify-between">
+            <div className="flex-1 bg-black/60 border border-white/[0.06] rounded-xl px-3 py-1.5 flex items-center justify-between">
               <input
                 type="text"
                 placeholder={selectedCell ? "Enter math, literal value, or formula starting with = like =SUM([costPerUnit], 10)" : "Select any cell grid coordinates below to inspect or run custom calculations..."}
@@ -953,7 +953,7 @@ export default function SmartTablesView() {
                     }
                   }
                 }}
-                className="w-full bg-transparent text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-0 text-[11px]"
+                className="w-full bg-transparent text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-0 text-xs"
               />
               {selectedCell && (() => {
                 const formulaValue = customFormulas[`${selectedCell.tableKey}_${selectedCell.rowId}_${selectedCell.colKey}`] || '';
@@ -962,16 +962,16 @@ export default function SmartTablesView() {
                   <div className="flex items-center gap-2">
                     {hasFormula ? (
                       realTimeSyntaxError ? (
-                        <span className="text-[9px] text-red-400 bg-red-950/20 border border-red-500/10 px-2 py-0.5 rounded uppercase font-bold animate-fadeIn shrink-0">
+                        <span className="text-xs text-red-400 bg-red-950/20 border border-red-500/10 px-2 py-0.5 rounded-xl uppercase font-bold animate-fadeIn shrink-0">
                           ⚠️ Error: {realTimeSyntaxError}
                         </span>
                       ) : (
-                        <span className="text-[9px] text-emerald-400 bg-emerald-950/20 border border-emerald-500/10 px-2 py-0.5 rounded uppercase font-bold shrink-0">
+                        <span className="text-xs text-emerald-400 bg-emerald-950/20 border border-emerald-500/10 px-2 py-0.5 rounded-xl uppercase font-bold shrink-0">
                           ✓ Formula Active
                         </span>
                       )
                     ) : (
-                      <span className="text-[9px] text-[var(--color-text-muted)] uppercase bg-[var(--color-background)]/40 px-1.5 py-0.5 rounded shrink-0">Literal Data</span>
+                      <span className="text-xs text-[var(--color-text-muted)] uppercase bg-[var(--color-background)]/40 px-1.5 py-0.5 rounded-xl shrink-0">Literal Data</span>
                     )}
                     <button
                       type="button"
@@ -983,7 +983,7 @@ export default function SmartTablesView() {
                           return next;
                         });
                       }}
-                      className="text-[var(--color-text-muted)] hover:text-white hover:underline text-[10px] uppercase cursor-pointer ml-1 shrink-0"
+                      className="text-[var(--color-text-muted)] hover:text-white hover:underline text-xs uppercase cursor-pointer ml-1 shrink-0"
                     >
                       Clear Dynamic Formula
                     </button>
@@ -995,7 +995,7 @@ export default function SmartTablesView() {
 
           {/* VIEW TYPE CONTROL SWITCHER */}
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1.5 border border-white/[0.05] p-1 bg-[var(--color-background)]/80 rounded-lg text-xs font-mono">
+            <div className="flex items-center gap-1.5 border border-white/[0.05] p-1 bg-[var(--color-background)]/80 rounded-lg text-xs">
               {[
                 { id: 'spreadsheet', label: 'Spreadsheet Grid', icon: Grid3X3 },
                 { id: 'kanban', label: 'Kanban board', icon: KanbanSquare },
@@ -1010,11 +1010,11 @@ export default function SmartTablesView() {
                   <button
                     key={viewOpt.id}
                     onClick={() => setViewLayout(viewOpt.id as any)}
-                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded transition-all cursor-pointer text-[10.5px] font-bold uppercase ${
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl transition-all cursor-pointer text-xs font-bold uppercase ${
                       viewLayout === viewOpt.id ? 'bg-[#d4af37] text-[var(--color-text-muted)] font-bold' : 'text-[var(--color-text-muted)] hover:text-white'
                     }`}
                   >
-                    <IconComp size={12} />
+                    <IconComp size={14} />
                     <span>{viewOpt.label}</span>
                   </button>
                 );
@@ -1022,29 +1022,29 @@ export default function SmartTablesView() {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="relative font-mono">
-                <Search size={12} className="absolute left-2 top-2.5 text-[var(--color-text-muted)]" />
+              <div className="relative">
+                <Search size={14} className="absolute left-2 top-2.5 text-[var(--color-text-muted)]" />
                 <input 
                   type="text" 
                   placeholder="Filter grid values..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-[var(--color-card-bg)] border border-white/[0.05] lg:w-48 text-[11px] pl-6.5 pr-2 py-1.5 text-[var(--color-text-main)] focus:outline-none rounded"
+                  className="bg-[var(--color-card-bg)] border border-white/[0.05] lg:w-48 text-xs pl-6.5 pr-2 py-1.5 text-[var(--color-text-main)] focus:outline-none rounded-xl"
                 />
               </div>
 
               <button
                 onClick={() => setFilterDrawer(!filterDrawer)}
-                className="px-3 py-1.5 border border-white/5 bg-[var(--color-card-bg)] rounded text-xs text-[var(--color-text-muted)] hover:text-white font-mono flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 border border-white/5 bg-[var(--color-card-bg)] rounded-xl text-xs text-[var(--color-text-muted)] hover:text-white flex items-center gap-1 cursor-pointer"
               >
-                <Filter size={11} /> Filter parameters ({multiFilters.length})
+                <Filter size={14} /> Filter parameters ({multiFilters.length})
               </button>
 
               <button 
                 onClick={() => setShowAddCustomCol(true)}
-                className="px-3 py-1.5 border border-[#d4af37]/35 hover:border-[#d4af37] text-[#d4af37] rounded text-xs font-mono flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 border border-[#d4af37]/35 hover:border-[#d4af37] text-[#d4af37] rounded-xl text-xs flex items-center gap-1 cursor-pointer"
               >
-                <Plus size={11} /> Create custom column
+                <Plus size={14} /> Create custom column
               </button>
             </div>
           </div>
@@ -1061,11 +1061,11 @@ export default function SmartTablesView() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="glass-panel p-4 rounded-lg bg-[var(--color-card-bg)] border border-indigo-500/20 font-mono text-[11px] flex gap-3 items-start justify-between"
+                className="glass-panel p-4 rounded-lg bg-[var(--color-card-bg)] border border-indigo-500/20 text-xs flex gap-3 items-start justify-between"
               >
                 <div className="space-y-1">
-                  <p className="text-[var(--color-text-muted)] uppercase font-black tracking-widest text-[9px] flex items-center gap-1">
-                    <MessageSquare size={10} className="text-indigo-400" /> Static Annotation comment block
+                  <p className="text-[var(--color-text-muted)] uppercase font-black tracking-widest text-xs flex items-center gap-1">
+                    <MessageSquare size={14} className="text-indigo-400" /> Static Annotation comment block
                   </p>
                   <p className="text-white text-xs">{cellMetadata[`${selectedCell.tableKey}_${selectedCell.rowId}_${selectedCell.colKey}`].comment}</p>
                 </div>
@@ -1078,7 +1078,7 @@ export default function SmartTablesView() {
                       [metaKey]: { ...(p[metaKey] || {}), comment: '' }
                     }));
                   }}
-                  className="text-[var(--color-text-muted)] hover:text-red-400 transition-colors cursor-pointer text-[10px]"
+                  className="text-[var(--color-text-muted)] hover:text-red-400 transition-colors cursor-pointer text-xs"
                 >
                   Remove Comment Note
                 </button>
@@ -1093,7 +1093,7 @@ export default function SmartTablesView() {
           
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
 
-          <div className="absolute top-3 left-3 bg-[var(--color-card-bg)]/40 p-2 rounded border border-white/5 backdrop-blur z-40 text-[10px] font-mono text-[var(--color-text-muted)]">
+          <div className="absolute top-3 left-3 bg-[var(--color-card-bg)]/40 p-2 rounded-xl border border-white/5 z-40 text-xs text-[var(--color-text-muted)]">
             🌌 Free-floating Workspace • Drag from window headers • Drag corner edge to resize • double click headers to toggle fullscreen maximize
           </div>
 
@@ -1106,7 +1106,7 @@ export default function SmartTablesView() {
               return (
                 <div
                   key={win.id}
-                  className="absolute rounded-xl border bg-black/60 backdrop-blur-md overflow-hidden flex flex-col hover:shadow-2xl transition-shadow border-white/10 group"
+                  className="absolute rounded-xl border bg-black/60 overflow-hidden flex flex-col hover:shadow-2xl transition-shadow border-white/10 group"
                   style={{
                     left: `${win.x}px`,
                     top: `${win.y}px`,
@@ -1129,7 +1129,7 @@ export default function SmartTablesView() {
                   >
                     <div className="flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full" style={{ backgroundColor: theme.hex }} />
-                      <h4 className="text-[11px] font-mono font-bold text-[var(--color-text-main)] uppercase tracking-wider">{win.title}</h4>
+                      <h4 className="text-xs font-bold text-[var(--color-text-main)] uppercase tracking-wider">{win.title}</h4>
                     </div>
 
                     <div className="flex items-center gap-1 window-control-button">
@@ -1140,7 +1140,7 @@ export default function SmartTablesView() {
                           const v = e.target.value as any;
                           setSandboxTables(prev => prev.map(t => t.id === win.id ? { ...t, view: v } : t));
                         }}
-                        className="bg-[var(--color-card-bg)] border border-white/5 text-[9.5px] leading-none px-1.5 py-0.5 rounded text-[var(--color-text-main)] focus:outline-none uppercase font-mono mr-2"
+                        className="bg-[var(--color-card-bg)] border border-white/5 text-xs leading-none px-1.5 py-0.5 rounded-xl text-[var(--color-text-main)] focus:outline-none uppercase mr-2"
                       >
                         <option value="spreadsheet">Spreadsheet</option>
                         <option value="kanban">Kanban status</option>
@@ -1157,10 +1157,10 @@ export default function SmartTablesView() {
                           const maxZ = Math.max(...sandboxTables.map(t => t.zIndex), 10);
                           setSandboxTables(prev => prev.map(t => t.id === win.id ? { ...t, zIndex: maxZ + 1 } : t));
                         }}
-                        className="p-1 hover:bg-[rgba(255,255,255,0.03)] rounded text-[var(--color-text-muted)] hover:text-white"
+                        className="p-1 hover:bg-[rgba(255,255,255,0.03)] rounded-xl text-[var(--color-text-muted)] hover:text-white"
                         title="Bring to Front"
                       >
-                        <Layers size={10} />
+                        <Layers size={14} />
                       </button>
 
                       <button
@@ -1170,20 +1170,20 @@ export default function SmartTablesView() {
                           const next = presets[(currentIdx + 1) % presets.length];
                           setSandboxTables(prev => prev.map(t => t.id === win.id ? { ...t, themePreset: next } : t));
                         }}
-                        className="p-1 hover:bg-[rgba(255,255,255,0.03)] rounded text-[var(--color-text-muted)] hover:text-white"
+                        className="p-1 hover:bg-[rgba(255,255,255,0.03)] rounded-xl text-[var(--color-text-muted)] hover:text-white"
                         title="Alternate theme"
                       >
-                        <Palette size={10} />
+                        <Palette size={14} />
                       </button>
 
                       <button
                         onClick={() => {
                           setSandboxTables(prev => prev.filter(t => t.id !== win.id));
                         }}
-                        className="p-1 hover:bg-[rgba(255,255,255,0.03)] rounded text-[var(--color-text-muted)] hover:text-red-400"
+                        className="p-1 hover:bg-[rgba(255,255,255,0.03)] rounded-xl text-[var(--color-text-muted)] hover:text-red-400"
                         title="Close workspace block"
                       >
-                        <X size={10} />
+                        <X size={14} />
                       </button>
                     </div>
                   </div>
@@ -1209,7 +1209,7 @@ export default function SmartTablesView() {
           </div>
 
           {sandboxTables.length === 0 && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 font-mono text-xs text-[var(--color-text-muted)]">
+            <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 text-xs text-[var(--color-text-muted)]">
               <Layers size={24} className="animate-bounce" />
               <span>All Workspace modules closed. Press Reset Orchestrator Canvas below.</span>
               <button
@@ -1221,7 +1221,7 @@ export default function SmartTablesView() {
                     { id: 'win-sales', title: 'Active Sales Ledger Tracking', titleKey: 'sales', x: 690, y: 540, w: 520, h: 420, zIndex: 25, isMaximized: false, view: 'analytics', themePreset: 'emerald', opacity: 75, blur: 15, alternatingRows: true, density: 'relaxed' }
                   ]);
                 }}
-                className="px-4 py-2 bg-[var(--color-card-bg)] border border-white/10 rounded uppercase hover:text-white"
+                className="px-4 py-2 bg-[var(--color-card-bg)] border border-white/10 rounded-xl uppercase hover:text-white"
               >
                 Reset Database Grid Frame Windows
               </button>
@@ -1234,14 +1234,14 @@ export default function SmartTablesView() {
       {/* --- CELL CONTEXT-RIGHT-CLICK MENU OVERLAY --- */}
       {contextMenuCell && (
         <div
-          className="fixed bg-[var(--color-background)] border border-white/10 p-2.5 rounded-lg shadow-2xl space-y-2.5 z-55 w-52 font-mono text-[10.5px] select-none"
+          className="fixed bg-[var(--color-background)] border border-white/10 p-2.5 rounded-lg shadow-2xl space-y-2.5 z-55 w-52 text-xs select-none"
           style={{ left: `${contextMenuCell.x}px`, top: `${contextMenuCell.y}px` }}
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="block text-[9px] text-[var(--color-text-muted)] uppercase pb-1.5 border-b border-white/[0.04]">Excel Cell Actions</span>
+          <span className="block text-xs text-[var(--color-text-muted)] uppercase pb-1.5 border-b border-white/[0.04]">Excel Cell Actions</span>
           
           <div className="space-y-1">
-            <span className="block text-[8px] text-[var(--color-text-muted)] uppercase">Paint Highlight</span>
+            <span className="block text-xs text-[var(--color-text-muted)] uppercase">Paint Highlight</span>
             <div className="flex gap-1.5">
               {[
                 { hex: 'rgba(212, 175, 55, 0.2)', name: 'Gold' },
@@ -1253,7 +1253,7 @@ export default function SmartTablesView() {
                 <button
                   key={c.name}
                   onClick={() => applyCellHighlight(c.hex)}
-                  className="h-4 flex-1 rounded border border-white/10 cursor-pointer"
+                  className="h-4 flex-1 rounded-xl border border-white/10 cursor-pointer"
                   style={{ backgroundColor: c.hex === 'transparent' ? '#18181b' : c.hex }}
                   title={c.name}
                 />
@@ -1262,13 +1262,13 @@ export default function SmartTablesView() {
           </div>
 
           <div className="space-y-1">
-            <span className="block text-[8px] text-[var(--color-text-muted)] uppercase">Embed Emoji Signifier</span>
+            <span className="block text-xs text-[var(--color-text-muted)] uppercase">Embed Emoji Signifier</span>
             <div className="flex gap-1.5 justify-between">
               {['⭐', '⚠️', '💎', '✅', '🔥', '🔒'].map((emoji) => (
                 <button
                   key={emoji}
                   onClick={() => insertCellEmoji(emoji)}
-                  className="px-1 py-0.5 hover:bg-[rgba(255,255,255,0.06)] rounded cursor-pointer"
+                  className="px-1 py-0.5 hover:bg-[rgba(255,255,255,0.06)] rounded-xl cursor-pointer"
                 >
                   {emoji}
                 </button>
@@ -1278,9 +1278,9 @@ export default function SmartTablesView() {
 
           <button
             onClick={toggleCellLock}
-            className="w-full text-left py-1 px-1.5 rounded hover:bg-[rgba(255,255,255,0.03)] flex items-center gap-1.5"
+            className="w-full text-left py-1 px-1.5 rounded-xl hover:bg-[rgba(255,255,255,0.03)] flex items-center gap-1.5"
           >
-            <Lock size={10} /> Toggle Sourcing Protection lock
+            <Lock size={14} /> Toggle Sourcing Protection lock
           </button>
 
           <button
@@ -1294,9 +1294,9 @@ export default function SmartTablesView() {
                 }));
               }
             }}
-            className="w-full text-left py-1 px-1.5 rounded hover:bg-[rgba(255,255,255,0.03)] flex items-center gap-1.5"
+            className="w-full text-left py-1 px-1.5 rounded-xl hover:bg-[rgba(255,255,255,0.03)] flex items-center gap-1.5"
           >
-            <MessageSquare size={10} /> Attach comment comment
+            <MessageSquare size={14} /> Attach comment comment
           </button>
           
           <button
@@ -1308,9 +1308,9 @@ export default function SmartTablesView() {
                 setCustomFormulas(prev => ({ ...prev, [formulaKey]: promptF }));
               }
             }}
-            className="w-full text-left py-1 px-1.5 rounded hover:bg-emerald-600/20 text-emerald-300 flex items-center gap-1.5"
+            className="w-full text-left py-1 px-1.5 rounded-xl hover:bg-emerald-600/20 text-emerald-300 flex items-center gap-1.5"
           >
-            <Sparkles size={10} /> Write Formula function
+            <Sparkles size={14} /> Write Formula function
           </button>
         </div>
       )}
@@ -1325,41 +1325,41 @@ export default function SmartTablesView() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-45"
+              className="fixed inset-0 bg-black/80 z-45"
               onClick={() => setShowAIAudit(false)}
             />
             <motion.div 
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              className="fixed right-0 top-0 bottom-0 w-96 bg-[var(--color-background)] border-l border-purple-500/10 z-50 p-6 flex flex-col justify-between font-mono"
+              className="fixed right-0 top-0 bottom-0 w-96 bg-[var(--color-background)] border-l border-white/[0.08] z-50 p-6 flex flex-col justify-between"
             >
               <div className="space-y-6 overflow-y-auto max-h-[90%] pr-1">
                 <div className="flex justify-between items-center border-b border-white/[0.05] pb-3">
-                  <h3 className="text-xs font-bold text-purple-400 uppercase tracking-widest flex items-center gap-1.5">
-                    <Sparkles size={14} className="text-purple-400 animate-pulse" /> AI OPERATIONAL AUDITOR ACTIVE
+                  <h3 className="text-xs font-bold text-[var(--color-accent-highlight)] uppercase tracking-widest flex items-center gap-1.5">
+                    <Sparkles size={14} className="text-[var(--color-accent-highlight)] animate-pulse" /> AI OPERATIONAL AUDITOR ACTIVE
                   </h3>
                   <button onClick={() => setShowAIAudit(false)} className="text-[var(--color-text-muted)] hover:text-white"><X size={14}/></button>
                 </div>
 
-                <div className="space-y-4 text-xs font-mono">
-                  <p className="text-[var(--color-text-muted)] text-[10.5px]">Scanning materials, expected collection selling prices, and sample ratios for HPP anomalies.</p>
+                <div className="space-y-4 text-xs">
+                  <p className="text-[var(--color-text-muted)] text-xs">Scanning materials, expected collection selling prices, and sample ratios for HPP anomalies.</p>
                   
-                  <div className="bg-purple-950/15 border border-purple-500/20 p-3.5 rounded space-y-2.5">
-                    <div className="flex items-center gap-2 text-purple-300 text-[11px] font-bold">
-                      <Zap size={11} className="text-purple-400 animate-bounce" /> PATTERN EXTRAPOLATION HIGHLIGHT
+                  <div className="bg-[var(--color-accent-muted)] border border-[var(--color-accent-border)] p-3.5 rounded-xl space-y-2.5">
+                    <div className="flex items-center gap-2 text-[var(--color-accent-highlight)] text-xs font-bold">
+                      <Zap size={14} className="text-[var(--color-accent-highlight)] animate-bounce" /> PATTERN EXTRAPOLATION HIGHLIGHT
                     </div>
-                    <ul className="space-y-2 text-[10.5px] text-[var(--color-text-main)]">
+                    <ul className="space-y-2 text-xs text-[var(--color-text-main)]">
                       <li>• <strong>Fabric Pricing Optimization</strong>: Sourcing waterproof membranes MAT-001 from supplier Supra Tokyo lists high ({formatMoney(14.20)}). Alternative partnersup Sup-002 can optimize cost per meter by 12%.</li>
                       <li className="pt-1.5 border-t border-white/[0.04]">• <strong>Production Yield Safe threshold</strong>: Expected profit margins on product PROD-001 is falling to 12%. Suggest utilizing selling price formula: <code>=[sellingPrice] * 1.5</code> for health check.</li>
                     </ul>
                   </div>
 
-                  <div className="p-3 bg-[var(--color-card-bg)] border border-white/5 rounded space-y-2">
-                    <span className="text-[9.5px] uppercase text-[var(--color-text-muted)] block font-bold">AI Supplier Advisor search</span>
+                  <div className="p-3 bg-[var(--color-card-bg)] border border-white/5 rounded-xl space-y-2">
+                    <span className="text-xs uppercase text-[var(--color-text-muted)] block font-bold">AI Supplier Advisor search</span>
                     <input
                       type="text"
-                      className="w-full bg-[var(--color-background)] border border-white/10 rounded px-2 py-1 text-[var(--color-text-main)] text-[10.5px]"
+                      className="w-full bg-[var(--color-background)] border border-white/10 rounded-xl px-2 py-1 text-[var(--color-text-main)] text-xs"
                       placeholder="Ask supplier, previous usage, low stock threshold..."
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -1370,15 +1370,15 @@ export default function SmartTablesView() {
                   </div>
 
                   <div className="space-y-2">
-                    <span className="text-[9.5px] uppercase text-[var(--color-text-muted)] block font-bold">Automated formulas recommended:</span>
-                    <div className="bg-black/60 p-2.5 rounded border border-white/5 font-mono text-[9.5px] text-[var(--color-text-muted)] space-y-1">
+                    <span className="text-xs uppercase text-[var(--color-text-muted)] block font-bold">Automated formulas recommended:</span>
+                    <div className="bg-black/60 p-2.5 rounded-xl border border-white/5 text-xs text-[var(--color-text-muted)] space-y-1">
                       <div><code>=MARGIN([sellingPrice], [finalHPP])</code></div>
                       <div>Returns expected profit index percentage margin dynamically.</div>
                     </div>
                   </div>
                 </div>
               </div>
-              <p className="text-[var(--color-text-muted)] text-[9px]">Autofills intelligent dropdown options based on pattern history.</p>
+              <p className="text-[var(--color-text-muted)] text-xs">Autofills intelligent dropdown options based on pattern history.</p>
             </motion.div>
           </>
         )}
@@ -1387,8 +1387,8 @@ export default function SmartTablesView() {
       {/* B. GRAPHICAL FORMULA BUILDER / MAP MAPOVERLAY */}
       <AnimatePresence>
         {showFormulaMap && (
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="glass-panel-heavy rounded-xl max-w-2xl w-full p-6 space-y-5 font-mono text-xs">
+          <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+            <div className="glass-panel-heavy rounded-xl max-w-2xl w-full p-6 space-y-5 text-xs">
               <div className="flex justify-between items-center border-b border-white/[0.05] pb-3">
                 <h3 className="text-sm font-bold text-[var(--color-text-main)] uppercase tracking-wider flex items-center gap-1.5">
                   <Sliders size={14} className="text-indigo-400" /> Interactive Excel Visual Formula map Builder
@@ -1397,8 +1397,8 @@ export default function SmartTablesView() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-3 p-3 bg-[var(--color-background)] rounded border border-white/5">
-                  <span className="text-[10px] text-[var(--color-text-muted)] uppercase block font-bold">Variable components (Drag structure)</span>
+                <div className="space-y-3 p-3 bg-[var(--color-background)] rounded-xl border border-white/5">
+                  <span className="text-xs text-[var(--color-text-muted)] uppercase block font-bold">Variable components (Drag structure)</span>
                   <div className="flex flex-wrap gap-2">
                     {['[costPerUnit]', '[remainingQty]', '[sellingPrice]', '[finalHPP]', '[qtySold]', '[pricePerPcs]'].map(token => (
                       <button
@@ -1412,7 +1412,7 @@ export default function SmartTablesView() {
                             toast.error("Select a grid cell first to append this factor!");
                           }
                         }}
-                        className="px-2 py-1 bg-[var(--color-card-bg)] border border-white/5 hover:border-[#d4af37] text-[var(--color-text-main)] rounded text-[10.5px] font-bold"
+                        className="px-2 py-1 bg-[var(--color-card-bg)] border border-white/5 hover:border-[#d4af37] text-[var(--color-text-main)] rounded-xl text-xs font-bold"
                       >
                         {token}
                       </button>
@@ -1420,8 +1420,8 @@ export default function SmartTablesView() {
                   </div>
                 </div>
 
-                <div className="space-y-3 p-3 bg-[var(--color-background)] rounded border border-white/5">
-                  <span className="text-[10px] text-[var(--color-text-muted)] uppercase block font-bold font-mono">Algebraic operators</span>
+                <div className="space-y-3 p-3 bg-[var(--color-background)] rounded-xl border border-white/5">
+                  <span className="text-xs text-[var(--color-text-muted)] uppercase block font-bold">Algebraic operators</span>
                   <div className="grid grid-cols-3 gap-1.5 text-center">
                     {['+', '-', '*', '/', 'MARGIN()', 'AI_SUGGEST()'].map(op => (
                       <button
@@ -1435,7 +1435,7 @@ export default function SmartTablesView() {
                             toast.error("Select cell first!");
                           }
                         }}
-                        className="p-1 px-2.5 bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] text-[10.5px] rounded font-bold"
+                        className="p-1 px-2.5 bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] text-xs rounded-xl font-bold"
                       >
                         {op}
                       </button>
@@ -1445,20 +1445,20 @@ export default function SmartTablesView() {
               </div>
 
               {/* Visual Map of Data Pipeline */}
-              <div className="p-3 bg-[var(--color-card-bg)]/40 rounded border border-white/[0.04]">
-                <span className="text-[9.5px] uppercase text-[var(--color-text-muted)] block pb-1 border-b border-white/[0.02]">Realtime Data Sourcing Recalculation Flow</span>
-                <div className="flex justify-between items-center text-center mt-3 text-[10px]">
-                  <div className="bg-[var(--color-background)] px-2 py-1 rounded border border-white/5">
+              <div className="p-3 bg-[var(--color-card-bg)]/40 rounded-xl border border-white/[0.04]">
+                <span className="text-xs uppercase text-[var(--color-text-muted)] block pb-1 border-b border-white/[0.02]">Realtime Data Sourcing Recalculation Flow</span>
+                <div className="flex justify-between items-center text-center mt-3 text-xs">
+                  <div className="bg-[var(--color-background)] px-2 py-1 rounded-xl border border-white/5">
                     <strong>Fabric Library Cost</strong><br/>
                     <span className="text-[#d4af37]">{formatMoney(14.20)} / meter</span>
                   </div>
                   <ArrowRight size={14} className="text-[var(--color-text-muted)]" />
-                  <div className="bg-[var(--color-background)] px-2 py-1 rounded border border-white/5">
+                  <div className="bg-[var(--color-background)] px-2 py-1 rounded-xl border border-white/5">
                     <strong>Sampling Recipe HPP</strong><br/>
-                    <span className="text-purple-400">Sum final usage qty</span>
+                    <span className="text-[var(--color-accent-highlight)]">Sum final usage qty</span>
                   </div>
                   <ArrowRight size={14} className="text-[var(--color-text-muted)]" />
-                  <div className="bg-[var(--color-background)] px-2 py-1 rounded border border-white/5 animate-pulse">
+                  <div className="bg-[var(--color-background)] px-2 py-1 rounded-xl border border-white/5 animate-pulse">
                     <strong>Product Profit margin</strong><br/>
                     <span className="text-[#10b981]">Dynamic net ROI</span>
                   </div>
@@ -1473,7 +1473,7 @@ export default function SmartTablesView() {
       <AnimatePresence>
         {showColorPanel && (
           <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
-            <div className="glass-panel-heavy rounded-xl max-w-sm w-full p-6 space-y-4 font-mono text-xs">
+            <div className="glass-panel-heavy rounded-xl max-w-sm w-full p-6 space-y-4 text-xs">
               <div className="flex justify-between items-center border-b border-white/[0.05] pb-2">
                 <span className="text-xs font-bold text-[var(--color-text-main)] uppercase flex items-center gap-1.5">
                   <Palette size={14} style={{ color: activeColor }} /> ATELIER STYLE LAB
@@ -1483,7 +1483,7 @@ export default function SmartTablesView() {
 
               {/* Presets Theme Selection */}
               <div className="space-y-2">
-                <span className="text-[10px] text-[var(--color-text-muted)] uppercase block font-bold">Select workspace styling preset</span>
+                <span className="text-xs text-[var(--color-text-muted)] uppercase block font-bold">Select workspace styling preset</span>
                 <div className="grid grid-cols-2 gap-2">
                   {Object.entries(PRESET_THEMES).map(([key, theme]) => (
                     <button
@@ -1491,16 +1491,16 @@ export default function SmartTablesView() {
                       onClick={() => updateConfig({ customAccentColor: theme.hex })}
                       className="p-3.5 bg-[var(--color-card-bg)] border border-white/[0.02] hover:border-white/20 rounded-md text-left flex flex-col justify-between transition-colors uppercase cursor-pointer"
                     >
-                      <span className="text-[10.5px] font-bold text-[var(--color-text-main)]">{theme.label}</span>
-                      <span className="text-[9.5px] text-[var(--color-text-muted)] select-all truncate">{theme.hex}</span>
+                      <span className="text-xs font-bold text-[var(--color-text-main)]">{theme.label}</span>
+                      <span className="text-xs text-[var(--color-text-muted)] select-all truncate">{theme.hex}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className="space-y-2 border-t border-white/[0.04] pt-3.5">
-                <span className="text-[10px] text-[var(--color-text-muted)] uppercase block font-bold">Dynamic Dimension Controllers</span>
-                <div className="grid grid-cols-2 gap-3 text-[10px]">
+                <span className="text-xs text-[var(--color-text-muted)] uppercase block font-bold">Dynamic Dimension Controllers</span>
+                <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
                     <label className="text-[var(--color-text-muted)] block pb-1">Font Size</label>
                     <NumberInput
@@ -1509,7 +1509,7 @@ export default function SmartTablesView() {
                       allowDecimal={false}
                       min={9}
                       max={16}
-                      className="w-full bg-[var(--color-card-bg)] border border-white/10 px-2 py-1 text-white rounded focus:outline-none"
+                      className="w-full bg-[var(--color-card-bg)] border border-white/10 px-2 py-1 text-white rounded-xl focus:outline-none"
                     />
                   </div>
                   <div>
@@ -1520,7 +1520,7 @@ export default function SmartTablesView() {
                       allowDecimal={false}
                       min={2}
                       max={20}
-                      className="w-full bg-[var(--color-card-bg)] border border-white/10 px-2 py-1 text-white rounded focus:outline-none"
+                      className="w-full bg-[var(--color-card-bg)] border border-white/10 px-2 py-1 text-white rounded-xl focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1532,8 +1532,8 @@ export default function SmartTablesView() {
 
       {/* D. ADD CUSTOM COLUMN MODAL */}
       {showAddCustomCol && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="glass-panel-heavy rounded-lg max-w-sm w-full p-6 space-y-4 font-mono text-xs">
+        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
+          <div className="glass-panel-heavy rounded-lg max-w-sm w-full p-6 space-y-4 text-xs">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-main)] border-b border-white/[0.05] pb-3">Create Dynamic Column</h3>
             
             <div className="space-y-3.5">
@@ -1544,7 +1544,7 @@ export default function SmartTablesView() {
                   value={newCol.label} 
                   onChange={(e) => setNewCol({...newCol, label: e.target.value})}
                   placeholder="e.g. Lead Sourcing Time"
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white focus:outline-none focus:border-[#d4af37] rounded"
+                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white focus:outline-none focus:border-[#d4af37] rounded-xl"
                 />
               </div>
 
@@ -1553,7 +1553,7 @@ export default function SmartTablesView() {
                 <select 
                   value={newCol.type} 
                   onChange={(e) => setNewCol({...newCol, type: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
+                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none"
                 >
                   <option value="text">Text value</option>
                   <option value="number">Numeric price/unit</option>
@@ -1563,16 +1563,16 @@ export default function SmartTablesView() {
               </div>
             </div>
 
-            <div className="flex gap-2 justify-end text-xs font-mono pt-4 border-t border-white/[0.05]">
+            <div className="flex gap-2 justify-end text-xs pt-4 border-t border-white/[0.05]">
               <button 
                 onClick={() => setShowAddCustomCol(false)}
-                className="px-4 py-2 border border-white/[0.03] text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded cursor-pointer"
+                className="px-4 py-2 border border-white/[0.03] text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded-xl cursor-pointer"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleAddColumn}
-                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded cursor-pointer"
+                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded-xl cursor-pointer"
               >
                 Insert Column
               </button>
@@ -1584,8 +1584,8 @@ export default function SmartTablesView() {
       {/* FILTER PARAMETERS CONFIG DRAWER */}
       <AnimatePresence>
         {filterDrawer && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="glass-panel-heavy rounded-xl max-w-sm w-full p-5 space-y-4 font-mono text-xs">
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div className="glass-panel-heavy rounded-xl max-w-sm w-full p-5 space-y-4 text-xs">
               <div className="flex justify-between items-center border-b border-white/[0.05] pb-2">
                 <span className="text-xs font-bold text-[var(--color-text-main)] uppercase flex items-center gap-1.5">
                   <Filter size={14} style={{ color: activeColor }} /> Multi-filtering queries
@@ -1594,7 +1594,7 @@ export default function SmartTablesView() {
               </div>
 
               <div className="space-y-3">
-                <div className="flex justify-between items-center text-[10px] text-[var(--color-text-muted)] border-b border-white/[0.02] pb-1">
+                <div className="flex justify-between items-center text-xs text-[var(--color-text-muted)] border-b border-white/[0.02] pb-1">
                   <span>Current Active Grid filter rules</span>
                   <button onClick={() => setMultiFilters([])} className="text-red-400 hover:underline">Clear all</button>
                 </div>
@@ -1604,29 +1604,29 @@ export default function SmartTablesView() {
                 ) : (
                   <div className="space-y-2">
                     {multiFilters.map((f, i) => (
-                      <div key={i} className="flex gap-2 items-center bg-black/35 p-2 rounded justify-between">
+                      <div key={i} className="flex gap-2 items-center bg-black/35 p-2 rounded-xl justify-between">
                         <span><code>{f.field}</code> {f.op} <code>{f.val}</code></span>
-                        <X size={12} className="cursor-pointer text-red-500 hover:text-white" onClick={() => setMultiFilters(prev => prev.filter((_, idx) => idx !== i))} />
+                        <X size={14} className="cursor-pointer text-red-500 hover:text-white" onClick={() => setMultiFilters(prev => prev.filter((_, idx) => idx !== i))} />
                       </div>
                     ))}
                   </div>
                 )}
 
                 <div className="space-y-2 pt-2 border-t border-white/[0.04]">
-                  <span className="text-[9.5px] uppercase text-[var(--color-text-muted)] block font-bold">Add criteria item:</span>
+                  <span className="text-xs uppercase text-[var(--color-text-muted)] block font-bold">Add criteria item:</span>
                   <div className="grid grid-cols-3 gap-2">
-                    <select id="filt-field" className="bg-[var(--color-card-bg)] border border-white/10 rounded p-1 text-[10px] text-[var(--color-text-main)]">
+                    <select id="filt-field" className="bg-[var(--color-card-bg)] border border-white/10 rounded-xl p-1 text-xs text-[var(--color-text-main)]">
                       {activeColumnsSchema.map(col => (
                         <option key={col.key} value={col.key}>{col.label}</option>
                       ))}
                     </select>
-                    <select id="filt-op" className="bg-[var(--color-card-bg)] border border-white/10 rounded p-1 text-[10px] text-[var(--color-text-main)]">
+                    <select id="filt-op" className="bg-[var(--color-card-bg)] border border-white/10 rounded-xl p-1 text-xs text-[var(--color-text-main)]">
                       <option value="contains">Contains</option>
                       <option value="^">Starts with</option>
                       <option value=">">&gt; greater</option>
                       <option value="<">&lt; lesser</option>
                     </select>
-                    <input id="filt-val" type="text" className="bg-[var(--color-card-bg)] border border-white/10 rounded p-1 text-[10px] text-[var(--color-text-main)]" placeholder="Value..." />
+                    <input id="filt-val" type="text" className="bg-[var(--color-card-bg)] border border-white/10 rounded-xl p-1 text-xs text-[var(--color-text-main)]" placeholder="Value..." />
                   </div>
                   <button
                     onClick={() => {
@@ -1637,7 +1637,7 @@ export default function SmartTablesView() {
                       setMultiFilters(prev => [...prev, { field: fSelect.value, op: oSelect.value as any, val: vInput.value }]);
                       vInput.value = '';
                     }}
-                    className="w-full py-1 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold rounded uppercase mt-2 text-[10.5px]"
+                    className="w-full py-1 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold rounded-xl uppercase mt-2 text-xs"
                   >
                     Append criteria rule
                   </button>
@@ -1662,9 +1662,9 @@ export default function SmartTablesView() {
       // TRUE SPREADSHEET EXCEL GRADE WITH DOUBLE COORDINATES
       return (
         <div className="w-full overflow-x-auto select-text">
-          <table className="w-full text-[11px] font-mono border-collapse text-left select-text">
+          <table className="w-full text-xs border-collapse text-left select-text">
             <thead>
-              <tr className="bg-[var(--color-background)]/90 border-b border-white/[0.08] text-[var(--color-text-muted)] uppercase select-none text-[9px] tracking-wider font-bold">
+              <tr className="bg-[var(--color-background)]/90 border-b border-white/[0.08] text-[var(--color-text-muted)] uppercase select-none text-xs tracking-wider font-bold">
                 <th className="py-2.5 px-3 border-r border-white/5 text-center w-8 bg-[var(--color-card-bg)]">#</th>
                 <th className="py-2.5 px-4 border-r border-white/5 text-center w-12 text-[var(--color-text-muted)] bg-[var(--color-background)]">Reorder</th>
                 {cols.map((col, idx) => {
@@ -1681,7 +1681,7 @@ export default function SmartTablesView() {
                     >
                       <div className="flex items-center justify-between gap-1 select-none">
                         <div className="flex flex-col select-none">
-                          <span className="text-[8px] text-[#d4af37] tracking-widest">{excellChar}</span>
+                          <span className="text-xs text-[#d4af37] tracking-widest">{excellChar}</span>
                           <span className="truncate text-[var(--color-text-main)]">{getColHeaderLabel(col)}</span>
                         </div>
                         <ArrowUpDown size={8} className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" onClick={() => {
@@ -1696,7 +1696,7 @@ export default function SmartTablesView() {
                           if (isColFrozen) setFrozenColumns(frozenColumns.filter(c => c !== col.key));
                           else setFrozenColumns([...frozenColumns, col.key]);
                         }}
-                        className="opacity-0 group-hover:opacity-80 absolute top-0.5 right-1.5 text-[8px] text-[var(--color-text-muted)] hover:text-white"
+                        className="opacity-0 group-hover:opacity-80 absolute top-0.5 right-1.5 text-xs text-[var(--color-text-muted)] hover:text-white"
                         title="Toggle frozen Column pinning"
                       >
                         {isColFrozen ? <Lock size={8}/> : <Unlock size={8}/>}
@@ -1747,7 +1747,7 @@ export default function SmartTablesView() {
                     {/* Left Move reorder grab layout handle */}
                     <td className="py-2.5 px-4 border-r border-white/5 text-center bg-[var(--color-background)]/20 align-middle">
                       <span className="cursor-grab active:cursor-grabbing text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] flex justify-center items-center">
-                        <Move size={11} />
+                        <Move size={14} />
                       </span>
                     </td>
 
@@ -1800,7 +1800,7 @@ export default function SmartTablesView() {
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleCellEdit(row.id, col.key, editValue);
                               }}
-                              className="w-full bg-[var(--color-card-bg)] border border-white/20 text-white rounded px-2 py-0.5 text-[11px] focus:outline-none"
+                              className="w-full bg-[var(--color-card-bg)] border border-white/20 text-white rounded-xl px-2 py-0.5 text-xs focus:outline-none"
                             />
                           ) : (
                             <div
@@ -1818,11 +1818,11 @@ export default function SmartTablesView() {
                             >
                               {meta.icon && <span className="select-none">{meta.icon}</span>}
                               {col.key === 'id' ? (
-                                <span className="font-bold text-[#d4af37] px-1 bg-[var(--color-card-bg)] border border-white/5 rounded">{val}</span>
+                                <span className="font-bold text-[#d4af37] px-1 bg-[var(--color-card-bg)] border border-white/5 rounded-xl">{val}</span>
                               ) : col.type === 'formula' || typeof val === 'number' && (col.key.toLowerCase().includes('price') || col.key.toLowerCase().includes('revenue') || col.key.toLowerCase().includes('cost') || col.key === 'finalHPP') ? (
                                 <span className="text-[var(--color-text-main)] font-bold">{formatMoney(val ?? 0)}</span>
                               ) : col.type === 'tag' ? (
-                                <span className={`px-1.5 py-0.5 rounded text-[9px] uppercase font-bold text-center border truncate ${
+                                <span className={`px-1.5 py-0.5 rounded-xl text-xs uppercase font-bold text-center border truncate ${
                                   String(val).includes('LOW_STOCK') ? 'bg-red-500/10 text-red-400 border-red-550/25' :
                                   String(val).includes('SURPLUS') || String(val).includes('Passed') || String(val).includes('Complete') || String(val).includes('Active') ? 'bg-emerald-500/10 text-emerald-400 border-emerald-550/25' : 'bg-[var(--color-card-bg)] border-[var(--color-border-line)]/30'
                                 }`}>
@@ -1841,7 +1841,7 @@ export default function SmartTablesView() {
                               className="absolute right-1 top-1 text-[#d4af37] hover:scale-110 cursor-pointer hidden group-hover/cell:flex"
                               title="Ask AI Suggestion formula fill"
                             >
-                              <Sparkles size={10} className="animate-spin" />
+                              <Sparkles size={14} className="animate-spin" />
                             </button>
                           )}
                         </td>
@@ -1853,7 +1853,7 @@ export default function SmartTablesView() {
             </tbody>
           </table>
           {rows.length === 0 && (
-            <div className="py-12 text-center text-[var(--color-text-muted)] text-[11px] font-mono">No matching records found.</div>
+            <div className="py-12 text-center text-[var(--color-text-muted)] text-xs">No matching records found.</div>
           )}
         </div>
       );
@@ -1862,7 +1862,7 @@ export default function SmartTablesView() {
     if (layoutType === 'kanban') {
       // GROUPED STATUS LANE CARDS
       return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono select-none" id="tables-kanban-board">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 select-none" id="tables-kanban-board">
           {[
             { title: 'DRAFT REGISTRATION / INVENTORY ALERTS', keys: ['LOW_STOCK', 'Design', 'Pending', 'Draft'] },
             { title: 'IN VELOCITY PROCESS / SAMPLING', keys: ['Sampling', 'In Progress', 'Shipped', 'Sampling'] },
@@ -1875,7 +1875,7 @@ export default function SmartTablesView() {
 
             return (
               <div key={lIdx} className="glass-panel p-3.5 rounded-lg space-y-4 bg-[var(--color-card-bg)] border border-white/[0.04] flex flex-col">
-                <div className="flex justify-between items-center border-b border-white/[0.03] pb-2 text-[10px]">
+                <div className="flex justify-between items-center border-b border-white/[0.03] pb-2 text-xs">
                   <span className="text-[var(--color-text-main)] font-bold uppercase tracking-wider">{lane.title}</span>
                   <span className="h-4.5 px-2 bg-[var(--color-card-bg)] rounded-full text-[var(--color-text-muted)] font-black">{laneRows.length}</span>
                 </div>
@@ -1884,15 +1884,15 @@ export default function SmartTablesView() {
                   {laneRows.map((card, cIdx) => (
                     <div
                       key={card.id || cIdx}
-                      className="p-3 bg-black/60 rounded border border-white/[0.02] hover:border-[#d4af37]/30 transition-all space-y-2 select-all relative"
+                      className="p-3 bg-black/60 rounded-xl border border-white/[0.02] hover:border-[#d4af37]/30 transition-all space-y-2 select-all relative"
                     >
                       <div className="flex justify-between">
-                        <span className="text-[9.5px] font-bold text-[#d4af37]">{card.id}</span>
-                        <span className="text-[8.5px] text-[var(--color-text-muted)] uppercase">{card.category || card.collection || 'Record'}</span>
+                        <span className="text-xs font-bold text-[#d4af37]">{card.id}</span>
+                        <span className="text-xs text-[var(--color-text-muted)] uppercase">{card.category || card.collection || 'Record'}</span>
                       </div>
-                      <h5 className="text-[11.5px] font-bold text-[var(--color-text-main)] leading-tight font-sans mt-1">{card.name || card.productName || 'Unnamed Sourcing'}</h5>
+                      <h5 className="text-xs font-bold text-[var(--color-text-main)] leading-tight font-sans mt-1">{card.name || card.productName || 'Unnamed Sourcing'}</h5>
                       
-                      <div className="flex justify-between pt-2 border-t border-white/[0.02] text-[10px]">
+                      <div className="flex justify-between pt-2 border-t border-white/[0.02] text-xs">
                         <span className="text-indigo-400 font-bold">{formatMoney(card.costPerUnit || card.sellingPrice || 0)}</span>
                         <span className="text-[var(--color-text-muted)] italic">{card.remainingQty !== undefined ? `${card.remainingQty} units` : 'Synced'}</span>
                       </div>
@@ -1900,7 +1900,7 @@ export default function SmartTablesView() {
                   ))}
 
                   {laneRows.length === 0 && (
-                    <div className="py-12 border border-dashed border-white/[0.02] text-center text-[var(--color-text-muted)] text-[10px] rounded uppercase">
+                    <div className="py-12 border border-dashed border-white/[0.02] text-center text-[var(--color-text-muted)] text-xs rounded-xl uppercase">
                       Lane Queue empty
                     </div>
                   )}
@@ -1915,33 +1915,33 @@ export default function SmartTablesView() {
     if (layoutType === 'gallery') {
       // IMAGE RICH MATRIX
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 font-mono select-none">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 select-none">
           {rows.map((card, idx) => (
             <div key={card.id || idx} className="glass-panel p-3 rounded-lg bg-[var(--color-card-bg)]/60 border border-white/[0.02] hover:border-white/10 flex flex-col justify-between">
               <div className="space-y-2">
-                <div className="aspect-video w-full rounded bg-black/50 overflow-hidden relative flex items-center justify-center border border-white/5">
+                <div className="aspect-video w-full rounded-xl bg-black/50 overflow-hidden relative flex items-center justify-center border border-white/5">
                   {card.image ? (
                     <img src={card.image} alt={card.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                   ) : (
                     <Database size={24} className="text-[var(--color-text-muted)] animate-pulse" />
                   )}
-                  <span className="absolute bottom-1 right-1 text-[8.5px] uppercase bg-black/75 text-[var(--color-text-main)] font-black tracking-widest px-1.5 py-0.5 rounded border border-white/5">
+                  <span className="absolute bottom-1 right-1 text-xs uppercase bg-black/75 text-[var(--color-text-main)] font-black tracking-widest px-1.5 py-0.5 rounded-xl border border-white/5">
                     {card.category || 'Atelier'}
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <div className="flex justify-between font-mono text-[9px]">
+                  <div className="flex justify-between text-xs">
                     <span className="text-[#d4af37] font-bold">{card.id}</span>
                     <span className="text-[var(--color-text-muted)]">{card.collection || 'Active season'}</span>
                   </div>
-                  <h4 className="text-[11.5px] font-sans font-bold text-[var(--color-text-main)] line-clamp-1">{card.name || card.productName || 'Custom Asset'}</h4>
+                  <h4 className="text-xs font-sans font-bold text-[var(--color-text-main)] line-clamp-1">{card.name || card.productName || 'Custom Asset'}</h4>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-white/[0.04] mt-3.5 flex justify-between items-center text-[10px]">
+              <div className="pt-2 border-t border-white/[0.04] mt-3.5 flex justify-between items-center text-xs">
                 <span className="text-indigo-400 font-bold">{formatMoney(card.costPerUnit || card.sellingPrice || 0)}</span>
-                <span className="px-1.5 py-0.5 bg-[var(--color-background)] border border-white/5 text-[var(--color-text-muted)] uppercase text-[9px] rounded">
+                <span className="px-1.5 py-0.5 bg-[var(--color-background)] border border-white/5 text-[var(--color-text-muted)] uppercase text-xs rounded-xl">
                   {card.status || card.stockStatus || 'Sync OK'}
                 </span>
               </div>
@@ -1955,13 +1955,13 @@ export default function SmartTablesView() {
       // 31 DAY SCHEDULE MATRIX WITH DETAILED ASSIGNMENTS
       const days = Array.from({ length: 31 }, (_, i) => i + 1);
       return (
-        <div className="space-y-4 font-mono select-none p-2">
+        <div className="space-y-4 select-none p-2">
           <div className="flex justify-between items-center">
-            <span className="text-[10px] text-[var(--color-text-muted)] uppercase font-black">📅 NEVAEH ATELIER DELIVERY & SCHEDULE SCHEMAS</span>
-            <span className="text-[9.5px] text-[var(--color-text-muted)]">MAPPED SYSTEM EVENTS FOR 2026-05</span>
+            <span className="text-xs text-[var(--color-text-muted)] uppercase font-black">📅 NEVAEH ATELIER DELIVERY & SCHEDULE SCHEMAS</span>
+            <span className="text-xs text-[var(--color-text-muted)]">MAPPED SYSTEM EVENTS FOR 2026-05</span>
           </div>
           
-          <div className="grid grid-cols-7 gap-1.5 text-center text-[9px] text-[var(--color-text-muted)] uppercase font-bold pb-1 border-b border-white/[0.02]">
+          <div className="grid grid-cols-7 gap-1.5 text-center text-xs text-[var(--color-text-muted)] uppercase font-bold pb-1 border-b border-white/[0.02]">
             <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
           </div>
 
@@ -1974,24 +1974,24 @@ export default function SmartTablesView() {
               return (
                 <div 
                   key={day} 
-                  className={`min-h-[65px] p-1.5 border rounded flex flex-col justify-between transition-colors bg-[var(--color-background)]/40 border-white/[0.04] ${
+                  className={`min-h-[65px] p-1.5 border rounded-xl flex flex-col justify-between transition-colors bg-[var(--color-background)]/40 border-white/[0.04] ${
                     hasEvents ? 'hover:border-[#d4af37]/30' : 'opacity-40'
                   }`}
                 >
-                  <span className="text-[10px] text-[var(--color-text-muted)] font-bold">{day}</span>
+                  <span className="text-xs text-[var(--color-text-muted)] font-bold">{day}</span>
                   {hasEvents && (
                     <div className="space-y-0.5 max-h-12 overflow-y-auto pr-0.5">
                       {dayEvents.slice(0, 2).map((evt, idx) => (
                         <div 
                           key={idx} 
-                          className="bg-[var(--color-card-bg)] border border-white/5 rounded p-0.5 text-[8px] text-[#d4af37] truncate"
+                          className="bg-[var(--color-card-bg)] border border-white/5 rounded-xl p-0.5 text-xs text-[#d4af37] truncate"
                           title={`${evt.id}: ${evt.name || evt.productName}`}
                         >
                           {evt.id}
                         </div>
                       ))}
                       {dayEvents.length > 2 && (
-                        <div className="text-[7px] text-right text-[var(--color-text-muted)] font-bold font-mono">+{dayEvents.length - 2} more</div>
+                        <div className="text-xs text-right text-[var(--color-text-muted)] font-bold font-mono">+{dayEvents.length - 2} more</div>
                       )}
                     </div>
                   )}
@@ -2010,31 +2010,31 @@ export default function SmartTablesView() {
       const averageHPPVal = computedProducts.reduce((acc, curr) => acc + curr.finalHPP, 0) / (computedProducts.length || 1);
 
       return (
-        <div className="space-y-5 p-5 font-mono">
+        <div className="space-y-5 p-5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-[var(--color-card-bg)]/60 p-4 rounded-lg border border-white/[0.04] text-left">
-              <span className="text-[9.5px] uppercase tracking-widest text-[#d4af37]">Core Inventory asset Valuation</span>
+              <span className="text-xs uppercase tracking-widest text-[#d4af37]">Core Inventory asset Valuation</span>
               <h3 className="text-lg font-bold text-[var(--color-text-main)] mt-1">{formatMoney(totalInventoryVal)}</h3>
-              <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">Calculated dynamically: Sum (costPerUnit * remainingQty)</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Calculated dynamically: Sum (costPerUnit * remainingQty)</p>
             </div>
             
             <div className="bg-[var(--color-card-bg)]/60 p-4 rounded-lg border border-white/[0.04] text-left">
-              <span className="text-[9.5px] uppercase tracking-widest text-indigo-400">Net profitability potential cogs HPP</span>
+              <span className="text-xs uppercase tracking-widest text-indigo-400">Net profitability potential cogs HPP</span>
               <h3 className="text-lg font-bold text-[var(--color-text-main)] mt-1">{formatMoney(totalProfitsPotential)}</h3>
-              <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">Calculated from Master Product unitsSold ratio metrics</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Calculated from Master Product unitsSold ratio metrics</p>
             </div>
 
             <div className="bg-[var(--color-card-bg)]/60 p-4 rounded-lg border border-white/[0.04] text-left">
-              <span className="text-[9.5px] uppercase tracking-widest text-emerald-400">Average Aggregate item HPP</span>
+              <span className="text-xs uppercase tracking-widest text-emerald-400">Average Aggregate item HPP</span>
               <h3 className="text-lg font-bold text-[var(--color-text-main)] mt-1">{formatMoney(averageHPPVal)}</h3>
-              <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">Base labor, fabric cuts, and shipping fees factor average</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Base labor, fabric cuts, and shipping fees factor average</p>
             </div>
           </div>
 
           {/* Interactive SVG compare line graph */}
           <div className="bg-[var(--color-background)]/80 p-4 rounded-lg border border-white/[0.04]">
-            <span className="text-[9.5px] uppercase block pb-2 border-b border-white/[0.01]">Atelier Gross retail Pricing vs Aggregate Sourcing Cost stream</span>
-            <div className="h-44 w-full flex items-end justify-between font-mono pt-4 select-none">
+            <span className="text-xs uppercase block pb-2 border-b border-white/[0.01]">Atelier Gross retail Pricing vs Aggregate Sourcing Cost stream</span>
+            <div className="h-44 w-full flex items-end justify-between pt-4 select-none">
               
               <svg className="w-full h-full text-[var(--color-text-muted)]" viewBox="0 0 450 120">
                 {/* SVG comparison lines */}
@@ -2056,11 +2056,11 @@ export default function SmartTablesView() {
                 {/* SVG point elements */}
                 <circle cx="210" cy="80" r="4.5" fill="#d4af37" />
                 <circle cx="410" cy="20" r="4.5" fill="#d4af37" />
-                <text x="210" y="65" fill="#d4af37" fontSize="8" className="font-mono">Midpoint check</text>
+                <text x="210" y="65" fill="#d4af37" fontSize="8">Midpoint check</text>
               </svg>
 
             </div>
-            <div className="flex justify-between font-mono text-[9px] text-[var(--color-text-muted)] pt-2 border-t border-white/[0.02]">
+            <div className="flex justify-between text-xs text-[var(--color-text-muted)] pt-2 border-t border-white/[0.02]">
               <span>Sourcing base</span>
               <span>Prototype Lab trials</span>
               <span>V1 Launch batch</span>
@@ -2081,18 +2081,18 @@ export default function SmartTablesView() {
       ];
 
       return (
-        <div className="p-4 space-y-4 font-mono select-none">
+        <div className="p-4 space-y-4 select-none">
           <div className="flex justify-between items-center pb-2 border-b border-white/[0.04]">
-            <span className="text-[10px] text-[var(--color-text-muted)] uppercase font-black">🗺️ PIPELINE DEVELOPMENT MILESTONES ROADMAP TIMELINE</span>
-            <span className="text-[9.5px] text-[var(--color-text-muted)]">Adjust milestones range</span>
+            <span className="text-xs text-[var(--color-text-muted)] uppercase font-black">🗺️ PIPELINE DEVELOPMENT MILESTONES ROADMAP TIMELINE</span>
+            <span className="text-xs text-[var(--color-text-muted)]">Adjust milestones range</span>
           </div>
 
           <div className="space-y-4 pt-2">
             {stages.map(item => (
               <div key={item.id} className="space-y-1 text-left">
-                <div className="flex justify-between text-[10px] text-[var(--color-text-muted)] font-bold">
+                <div className="flex justify-between text-xs text-[var(--color-text-muted)] font-bold">
                   <span>{item.name}</span>
-                  <span className="text-[9px] text-[var(--color-text-muted)]">Day {item.start} - Day {item.end} ({item.end - item.start} days period)</span>
+                  <span className="text-xs text-[var(--color-text-muted)]">Day {item.start} - Day {item.end} ({item.end - item.start} days period)</span>
                 </div>
                 
                 <div className="h-6 w-full bg-[var(--color-background)]/70 rounded-full border border-white/5 relative overflow-hidden">
@@ -2112,7 +2112,7 @@ export default function SmartTablesView() {
             ))}
           </div>
 
-          <div className="flex justify-between text-[9px] text-[var(--color-text-muted)] pt-2 border-t border-white/[0.02]">
+          <div className="flex justify-between text-xs text-[var(--color-text-muted)] pt-2 border-t border-white/[0.02]">
             <span>Start (May 01)</span>
             <span>Midpoint (May 15)</span>
             <span>Completion (May 31)</span>
@@ -2124,13 +2124,13 @@ export default function SmartTablesView() {
     if (layoutType === 'chart') {
       // BUSINESS BAR HISTOGRAM ANALYSES
       return (
-        <div className="p-4 font-mono text-center space-y-4 select-none">
+        <div className="p-4 text-center space-y-4 select-none">
           <div className="flex justify-between items-center border-b border-white/[0.04] pb-2 text-left">
             <div>
-              <span className="text-[10px] text-[var(--color-text-muted)] uppercase font-black">📊 STATISTICAL DISTRIBUTION BREAKDOWN ANALYSIS CHARTS</span>
-              <p className="text-[9px] text-[var(--color-text-muted)] mt-0.5">Quantity parameters and pricing allocations ratio levels</p>
+              <span className="text-xs text-[var(--color-text-muted)] uppercase font-black">📊 STATISTICAL DISTRIBUTION BREAKDOWN ANALYSIS CHARTS</span>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Quantity parameters and pricing allocations ratio levels</p>
             </div>
-            <span className="text-[9.5px] text-[#d4af37] font-bold">Sum Profit Margins safe</span>
+            <span className="text-xs text-[#d4af37] font-bold">Sum Profit Margins safe</span>
           </div>
 
           <div className="h-48 flex justify-between items-end gap-3.5 pt-6 bg-[var(--color-background)]/70 p-4 rounded-lg border border-white/[0.04]">
@@ -2144,17 +2144,17 @@ export default function SmartTablesView() {
                     className="w-full rounded-t transition-all hover:scale-x-105 cursor-pointer max-w-10 relative" 
                     style={{ height: `${heightVal}%`, backgroundColor: color + '25', borderTop: `2px solid ${color}` }}
                   >
-                    <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/90 p-1 text-[8px] rounded border border-white/10 hidden group-hover:block z-30 font-bold">
+                    <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/90 p-1 text-xs rounded-xl border border-white/10 hidden group-hover:block z-30 font-bold">
                       {row.id}
                     </span>
                   </div>
-                  <span className="text-[8.5px] text-[var(--color-text-muted)] font-mono mt-1.5 truncate max-w-12 block">{row.id || 'QTY'}</span>
+                  <span className="text-xs text-[var(--color-text-muted)] mt-1.5 truncate max-w-12 block">{row.id || 'QTY'}</span>
                 </div>
               );
             })}
           </div>
 
-          <p className="text-[8.5px] text-[var(--color-text-muted)]">Auto-generated business distribution chart from live dataset.</p>
+          <p className="text-xs text-[var(--color-text-muted)]">Auto-generated business distribution chart from live dataset.</p>
         </div>
       );
     }
@@ -2162,12 +2162,12 @@ export default function SmartTablesView() {
     if (layoutType === 'split') {
       // Bidirectional side-by-side split screens syncing live
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono select-text p-1 h-[400px] overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 select-text p-1 h-[400px] overflow-hidden">
           
           {/* L. Materials Mini Sheet */}
-          <div className="bg-[var(--color-background)]/90 rounded border border-white/[0.04] p-3 flex flex-col overflow-auto text-left">
-            <span className="text-[10px] text-[var(--color-text-muted)] font-black tracking-widest uppercase pb-2 border-b border-white/[0.03] block">LEFT SPEC SHEET: FABRIC & SOURCING LIBRARY</span>
-            <table className="w-full text-[10px] mt-2 border-collapse">
+          <div className="bg-[var(--color-background)]/90 rounded-xl border border-white/[0.04] p-3 flex flex-col overflow-auto text-left">
+            <span className="text-xs text-[var(--color-text-muted)] font-black tracking-widest uppercase pb-2 border-b border-white/[0.03] block">LEFT SPEC SHEET: FABRIC & SOURCING LIBRARY</span>
+            <table className="w-full text-xs mt-2 border-collapse">
               <thead>
                 <tr className="border-b border-white/[0.03] text-[var(--color-text-muted)] select-none">
                   <th className="py-1 px-2 text-left">ID</th>
@@ -2185,7 +2185,7 @@ export default function SmartTablesView() {
                         onChange={(val) => {
                           setMaterials(prev => prev.map(item => item.id === m.id ? { ...item, costPerUnit: val } : item));
                         }}
-                        className="bg-[var(--color-card-bg)] border border-white/10 text-white rounded px-1.5 py-0.5 text-[10px] w-20"
+                        className="bg-[var(--color-card-bg)] border border-white/10 text-white rounded-xl px-1.5 py-0.5 text-xs w-20"
                       />
                     </td>
                     <td className="py-1 text-[var(--color-text-muted)] font-bold">{m.remainingQty} m</td>
@@ -2196,9 +2196,9 @@ export default function SmartTablesView() {
           </div>
 
           {/* R. Master Products HPP recals live */}
-          <div className="bg-[var(--color-background)]/90 rounded border border-white/[0.04] p-3 flex flex-col overflow-auto text-left">
-            <span className="text-[10px] text-[var(--color-text-muted)] font-black tracking-widest uppercase pb-2 border-b border-white/[0.03] block">RIGHT CALCULATOR SHEET: PRODUCTS & REAL HPP SYNC</span>
-            <table className="w-full text-[10px] mt-2 border-collapse">
+          <div className="bg-[var(--color-background)]/90 rounded-xl border border-white/[0.04] p-3 flex flex-col overflow-auto text-left">
+            <span className="text-xs text-[var(--color-text-muted)] font-black tracking-widest uppercase pb-2 border-b border-white/[0.03] block">RIGHT CALCULATOR SHEET: PRODUCTS & REAL HPP SYNC</span>
+            <table className="w-full text-xs mt-2 border-collapse">
               <thead>
                 <tr className="border-b border-white/[0.03] text-[var(--color-text-muted)] select-none">
                   <th className="py-1 px-2 text-left">ID</th>
@@ -2216,7 +2216,7 @@ export default function SmartTablesView() {
                         onChange={(val) => {
                           setProducts(prev => prev.map(item => item.id === p.id ? { ...item, sellingPrice: val } : item));
                         }}
-                        className="bg-[var(--color-card-bg)] border border-white/10 text-white rounded px-1.5 py-0.5 text-[10px] w-24"
+                        className="bg-[var(--color-card-bg)] border border-white/10 text-white rounded-xl px-1.5 py-0.5 text-xs w-24"
                       />
                     </td>
                     <td className="py-1 text-emerald-400 font-bold">

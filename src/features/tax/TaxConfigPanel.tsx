@@ -15,8 +15,8 @@ import NumberInput from '../../shared/ui/NumberInput';
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">{label}</span>
-      {hint && <span className="text-[9px] font-mono text-[var(--color-text-muted)]/60 ml-2">{hint}</span>}
+      <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">{label}</span>
+      {hint && <span className="text-xs text-[var(--color-text-muted)]/60 ml-2">{hint}</span>}
       <div className="mt-1">{children}</div>
     </label>
   );
@@ -70,7 +70,7 @@ export default function TaxConfigPanel() {
   };
 
   if (loading) return (
-    <div className="animate-pulse text-xs font-mono text-[var(--color-text-muted)] py-8 text-center">
+    <div className="animate-pulse text-xs text-[var(--color-text-muted)] py-8 text-center">
       Memuat konfigurasi pajak...
     </div>
   );
@@ -79,11 +79,11 @@ export default function TaxConfigPanel() {
     <form onSubmit={handleSave} className="space-y-6">
       <div className="flex items-center gap-2 pb-4 border-b border-[var(--color-border-line)]">
         <Receipt size={14} style={{ color: accent }}/>
-        <h3 className="text-sm font-mono font-bold uppercase tracking-widest text-[var(--color-text-main)]">
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-[var(--color-text-main)]">
           Konfigurasi Pajak
         </h3>
         {activeBusiness && (
-          <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">
             {activeBusiness.name}
           </span>
         )}
@@ -92,8 +92,8 @@ export default function TaxConfigPanel() {
       {/* Status PKP */}
       <div className="flex items-center justify-between p-3 rounded-xl border border-[var(--color-border-line)] bg-white/[0.02]">
         <div>
-          <p className="text-xs font-mono font-semibold text-[var(--color-text-main)]">Status PKP</p>
-          <p className="text-[9px] font-mono text-[var(--color-text-muted)]">Pengusaha Kena Pajak — wajib pungut PPN</p>
+          <p className="text-xs font-semibold text-[var(--color-text-main)]">Status PKP</p>
+          <p className="text-xs text-[var(--color-text-muted)]">Pengusaha Kena Pajak — wajib pungut PPN</p>
         </div>
         <button
           type="button"
@@ -149,21 +149,21 @@ export default function TaxConfigPanel() {
       {form.pkp_status && (
         <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
           <div className="flex items-center gap-1.5 mb-3">
-            <Info size={11} className="text-[var(--color-text-muted)]"/>
-            <span className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">
+            <Info size={14} className="text-[var(--color-text-muted)]"/>
+            <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
               Preview: Transaksi {currency}100.000
             </span>
           </div>
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-mono">
+            <div className="flex justify-between text-xs">
               <span className="text-[var(--color-text-muted)]">Base amount</span>
               <span className="text-[var(--color-text-main)]">{currency}{preview100k.base_amount.toLocaleString('id')}</span>
             </div>
-            <div className="flex justify-between text-xs font-mono">
+            <div className="flex justify-between text-xs">
               <span className="text-[var(--color-text-muted)]">PPN {form.ppn_rate}%</span>
               <span className="text-yellow-400">+{currency}{preview100k.ppn_amount.toLocaleString('id')}</span>
             </div>
-            <div className="border-t border-[var(--color-border-line)] pt-1.5 flex justify-between text-xs font-mono font-bold">
+            <div className="border-t border-[var(--color-border-line)] pt-1.5 flex justify-between text-xs font-bold">
               <span className="text-[var(--color-text-muted)]">Total</span>
               <span style={{ color: accent }}>{currency}{preview100k.total.toLocaleString('id')}</span>
             </div>
@@ -173,9 +173,9 @@ export default function TaxConfigPanel() {
 
       <div className="flex justify-end">
         <button type="submit" disabled={saving}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-mono font-bold text-white disabled:opacity-50 transition-all cursor-pointer"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold text-white disabled:opacity-50 transition-all cursor-pointer"
           style={{ background: accent }}>
-          <Save size={12}/>{saving ? 'Menyimpan...' : 'Simpan Konfigurasi Pajak'}
+          <Save size={14}/>{saving ? 'Menyimpan...' : 'Simpan Konfigurasi Pajak'}
         </button>
       </div>
     </form>

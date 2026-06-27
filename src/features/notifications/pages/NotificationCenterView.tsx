@@ -12,13 +12,13 @@ export default function NotificationCenterView() {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[var(--color-border-line)] pb-5">
         <div>
-          <span className="text-xs font-mono tracking-widest uppercase" style={{ color: activeColor }}>
+          <span className="text-xs tracking-widest uppercase" style={{ color: activeColor }}>
             {t('notif_page_label')}
           </span>
           <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)] mt-1">
             {t('notif_page_title')}
           </h2>
-          <p className="text-xs text-[var(--color-text-muted)] font-mono mt-1">
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">
             {t('notif_page_desc')}
           </p>
         </div>
@@ -26,7 +26,7 @@ export default function NotificationCenterView() {
         {notifications.length > 0 && (
           <button
             onClick={clearNotifications}
-            className="px-3 py-1.5 border border-[var(--color-border-line)] hover:bg-white/[0.04] text-xs font-mono uppercase tracking-wider text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all rounded cursor-pointer"
+            className="px-3 py-1.5 border border-[var(--color-border-line)] hover:bg-white/[0.04] text-xs uppercase tracking-wider text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all rounded-xl cursor-pointer"
           >
             {t('notif_clear_btn')}
           </button>
@@ -49,7 +49,7 @@ export default function NotificationCenterView() {
                   : 'bg-emerald-950/20 border-emerald-500/10'
               }`}
             >
-              <div className={`p-1.5 rounded border mt-0.5 ${
+              <div className={`p-1.5 rounded-xl border mt-0.5 ${
                 (notif.type === 'warning' || notif.type === 'alert')
                   ? 'text-red-400 border-red-500/15'
                   : notif.type === 'info'
@@ -64,7 +64,7 @@ export default function NotificationCenterView() {
 
               <div className="space-y-1 flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded uppercase ${
+                  <span className={`text-xs px-1.5 py-0.5 rounded-xl uppercase ${
                     (notif.type === 'warning' || notif.type === 'alert')
                       ? 'bg-red-500/10 text-red-400'
                       : notif.type === 'success'
@@ -73,7 +73,7 @@ export default function NotificationCenterView() {
                   }`}>
                     {notif.type}
                   </span>
-                  <span className="text-[10px] font-mono text-[var(--color-text-muted)]">
+                  <span className="text-xs text-[var(--color-text-muted)]">
                     {notif.timestamp}
                   </span>
                 </div>
@@ -90,7 +90,7 @@ export default function NotificationCenterView() {
           <h4 className="text-sm font-display uppercase tracking-widest text-[var(--color-text-muted)] font-medium">
             {t('notif_empty_title')}
           </h4>
-          <p className="text-xs text-[var(--color-text-muted)] font-mono">
+          <p className="text-xs text-[var(--color-text-muted)]">
             {t('notif_empty_desc')}
           </p>
         </div>

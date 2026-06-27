@@ -13,17 +13,24 @@ import { isSupabaseEnabled } from '../../infra/supabase/client';
 import migrationService from '../../infra/database/migration.service';
 import { AppSidebar } from './AppSidebar';
 import { useTheme } from '../../shared/hooks/useTheme';
+import { applyAccent } from '../../shared/theme/accent';
 import { BackgroundStage } from '../../shared/components/BackgroundStage';
 
 // ─── Inner layout ─────────────────────────────────────────────────────────────
 
 function AppLayoutInner({ onSignOut, userEmail }: { onSignOut: () => void; userEmail?: string }) {
   const { config, notifications } = useERP();
+  const accent = config?.customAccentColor || '#7c3aed';
   const { activeBusiness, isHolding } = useBusiness();
   const { navigateTo, activePage } = useAppNavigation();
 
   // Apply the wallpaper/glass/accent theme (data-theme + CSS-var overrides).
   useTheme();
+
+  // Single source of truth for the accent: sync customAccentColor → every accent
+  // CSS variable (both the token system and the legacy --color-* system) so the
+  // entire UI — inline-styled AND var-based components — follows one chosen colour.
+  React.useEffect(() => { applyAccent(accent); }, [accent]);
 
   const [showCreateBiz, setShowCreateBiz] = useState(false);
   const [showSearch,    setShowSearch]    = useState(false);
@@ -140,10 +147,10 @@ function AppLayoutInner({ onSignOut, userEmail }: { onSignOut: () => void; userE
               {/* Avatar */}
               <div style={{
                 width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0, marginLeft: '6px',
-                background: 'linear-gradient(135deg, #8b5cf6, #5b21b6)',
+                background: accent,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '13px', fontWeight: 700, color: 'white', cursor: 'pointer',
-                boxShadow: '0 2px 10px rgba(124,58,237,0.35)',
+                boxShadow: `0 2px 10px ${accent}59`,
                 letterSpacing: '-0.02em',
               }}>
                 {userEmail ? userEmail[0].toUpperCase() : 'V'}

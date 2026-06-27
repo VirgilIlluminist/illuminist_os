@@ -44,10 +44,10 @@ export default function TaxSettingsPage() {
       <div className="border-b border-[var(--color-border-line)] pb-5">
         <div className="flex items-center gap-2 mb-1">
           <Receipt size={14} style={{ color: accent }}/>
-          <span className="text-xs font-mono tracking-widest uppercase text-[var(--color-text-muted)]">Tax Management</span>
+          <span className="text-xs tracking-widest uppercase text-[var(--color-text-muted)]">Tax Management</span>
         </div>
         <h2 className="text-2xl font-display uppercase tracking-tight font-semibold text-[var(--color-text-main)]">Pajak & Fiskal</h2>
-        <p className="text-xs font-mono text-[var(--color-text-muted)] mt-0.5">
+        <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
           Konfigurasi PPN, PPh, dan laporan pajak per periode
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function TaxSettingsPage() {
       <div className="flex gap-1 border-b border-[var(--color-border-line)]">
         {([['config', 'Konfigurasi'], ['summary', 'Rekapitulasi']] as [Tab, string][]).map(([t, label]) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-[10px] font-mono uppercase tracking-widest transition-all cursor-pointer border-b-2 -mb-px ${tab === t ? 'border-current font-bold' : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
+            className={`px-4 py-2 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 -mb-px ${tab === t ? 'border-current font-bold' : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'}`}
             style={tab === t ? { color: accent, borderColor: accent } : {}}>
             {label}
           </button>
@@ -68,13 +68,13 @@ export default function TaxSettingsPage() {
       {tab === 'summary' && (
         <div className="space-y-4">
           {!taxConfig?.pkp_status ? (
-            <div className="text-center py-16 text-sm font-mono text-[var(--color-text-muted)]">
+            <div className="text-center py-16 text-sm text-[var(--color-text-muted)]">
               Aktifkan status PKP di tab Konfigurasi untuk melihat rekapitulasi pajak.
             </div>
           ) : (
             <>
               <div className="flex items-center gap-3">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Periode</label>
+                <label className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Periode</label>
                 <input type="month" value={period} onChange={e => setPeriod(e.target.value)}
                   className="bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"/>
               </div>
@@ -90,7 +90,7 @@ export default function TaxSettingsPage() {
                     { label: 'Total Pajak',     value: summary.total_tax,       color: 'text-yellow-400' },
                   ].map(({ label, value, color }) => (
                     <div key={label} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.02]">
-                      <p className="text-[9px] font-mono uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
+                      <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
                       <p className={`text-lg font-mono font-bold ${color}`}>{currency}{value.toLocaleString('id')}</p>
                     </div>
                   ))}
@@ -98,8 +98,8 @@ export default function TaxSettingsPage() {
               )}
 
               <div className="flex items-center gap-2 p-3 rounded-lg bg-white/[0.02] border border-[var(--color-border-line)]">
-                <FileText size={12} className="text-[var(--color-text-muted)]"/>
-                <span className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                <FileText size={14} className="text-[var(--color-text-muted)]"/>
+                <span className="text-xs text-[var(--color-text-muted)]">
                   Untuk laporan SPT Masa PPN, export data dari rekapitulasi di atas per bulan.
                 </span>
               </div>

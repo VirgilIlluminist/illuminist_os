@@ -49,7 +49,7 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
   const currency = erpConfig?.currencySymbol ?? 'Rp';
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60" onClick={onClose}>
       <div
         className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl border border-[var(--color-border-line)] bg-[var(--color-bg-card)] shadow-2xl"
         onClick={e => e.stopPropagation()}
@@ -59,8 +59,8 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
           <div className="flex items-center gap-2">
             <FileText size={14} style={{ color: accent }}/>
             <div>
-              <h3 className="text-sm font-mono font-bold uppercase tracking-widest text-[var(--color-text-main)]">Generate Invoice</h3>
-              <p className="text-[9px] font-mono text-[var(--color-text-muted)]">{invoiceNum}</p>
+              <h3 className="text-base font-semibold tracking-tight text-[var(--color-text-main)]">Generate Invoice</h3>
+              <p className="text-xs text-[var(--color-text-muted)]">{invoiceNum}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5 text-[var(--color-text-muted)] cursor-pointer">
@@ -73,7 +73,7 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
 
           {/* Order summary */}
           <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-2">
-            <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Ringkasan Pesanan</p>
+            <p className="text-xs font-medium text-[var(--color-text-muted)] mb-3">Ringkasan Pesanan</p>
             <div className="flex justify-between text-xs font-mono">
               <span className="text-[var(--color-text-muted)]">Produk</span>
               <span className="text-[var(--color-text-main)]">{productName}</span>
@@ -109,15 +109,15 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
           {/* Options */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-1 block">Jatuh Tempo</label>
+              <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Jatuh Tempo</label>
               <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)}
-                className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-xs font-mono text-[var(--color-text-main)] focus:outline-none"/>
+                className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-xl px-4 py-2.5 text-sm text-[var(--color-text-main)] focus:outline-none"/>
             </div>
             <div className="flex items-end pb-1">
-              <div className="flex items-center justify-between w-full p-3 rounded-lg border border-[var(--color-border-line)] bg-white/[0.02]">
+              <div className="flex items-center justify-between w-full p-3 rounded-xl border border-[var(--color-border-line)] bg-white/[0.02]">
                 <div>
-                  <p className="text-[9px] font-mono font-semibold text-[var(--color-text-main)]">Status Pembayaran</p>
-                  <p className="text-[8px] font-mono text-[var(--color-text-muted)]">{isPaid ? 'Lunas' : 'Belum Lunas'}</p>
+                  <p className="text-sm font-medium text-[var(--color-text-main)]">Status Pembayaran</p>
+                  <p className="text-xs text-[var(--color-text-muted)]">{isPaid ? 'Lunas' : 'Belum Lunas'}</p>
                 </div>
                 <button type="button" onClick={() => setIsPaid(v => !v)}
                   className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${isPaid ? 'bg-green-500' : 'bg-white/10'}`}>
@@ -129,7 +129,7 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
 
           {/* Bank info */}
           <div className="space-y-2">
-            <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Info Pembayaran (opsional)</p>
+            <p className="text-xs font-medium text-[var(--color-text-muted)]">Info Pembayaran (opsional)</p>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { label: 'Nama Bank', value: bankName, set: setBankName, placeholder: 'BCA' },
@@ -137,42 +137,42 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
                 { label: 'Atas Nama', value: bankHolder, set: setBankHolder, placeholder: 'PT Usaha' },
               ].map(({ label, value, set, placeholder }) => (
                 <div key={label}>
-                  <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">{label}</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{label}</label>
                   <input type="text" value={value} placeholder={placeholder} onChange={e => set(e.target.value)}
-                    className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-2 py-1.5 text-xs font-mono text-[var(--color-text-main)] focus:outline-none"/>
+                    className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-xl px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none"/>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-1 block">Catatan</label>
+            <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Catatan</label>
             <textarea value={notes} onChange={e => setNotes(e.target.value)}
               placeholder="Terima kasih atas kepercayaan Anda..."
               rows={2}
-              className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-xs font-mono text-[var(--color-text-main)] focus:outline-none resize-none"/>
+              className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-xl px-3 py-2 text-sm text-[var(--color-text-main)] focus:outline-none resize-none"/>
           </div>
         </div>
 
         {/* Footer actions */}
         <div className="flex items-center justify-between gap-2 p-4 border-t border-[var(--color-border-line)]">
           <button onClick={onClose}
-            className="px-4 py-2 text-[10px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
+            className="px-4 py-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
             Batal
           </button>
           <div className="flex items-center gap-2">
             <button
               onClick={() => InvoiceService.previewInvoice(invoiceData)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-mono border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer"
             >
-              <Eye size={11}/> Preview
+              <Eye size={14}/> Preview
             </button>
             <button
               onClick={() => InvoiceService.downloadInvoice(invoiceData)}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-[10px] font-mono font-bold text-black cursor-pointer"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-semibold text-black cursor-pointer"
               style={{ background: accent }}
             >
-              <Download size={11}/> Download PDF
+              <Download size={14}/> Download PDF
             </button>
           </div>
         </div>

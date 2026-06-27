@@ -69,7 +69,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
     setMapping(m => m.map((x, idx) => idx === i ? { ...x, csvHeader } : x));
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60" onClick={onClose}>
       <div
         className="relative w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl border border-[var(--color-border-line)] bg-[var(--color-bg-card)] shadow-2xl"
         onClick={e => e.stopPropagation()}
@@ -77,19 +77,19 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-[var(--color-border-line)]">
           <div>
-            <h3 className="text-sm font-mono font-bold uppercase tracking-widest text-[var(--color-text-main)]">
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-[var(--color-text-main)]">
               Import CSV — {template.label}
             </h3>
-            <p className="text-[9px] font-mono text-[var(--color-text-muted)] mt-0.5">
+            <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
               {rawRows.length > 0 ? `${rawRows.length} baris ditemukan` : 'Upload file CSV untuk memulai'}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => CSVImportService.downloadTemplate(entity)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-mono uppercase tracking-widest border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs uppercase tracking-widest border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer"
             >
-              <Download size={10}/> Template
+              <Download size={14}/> Template
             </button>
             <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5 text-[var(--color-text-muted)] transition-colors cursor-pointer">
               <X size={14}/>
@@ -101,12 +101,12 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
         <div className="flex px-5 pt-4 gap-2">
           {(['upload', 'mapping', 'preview', 'done'] as Step[]).map((s, i) => (
             <div key={s} className="flex items-center gap-2">
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-mono font-bold transition-all ${
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 step === s ? 'text-black' : 'bg-white/5 text-[var(--color-text-muted)]'
               }`} style={step === s ? { background: accent } : {}}>
                 {i + 1}
               </div>
-              <span className={`text-[9px] font-mono uppercase tracking-widest ${step === s ? 'text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)]'}`}>
+              <span className={`text-xs uppercase tracking-widest ${step === s ? 'text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)]'}`}>
                 {s === 'upload' ? 'Upload' : s === 'mapping' ? 'Mapping' : s === 'preview' ? 'Preview' : 'Selesai'}
               </span>
               {i < 3 && <div className="w-6 h-px bg-[var(--color-border-line)]"/>}
@@ -130,8 +130,8 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
             >
               <Upload size={28} className="text-[var(--color-text-muted)]"/>
               <div className="text-center">
-                <p className="text-sm font-mono text-[var(--color-text-main)]">Drag & drop file CSV</p>
-                <p className="text-[9px] font-mono text-[var(--color-text-muted)] mt-1">atau klik untuk pilih file</p>
+                <p className="text-sm text-[var(--color-text-main)]">Drag & drop file CSV</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1">atau klik untuk pilih file</p>
               </div>
               <input ref={fileRef} type="file" accept=".csv" className="hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }}/>
@@ -141,7 +141,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
           {/* ── STEP 2: MAPPING ────────────────────────────────────── */}
           {step === 'mapping' && (
             <div className="space-y-3">
-              <p className="text-[9px] font-mono text-[var(--color-text-muted)]">
+              <p className="text-xs text-[var(--color-text-muted)]">
                 Cocokkan kolom dari file CSV kamu dengan field yang dibutuhkan.
                 Field yang <span className="text-red-400">*</span> wajib diisi.
               </p>
@@ -150,17 +150,17 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
                   const field = template.fields[i];
                   return (
                     <div key={field.name} className="grid grid-cols-5 items-center gap-3">
-                      <div className="col-span-2 text-[10px] font-mono text-[var(--color-text-main)]">
+                      <div className="col-span-2 text-xs text-[var(--color-text-main)]">
                         {field.required && <span className="text-red-400">* </span>}
                         {field.label}
-                        <span className="text-[8px] text-[var(--color-text-muted)] ml-1">({field.name})</span>
+                        <span className="text-xs text-[var(--color-text-muted)] ml-1">({field.name})</span>
                       </div>
                       <div className="col-span-1 text-[var(--color-text-muted)] text-center">→</div>
                       <div className="col-span-2">
                         <select
                           value={m.csvHeader}
                           onChange={e => setMappingField(i, e.target.value)}
-                          className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-2 py-1.5 text-[10px] font-mono text-[var(--color-text-main)] focus:outline-none cursor-pointer"
+                          className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-2 py-1.5 text-xs text-[var(--color-text-main)] focus:outline-none cursor-pointer"
                         >
                           <option value="">— Tidak dipakai —</option>
                           {headers.map(h => (
@@ -174,11 +174,11 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button onClick={() => setStep('upload')}
-                  className="px-4 py-2 text-[10px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
+                  className="px-4 py-2 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
                   Kembali
                 </button>
                 <button onClick={() => setStep('preview')}
-                  className="px-4 py-2 rounded-lg text-[10px] font-mono font-bold text-black cursor-pointer"
+                  className="px-4 py-2 rounded-lg text-xs font-bold text-black cursor-pointer"
                   style={{ background: accent }}>
                   Preview Data
                 </button>
@@ -190,10 +190,10 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
           {step === 'preview' && (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                <span className="text-xs text-[var(--color-text-muted)]">
                   Preview 10 baris pertama dari {rawRows.length} total baris
                 </span>
-                <span className={`text-[8px] font-mono px-2 py-0.5 rounded-full ${
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
                   preview.every(r => r._valid) ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
                 }`}>
                   {preview.filter(r => r._valid).length}/{preview.length} valid
@@ -201,7 +201,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
               </div>
 
               <div className="overflow-x-auto rounded-xl border border-[var(--color-border-line)]">
-                <table className="w-full text-[9px] font-mono">
+                <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-[var(--color-border-line)] bg-white/[0.02]">
                       <th className="px-3 py-2 text-left text-[var(--color-text-muted)]">#</th>
@@ -217,8 +217,8 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
                         <td className="px-3 py-1.5 text-[var(--color-text-muted)]">{row._row}</td>
                         <td className="px-3 py-1.5">
                           {row._valid
-                            ? <CheckCircle2 size={10} className="text-green-400"/>
-                            : <span title={row._errors.join(' | ')}><AlertTriangle size={10} className="text-red-400"/></span>
+                            ? <CheckCircle2 size={14} className="text-green-400"/>
+                            : <span title={row._errors.join(' | ')}><AlertTriangle size={14} className="text-red-400"/></span>
                           }
                         </td>
                         {template.fields.map(f => (
@@ -234,13 +234,13 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
 
               <div className="flex items-center justify-between pt-2">
                 <button onClick={() => setStep('mapping')}
-                  className="px-4 py-2 text-[10px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
+                  className="px-4 py-2 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
                   Kembali
                 </button>
                 <button onClick={runImport} disabled={importing}
-                  className="flex items-center gap-2 px-5 py-2 rounded-lg text-[10px] font-mono font-bold text-black disabled:opacity-60 cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-bold text-black disabled:opacity-60 cursor-pointer"
                   style={{ background: accent }}>
-                  {importing && <RefreshCw size={10} className="animate-spin"/>}
+                  {importing && <RefreshCw size={14} className="animate-spin"/>}
                   {importing ? 'Mengimpor...' : `Import ${rawRows.length} Data`}
                 </button>
               </div>
@@ -251,7 +251,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
           {step === 'done' && result && (
             <div className="space-y-4 text-center py-6">
               <CheckCircle2 size={40} className="mx-auto text-green-400"/>
-              <h4 className="text-base font-mono font-bold text-[var(--color-text-main)]">Import Selesai!</h4>
+              <h4 className="text-base font-semibold text-[var(--color-text-main)]">Import Selesai!</h4>
 
               <div className="grid grid-cols-3 gap-3 text-left">
                 {[
@@ -260,7 +260,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
                   { label: 'Dilewati',     value: result.skipped,  color: result.skipped > 0 ? 'text-red-400' : 'text-[var(--color-text-muted)]' },
                 ].map(({ label, value, color }) => (
                   <div key={label} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.02]">
-                    <p className="text-[9px] font-mono uppercase text-[var(--color-text-muted)]">{label}</p>
+                    <p className="text-xs uppercase text-[var(--color-text-muted)]">{label}</p>
                     <p className={`text-2xl font-mono font-bold ${color}`}>{value}</p>
                   </div>
                 ))}
@@ -268,9 +268,9 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
 
               {result.errors.length > 0 && (
                 <div className="text-left space-y-1 max-h-32 overflow-y-auto rounded-xl border border-red-500/20 p-3 bg-red-500/5">
-                  <p className="text-[9px] font-mono uppercase text-red-400 mb-2">Error per baris:</p>
+                  <p className="text-xs uppercase text-red-400 mb-2">Error per baris:</p>
                   {result.errors.map(e => (
-                    <p key={e.row} className="text-[9px] font-mono text-[var(--color-text-muted)]">
+                    <p key={e.row} className="text-xs text-[var(--color-text-muted)]">
                       Baris {e.row}: {e.message}
                     </p>
                   ))}
@@ -278,7 +278,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
               )}
 
               <button onClick={onClose}
-                className="px-6 py-2.5 rounded-lg text-xs font-mono font-bold text-black cursor-pointer"
+                className="px-6 py-2.5 rounded-lg text-xs font-bold text-black cursor-pointer"
                 style={{ background: accent }}>
                 Tutup
               </button>

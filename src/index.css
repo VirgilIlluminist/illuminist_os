@@ -23,8 +23,11 @@
   /* Borders */
   --color-border-line:      rgba(255, 255, 255, 0.05);
 
-  /* Accent — unified purple (Fierce) */
+  /* Accent — overridden at runtime by applyAccent() from config.customAccentColor.
+     These defaults only apply before the app shell mounts (e.g. login screen). */
   --color-accent-highlight: #7c3aed;
+  --color-accent-muted:     rgba(124, 58, 237, 0.15);
+  --color-accent-border:    rgba(124, 58, 237, 0.30);
 
   /* Table density (overridden from config) */
   --table-font-size:        11px;
@@ -100,9 +103,9 @@ div.bg-\[\#09090b\], div.bg-\[\#0a0a0d\] {
 .bg-\[\#09090b\]   { background-color: color-mix(in srgb, var(--color-background) 80%, var(--color-card-bg)) !important; }
 .bg-\[\#0f0f12\]   { background-color: color-mix(in srgb, var(--color-background) 60%, var(--color-card-bg)) !important; }
 
-/* Sidebar */
+/* Sidebar — transparent so glass-shell handles all blur */
 aside {
-  background-color: var(--color-background) !important;
+  background-color: transparent !important;
   border-color:     var(--color-border-line) !important;
 }
 
@@ -242,9 +245,17 @@ button.bg-white:hover, button.bg-zinc-100:hover { filter: brightness(1.1) !impor
 /* ─────────────────────────────────────────────────────────────────────────────
    MODAL OVERLAYS
    ───────────────────────────────────────────────────────────────────────────── */
+/* Unified glass modal — no nested blur inside glass-shell */
 .modal-overlay {
-  background-color: rgba(0, 0, 0, 0.7) !important;
-  backdrop-filter:  blur(8px) !important;
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.modal-card {
+  background: rgba(14, 10, 28, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07) !important;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -429,17 +440,14 @@ html.glass #root > div {
 }
 
 html.glass aside {
-  background: rgba(0, 0, 0, 0.28) !important;
+  background: transparent !important;
   border-right: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 html.glass .bg-\[var\(--color-card-bg\)\],
 html.glass [class*="rounded-2xl"] {
-  background: rgba(255, 255, 255, 0.07) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
   border: 1px solid rgba(255,255,255,0.09) !important;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
 html.glass .bg-\[var\(--color-background\)\] {

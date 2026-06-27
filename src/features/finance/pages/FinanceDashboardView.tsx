@@ -38,7 +38,7 @@ export default function FinanceDashboardView() {
             color: inflow ? '#4ADE80' : '#F87171',
             border: `1px solid ${inflow ? 'rgba(74,222,128,0.25)' : 'rgba(248,113,113,0.25)'}`,
           }}>
-            {inflow ? <ArrowUpRight size={11}/> : <ArrowDownRight size={11}/>}
+            {inflow ? <ArrowUpRight size={14}/> : <ArrowDownRight size={14}/>}
             {inflow ? 'Masuk' : 'Keluar'}
           </span>
         );

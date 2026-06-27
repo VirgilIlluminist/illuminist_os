@@ -42,8 +42,8 @@ type FormFieldProps =
   | TextareaFieldProps
   | CurrencyFieldProps;
 
-const labelCls = "block text-[10.5px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5";
-const inputCls = "w-full px-3 py-2 text-xs font-mono bg-[var(--color-card-bg)] border border-[var(--color-border-line)] text-[var(--color-text-main)] rounded focus:outline-none focus:border-[var(--color-accent-highlight)] transition-colors";
+const labelCls = "block text-sm font-mono text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5";
+const inputCls = "w-full px-3 py-2 text-sm bg-[var(--color-card-bg)] border border-[var(--color-border-line)] text-[var(--color-text-main)] rounded-lg focus:outline-none focus:border-[var(--color-accent-highlight)] transition-colors";
 
 export default function FormField(props: FormFieldProps) {
   const { label, required, hint, error } = props;
@@ -95,10 +95,10 @@ export default function FormField(props: FormFieldProps) {
       )}
 
       {hint && !error && (
-        <p className="text-[10px] text-[var(--color-text-muted)] font-mono leading-tight">{hint}</p>
+        <p className="text-xs text-[var(--color-text-muted)] leading-tight">{hint}</p>
       )}
       {error && (
-        <p className="text-[10px] text-red-400 font-mono leading-tight">{error}</p>
+        <p className="text-xs text-red-400 leading-tight">{error}</p>
       )}
     </div>
   );

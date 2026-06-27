@@ -66,7 +66,7 @@ export default function AISettingsPanel() {
           </h3>
         </div>
         <button onClick={loadProviders} className="p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer transition-colors">
-          <Loader size={13} className={loading ? 'animate-spin' : ''} />
+          <Loader size={15} className={loading ? 'animate-spin' : ''} />
         </button>
       </div>
 
@@ -95,37 +95,37 @@ export default function AISettingsPanel() {
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-semibold text-[var(--color-text-main)]">{prov.name}</span>
                       {isAvail
-                        ? <span className="text-[9px] font-mono bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded">AKTIF</span>
-                        : <span className="text-[9px] font-mono bg-white/[0.04] text-[var(--color-text-muted)] px-1.5 py-0.5 rounded">TIDAK AKTIF</span>
+                        ? <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded">AKTIF</span>
+                        : <span className="text-xs font-mono bg-white/[0.04] text-[var(--color-text-muted)] px-1.5 py-0.5 rounded">TIDAK AKTIF</span>
                       }
                     </div>
-                    <p className="text-[10px] text-[var(--color-text-muted)] font-mono">{prov.note}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{prov.note}</p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => testProvider(prov.id)}
                   disabled={testing === prov.id || !isAvail}
-                  className="text-[10px] font-mono px-2.5 py-1 border border-[var(--color-border-line)] rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer disabled:opacity-40 flex items-center gap-1 shrink-0"
+                  className="text-xs font-mono px-2.5 py-1 border border-[var(--color-border-line)] rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer disabled:opacity-40 flex items-center gap-1 shrink-0"
                 >
-                  {testing === prov.id ? <Loader size={10} className="animate-spin" /> : <Zap size={10} />}
+                  {testing === prov.id ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
                   Test
                 </button>
               </div>
 
               {/* API Key display */}
               <div className="mt-3 p-2 bg-[var(--color-background)] rounded border border-[var(--color-border-line)] flex items-center gap-2">
-                <span className="text-[9px] font-mono text-[var(--color-text-muted)] flex-1">
+                <span className="text-xs text-[var(--color-text-muted)] flex-1">
                   {isAvail ? (showKeys[prov.id] ? '••••••••••••••••••••' : 'API Key configured in .env') : `Set ${prov.envKey} in .env file`}
                 </span>
               </div>
 
               {/* Test result */}
               {result && (
-                <div className={`mt-2 text-[10px] font-mono flex items-center gap-1.5 ${result.ok ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className={`mt-2 text-xs flex items-center gap-1.5 ${result.ok ? 'text-emerald-400' : 'text-red-400'}`}>
                   {result.ok
-                    ? <><CheckCircle2 size={10} /> Connected — {result.latencyMs}ms latency</>
-                    : <><XCircle size={10} /> {result.error || 'Connection failed'}</>
+                    ? <><CheckCircle2 size={14} /> Connected — {result.latencyMs}ms latency</>
+                    : <><XCircle size={14} /> {result.error || 'Connection failed'}</>
                   }
                 </div>
               )}
@@ -137,13 +137,13 @@ export default function AISettingsPanel() {
       {/* Setup guide */}
       <div className="p-4 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-lg">
         <p className="text-xs font-semibold text-[var(--color-text-main)] mb-2">Cara mengaktifkan AI:</p>
-        <ol className="space-y-1 text-[10.5px] text-[var(--color-text-muted)] font-mono">
+        <ol className="space-y-1 text-xs text-[var(--color-text-muted)]">
           <li>1. Buka file <code className="bg-white/10 px-1 rounded">.env</code> di root project</li>
           <li>2. Tambahkan API key yang diinginkan</li>
           <li>3. Restart server: <code className="bg-white/10 px-1 rounded">npm run dev</code></li>
           <li>4. Klik Test untuk memverifikasi koneksi</li>
         </ol>
-        <div className="mt-3 p-2 bg-[var(--color-background)] rounded text-[10px] font-mono text-[var(--color-text-muted)]">
+        <div className="mt-3 p-2 bg-[var(--color-background)] rounded text-xs font-mono text-[var(--color-text-muted)]">
           <span style={{ color: accentHex }}>GEMINI_API_KEY</span>=your_key_here<br/>
           <span style={{ color: accentHex }}>OPENAI_API_KEY</span>=sk-your_key_here
         </div>
@@ -160,12 +160,12 @@ export default function AISettingsPanel() {
           [5, 'Auto Execute', 'Khusus pemilik bisnis'],
         ].map(([lvl, name, desc]) => (
           <div key={String(lvl)} className="flex items-center gap-3 py-1.5 border-b border-[var(--color-border-line)] last:border-0">
-            <span className="w-5 h-5 rounded text-[10px] font-bold flex items-center justify-center text-[var(--color-background)]" style={{ background: accentHex }}>
+            <span className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center text-[var(--color-background)]" style={{ background: accentHex }}>
               {lvl}
             </span>
             <div>
               <span className="text-xs font-medium text-[var(--color-text-main)]">{name}</span>
-              <span className="text-[10px] text-[var(--color-text-muted)] ml-2">{desc}</span>
+              <span className="text-xs text-[var(--color-text-muted)] ml-2">{desc}</span>
             </div>
           </div>
         ))}

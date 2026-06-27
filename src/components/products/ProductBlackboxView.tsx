@@ -210,7 +210,7 @@ export default function ProductBlackboxView() {
         <div className="flex gap-0 min-w-max">
           {TABS.map(({ key, label }) => (
             <button key={key} onClick={() => switchTab(key)}
-              className={`px-4 py-2.5 text-[10px] font-mono uppercase tracking-widest border-b-2 -mb-px transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-4 py-2.5 text-xs uppercase tracking-widest border-b-2 -mb-px transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === key
                   ? 'font-bold border-current'
                   : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'

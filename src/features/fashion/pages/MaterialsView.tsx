@@ -195,7 +195,7 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
   };
 
   // ── Shared styles ─────────────────────────────────────────────────────────
-  const inputCls = 'w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)] text-xs font-mono';
+  const inputCls = 'w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.09] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)] text-sm';
 
   const tabBtn = (key: typeof activeTab, label: string, count: number) => (
     <button
@@ -232,16 +232,17 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
   );
 
   const modalOverlay: React.CSSProperties = {
-    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.80)',
-    backdropFilter: 'blur(6px)', display: 'flex',
-    alignItems: 'center', justifyContent: 'center', padding: '24px', zIndex: 50,
+    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    padding: '24px', zIndex: 50,
   };
   const modalCard: React.CSSProperties = {
-    width: '100%', maxWidth: '480px',
-    background: 'rgba(18,14,34,0.96)',
-    border: '1px solid rgba(255,255,255,0.10)',
-    borderRadius: '16px', padding: '28px',
-    boxShadow: '0 32px 80px rgba(0,0,0,0.60)',
+    width: '100%', maxWidth: '520px',
+    background: 'rgba(14,10,28,0.92)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '20px', padding: '32px',
+    boxShadow: '0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)',
+    maxHeight: '90vh', overflowY: 'auto',
   };
 
   return (
@@ -253,7 +254,7 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
         actions={
           <div className="flex gap-2">
             {activeTab === 'library' && (
-              <HeaderBtn onClick={() => setShowAddMat(true)} label={t('mat_btn_add_material')} icon={<Plus size={12}/>}/>
+              <HeaderBtn onClick={() => setShowAddMat(true)} label={t('mat_btn_add_material')} icon={<Plus size={14}/>}/>
             )}
             {activeTab === 'purchase' && (
               <HeaderBtn onClick={() => {
@@ -261,10 +262,10 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
                   setNewPO(p => ({ ...p, materialId: computedMaterials[0].id, unitCost: computedMaterials[0].costPerUnit }));
                 }
                 setShowAddPO(true);
-              }} label={t('mat_btn_add_po')} icon={<Plus size={12}/>}/>
+              }} label={t('mat_btn_add_po')} icon={<Plus size={14}/>}/>
             )}
             {activeTab === 'suppliers' && (
-              <HeaderBtn onClick={() => setShowAddSup(true)} label={t('mat_btn_add_supplier')} icon={<Plus size={12}/>}/>
+              <HeaderBtn onClick={() => setShowAddSup(true)} label={t('mat_btn_add_supplier')} icon={<Plus size={14}/>}/>
             )}
           </div>
         }
@@ -280,7 +281,7 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
       {/* Search + filters */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ position: 'relative', flex: 1, minWidth: '220px', maxWidth: '360px' }}>
-          <Search size={13} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
+          <Search size={14} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -402,45 +403,45 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_name')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_name')}</label>
                 <input type="text" value={newMat.name} placeholder="e.g. Cobalt Nylon Ripstop"
                   onChange={e => setNewMat({ ...newMat, name: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_category')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_category')}</label>
                 <select value={newMat.category} onChange={e => setNewMat({ ...newMat, category: e.target.value })} className={inputCls}>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_supplier')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_supplier')}</label>
                 <select value={newMat.supplierId} onChange={e => setNewMat({ ...newMat, supplierId: e.target.value })} className={inputCls}>
                   <option value="">Tanpa Supplier</option>
                   {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_unit')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_unit')}</label>
                 <input type="text" value={newMat.unit} placeholder="meters"
                   onChange={e => setNewMat({ ...newMat, unit: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_base_qty')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_base_qty')}</label>
                 <NumberInput value={newMat.baseQty} onChange={n => setNewMat({ ...newMat, baseQty: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_cost_per_unit')} ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_cost_per_unit')} ({currencySymbol})</label>
                 <CurrencyInput value={newMat.costPerUnit} onChange={v => setNewMat({ ...newMat, costPerUnit: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_min_stock')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_min_stock')}</label>
                 <NumberInput value={newMat.minStock} onChange={n => setNewMat({ ...newMat, minStock: n })} className={inputCls}/>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">{t('mat_lbl_notes')}</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">{t('mat_lbl_notes')}</label>
                 <textarea value={newMat.notes} placeholder="Catatan kualitas, ukuran, dll..."
                   onChange={e => setNewMat({ ...newMat, notes: e.target.value })}
-                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none text-xs font-mono"/>
+                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded-xl focus:outline-none text-xs"/>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
                 <ImageUploader currentImage={newMat.image} onUpload={b64 => setNewMat({ ...newMat, image: b64 })} label={t('mat_lbl_swatch')}/>
@@ -472,26 +473,26 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Nama</label>
                 <input type="text" value={editingMat.name}
                   onChange={e => setEditingMat({ ...editingMat, name: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kategori</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Kategori</label>
                 <select value={editingMat.category} onChange={e => setEditingMat({ ...editingMat, category: e.target.value })} className={inputCls}>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Harga/Unit ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Harga/Unit ({currencySymbol})</label>
                 <CurrencyInput value={editingMat.costPerUnit} onChange={v => setEditingMat({ ...editingMat, costPerUnit: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Min Stok</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Min Stok</label>
                 <NumberInput value={editingMat.minStock} onChange={n => setEditingMat({ ...editingMat, minStock: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tambah Stok</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Tambah Stok</label>
                 <NumberInput value={editingMat.baseQty} onChange={n => setEditingMat({ ...editingMat, baseQty: n })} className={inputCls}/>
               </div>
             </div>
@@ -530,7 +531,7 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Material</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Material</label>
                 <select value={newPO.materialId} onChange={e => {
                   const m = computedMaterials.find(x => x.id === e.target.value);
                   setNewPO({ ...newPO, materialId: e.target.value, unitCost: m?.costPerUnit ?? 0 });
@@ -539,25 +540,25 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Supplier</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Supplier</label>
                 <select value={newPO.supplierId} onChange={e => setNewPO({ ...newPO, supplierId: e.target.value })} className={inputCls}>
                   {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Qty</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Qty</label>
                 <NumberInput value={newPO.qty} onChange={n => setNewPO({ ...newPO, qty: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Unit Cost ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Unit Cost ({currencySymbol})</label>
                 <CurrencyInput value={newPO.unitCost} onChange={v => setNewPO({ ...newPO, unitCost: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tanggal</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Tanggal</label>
                 <input type="date" value={newPO.date} onChange={e => setNewPO({ ...newPO, date: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Status</label>
                 <select value={newPO.status} onChange={e => setNewPO({ ...newPO, status: e.target.value as PurchaseOrder['status'] })} className={inputCls}>
                   <option value="Draft">Draft</option>
                   <option value="Sent">Sent</option>
@@ -587,23 +588,23 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama Supplier</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Nama Supplier</label>
                 <input type="text" value={newSup.name} placeholder="e.g. CV Tekstil Nusantara"
                   onChange={e => setNewSup({ ...newSup, name: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kontak</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Kontak</label>
                 <input type="text" value={newSup.contact} placeholder="Nama — email — no HP"
                   onChange={e => setNewSup({ ...newSup, contact: e.target.value })} className={inputCls}/>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
-                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Score (0–100)</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Score (0–100)</label>
                   <NumberInput value={newSup.performanceIndex} min={0} max={100} allowDecimal={false}
                     onChange={n => setNewSup({ ...newSup, performanceIndex: n })} className={inputCls}/>
                 </div>
                 <div>
-                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tier</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Tier</label>
                   <select value={newSup.tier} onChange={e => setNewSup({ ...newSup, tier: e.target.value as Supplier['tier'] })} className={inputCls}>
                     <option value="Preferred">Preferred</option>
                     <option value="Secondary">Secondary</option>
@@ -638,23 +639,23 @@ export default function MaterialsView({ initialSubTab = 'library' }: MaterialsVi
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Nama</label>
                 <input type="text" value={editingSup.name}
                   onChange={e => setEditingSup({ ...editingSup, name: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kontak</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Kontak</label>
                 <input type="text" value={editingSup.contact}
                   onChange={e => setEditingSup({ ...editingSup, contact: e.target.value })} className={inputCls}/>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
-                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Score</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Score</label>
                   <NumberInput value={editingSup.performanceIndex} min={0} max={100} allowDecimal={false}
                     onChange={n => setEditingSup({ ...editingSup, performanceIndex: n })} className={inputCls}/>
                 </div>
                 <div>
-                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tier</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Tier</label>
                   <select value={editingSup.tier} onChange={e => setEditingSup({ ...editingSup, tier: e.target.value as Supplier['tier'] })} className={inputCls}>
                     <option value="Preferred">Preferred</option>
                     <option value="Secondary">Secondary</option>

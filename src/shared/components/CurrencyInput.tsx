@@ -78,7 +78,7 @@ export default function CurrencyInput({
         className={`${className} w-full`}
       />
       {isFocused && (
-        <span className="absolute left-0 -bottom-4.5 text-[9px] text-[var(--color-accent-highlight)] tracking-wider animate-fadeIn z-10 bg-[var(--color-card-bg)] px-1.5 py-0.5 rounded border border-[var(--color-border-line)] whitespace-nowrap">
+        <span className="absolute left-0 -bottom-4.5 text-xs text-[var(--color-accent-highlight)] tracking-wider animate-fadeIn z-10 bg-[var(--color-card-bg)] px-1.5 py-0.5 rounded border border-[var(--color-border-line)] whitespace-nowrap">
           {isIDR ? "ketik angka saja, contoh: 12000" : "ketik angka saja, contoh: 12.50"}
         </span>
       )}

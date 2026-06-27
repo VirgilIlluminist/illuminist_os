@@ -56,17 +56,17 @@ export default function DescriptionTab({ description, accent, onSave }: Props) {
     <div className="space-y-6">
       {/* Auto-save indicator */}
       <div className="flex justify-end">
-        <span className={`text-[9px] font-mono transition-opacity ${saved ? 'text-green-400 opacity-100' : 'opacity-0'}`}>
+        <span className={`text-xs transition-opacity ${saved ? 'text-green-400 opacity-100' : 'opacity-0'}`}>
           ✓ Tersimpan
         </span>
       </div>
 
       {/* Core fields */}
       <div className="space-y-4">
-        <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Konten Utama</p>
+        <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Konten Utama</p>
         {CORE_FIELDS.map(({ key, label, rows }) => (
           <div key={String(key)}>
-            <label className="text-[10px] font-mono text-[var(--color-text-main)] mb-1 block">{label}</label>
+            <label className="text-sm text-[var(--color-text-main)] mb-1 block">{label}</label>
             <textarea
               value={(form[key] as string) ?? ''}
               onChange={e => set(key, e.target.value)}
@@ -79,18 +79,18 @@ export default function DescriptionTab({ description, accent, onSave }: Props) {
 
       {/* Platform fields */}
       <div className="space-y-4">
-        <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">Per Platform</p>
+        <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">Per Platform</p>
         {PLATFORM_FIELDS.map(({ key, label, maxLen }) => {
           const val = (form[key] as string) ?? '';
           return (
             <div key={String(key)}>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-[10px] font-mono text-[var(--color-text-main)]">{label}</label>
+                <label className="text-sm text-[var(--color-text-main)]">{label}</label>
                 <div className="flex items-center gap-2">
-                  {maxLen && <span className={`text-[8px] font-mono ${val.length > maxLen ? 'text-red-400' : 'text-[var(--color-text-muted)]'}`}>{val.length}/{maxLen}</span>}
+                  {maxLen && <span className={`text-xs ${val.length > maxLen ? 'text-red-400' : 'text-[var(--color-text-muted)]'}`}>{val.length}/{maxLen}</span>}
                   <button onClick={() => copyToClipboard(key)}
-                    className="flex items-center gap-1 text-[8px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-                    {copying === String(key) ? <Check size={9} className="text-green-400"/> : <Copy size={9}/>}
+                    className="flex items-center gap-1 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
+                    {copying === String(key) ? <Check size={14} className="text-green-400"/> : <Copy size={14}/>}
                     {copying === String(key) ? 'Disalin!' : 'Copy'}
                   </button>
                 </div>

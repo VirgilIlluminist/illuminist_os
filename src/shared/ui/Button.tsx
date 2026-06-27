@@ -18,9 +18,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  xs: 'px-2.5 py-1 text-[10px]',
-  sm: 'px-3 py-1.5 text-[10.5px]',
-  md: 'px-4 py-2 text-xs',
+  xs: 'px-2.5 py-1 text-xs',
+  sm: 'px-3 py-1.5 text-sm',
+  md: 'px-4 py-2 text-sm',
 };
 
 export default function Button({
@@ -68,7 +68,7 @@ export default function Button({
       style={{ ...variantStyle, ...props.style }}
     >
       {loading
-        ? <Loader size={11} className="animate-spin" />
+        ? <Loader size={15} className="animate-spin" />
         : icon && <span className="shrink-0">{icon}</span>
       }
       {children}

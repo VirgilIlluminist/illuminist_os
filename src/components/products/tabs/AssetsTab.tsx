@@ -76,7 +76,7 @@ export default function AssetsTab({ assets, uploading, accent, onUpload, onDelet
           className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-mono font-bold text-black disabled:opacity-50 cursor-pointer"
           style={{ background: accent }}
         >
-          <Upload size={12}/>{uploading ? 'Mengunggah...' : 'Upload Gambar'}
+          <Upload size={14}/>{uploading ? 'Mengunggah...' : 'Upload Gambar'}
         </button>
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden"
           onChange={e => handleFiles(e.target.files)}/>
@@ -95,7 +95,7 @@ export default function AssetsTab({ assets, uploading, accent, onUpload, onDelet
         >
           <Image size={24} className="text-[var(--color-text-muted)]"/>
           <p className="text-xs font-mono text-[var(--color-text-muted)]">Drag & drop gambar atau klik Upload</p>
-          <p className="text-[8px] font-mono text-[var(--color-text-muted)]/60">JPG / PNG / WEBP · Maks 5MB per file</p>
+          <p className="text-xs text-[var(--color-text-muted)]/60">JPG / PNG / WEBP · Maks 5MB per file</p>
         </div>
       )}
 
@@ -119,7 +119,7 @@ export default function AssetsTab({ assets, uploading, accent, onUpload, onDelet
                   onClick={() => setPreview(asset.url)}/>
               </div>
               <div className="absolute top-2 left-2">
-                <span className="text-[7px] font-mono px-1.5 py-0.5 rounded bg-black/60 text-white uppercase tracking-wider">
+                <span className="text-xs px-1.5 py-0.5 rounded-lg bg-black/60 text-white uppercase tracking-wider">
                   {asset.assetType}
                 </span>
               </div>
@@ -129,7 +129,7 @@ export default function AssetsTab({ assets, uploading, accent, onUpload, onDelet
                   disabled={deleting === asset.id}
                   className="p-1 rounded bg-red-500/80 text-white hover:bg-red-500 cursor-pointer"
                 >
-                  <Trash2 size={10}/>
+                  <Trash2 size={14}/>
                 </button>
               </div>
             </div>

@@ -127,10 +127,10 @@ export default function AIInsightPanel() {
     <div className="space-y-2">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[10px] font-mono uppercase tracking-widest font-semibold" style={{ color: accentHex }}>
+        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: accentHex }}>
           AI Insights
         </span>
-        <span className="text-[9px] font-mono text-[var(--color-text-muted)] bg-[var(--color-card-bg)] px-1.5 py-0.5 rounded border border-[var(--color-border-line)]">
+        <span className="text-xs text-[var(--color-text-muted)] bg-[var(--color-card-bg)] px-1.5 py-0.5 rounded border border-[var(--color-border-line)]">
           {insights.length} alert
         </span>
       </div>
@@ -153,10 +153,10 @@ export default function AIInsightPanel() {
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-semibold">{insight.title}</span>
                 {insight.value && (
-                  <span className="text-[10px] font-mono font-bold shrink-0">{insight.value}</span>
+                  <span className="text-xs font-mono font-bold shrink-0">{insight.value}</span>
                 )}
               </div>
-              <p className="text-[10.5px] opacity-80 mt-0.5 leading-relaxed">{insight.message}</p>
+              <p className="text-xs opacity-80 mt-0.5 leading-relaxed">{insight.message}</p>
             </div>
           </motion.div>
         ))

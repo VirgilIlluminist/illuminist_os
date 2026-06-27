@@ -238,14 +238,14 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
   };
 
   // ── Shared UI helpers ─────────────────────────────────────────────────────────
-  const inputCls = 'w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)] text-xs font-mono';
+  const inputCls = 'w-full px-4 py-2.5 bg-[var(--color-card-bg)] border border-white/[0.08] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)] text-sm';
 
   const tabBtn = (key: typeof activeTab, label: string, count: number) => (
     <button
       onClick={() => { setActiveTab(key); setSearch(''); }}
       style={{
         paddingBottom: '10px', background: 'none', border: 'none', cursor: 'pointer',
-        position: 'relative', fontSize: '12px', fontWeight: 500,
+        position: 'relative', fontSize: '14px', fontWeight: 500,
         color: activeTab === key ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)',
         transition: 'color 0.15s',
       }}
@@ -261,15 +261,15 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
   );
 
   const modalOverlay: React.CSSProperties = {
-    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)',
+    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.72)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', zIndex: 50,
   };
   const modalCard: React.CSSProperties = {
     width: '100%', maxWidth: '480px',
-    background: 'rgba(18,14,34,0.97)',
-    border: '1px solid rgba(255,255,255,0.10)',
-    borderRadius: '16px', padding: '28px',
-    boxShadow: '0 32px 80px rgba(0,0,0,0.60)',
+    background: 'rgba(14,10,28,0.92)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '20px', padding: '32px',
+    boxShadow: '0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)',
     maxHeight: '90vh', overflowY: 'auto',
   };
 
@@ -281,23 +281,23 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
         title="Products"
         actions={
           <div className="flex gap-2">
-            {activeTab === 'master' && <HeaderBtn onClick={() => setShowAddProd(true)} label={t('prod_btn_add_product')} icon={<Plus size={12}/>}/>}
+            {activeTab === 'master' && <HeaderBtn onClick={() => setShowAddProd(true)} label={t('prod_btn_add_product')} icon={<Plus size={14}/>}/>}
             {activeTab === 'sample' && <HeaderBtn onClick={() => {
               if (products.length && computedMaterials.length) {
                 setNewSample(s => ({ ...s, productId: products[0].id, productName: products[0].name, materialId: computedMaterials[0].id }));
               }
               setShowAddSample(true);
-            }} label={t('prod_btn_add_sample')} icon={<Plus size={12}/>}/>}
+            }} label={t('prod_btn_add_sample')} icon={<Plus size={14}/>}/>}
             {activeTab === 'production' && <HeaderBtn onClick={() => {
               if (products.length && computedMaterials.length) {
                 setNewBatch(b => ({ ...b, productId: products[0].id, productName: products[0].name, materialId: computedMaterials[0].id }));
               }
               setShowAddBatch(true);
-            }} label={t('prod_btn_add_batch')} icon={<Plus size={12}/>}/>}
+            }} label={t('prod_btn_add_batch')} icon={<Plus size={14}/>}/>}
             {activeTab === 'variants' && <HeaderBtn onClick={() => {
               if (products.length) setNewVariant(v => ({ ...v, productId: products[0].id, productName: products[0].name }));
               setShowAddVariant(true);
-            }} label={t('prod_btn_add_variant')} icon={<Plus size={12}/>}/>}
+            }} label={t('prod_btn_add_variant')} icon={<Plus size={14}/>}/>}
           </div>
         }
       />
@@ -313,15 +313,15 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
       {/* Search */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ position: 'relative', flex: 1, minWidth: '220px', maxWidth: '360px' }}>
-          <Search size={13} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
+          <Search size={14} style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)' }}/>
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Cari produk, SKU, ID..."
-            style={{ width: '100%', paddingLeft: '32px', paddingRight: '12px', paddingTop: '8px', paddingBottom: '8px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '9px', color: 'rgba(255,255,255,0.8)', fontSize: '12.5px', outline: 'none', boxSizing: 'border-box' }}
+            style={{ width: '100%', paddingLeft: '36px', paddingRight: '14px', paddingTop: '10px', paddingBottom: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: '12px', color: 'rgba(255,255,255,0.85)', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
           />
         </div>
         {activeTab === 'master' && collections.length > 0 && (
           <select value={collFilter} onChange={e => setCollFilter(e.target.value)}
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', borderRadius: '9px', padding: '7px 12px', fontSize: '12px' }}>
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.8)', borderRadius: '12px', padding: '10px 14px', fontSize: '14px' }}>
             <option value="ALL">Semua Koleksi</option>
             {collections.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -406,12 +406,12 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
       {(showAddProd || editingProd) && (
         <div style={modalOverlay}>
           <div style={modalCard}>
-            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, letterSpacing: '-0.03em', color: 'rgba(255,255,255,0.95)', marginBottom: '24px' }}>
               {editingProd ? 'Edit Produk' : t('prod_modal_add_product')}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Nama Produk</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Nama Produk</label>
                 <input type="text" value={editingProd ? editingProd.name : newProd.name}
                   placeholder="e.g. Oversize Tee Classic White"
                   onChange={e => editingProd ? setEditingProd({ ...editingProd, name: e.target.value }) : setNewProd({ ...newProd, name: e.target.value })}
@@ -419,27 +419,27 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
-                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Koleksi</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Koleksi</label>
                   <input type="text" value={editingProd ? editingProd.collection : newProd.collection}
                     onChange={e => editingProd ? setEditingProd({ ...editingProd, collection: e.target.value }) : setNewProd({ ...newProd, collection: e.target.value })}
                     placeholder="Essential Series 2025" className={inputCls}/>
                 </div>
                 <div>
-                  <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Kategori</label>
+                  <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Kategori</label>
                   <input type="text" value={editingProd ? editingProd.category : newProd.category}
                     onChange={e => editingProd ? setEditingProd({ ...editingProd, category: e.target.value }) : setNewProd({ ...newProd, category: e.target.value })}
                     className={inputCls}/>
                 </div>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Harga Jual ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Harga Jual ({currencySymbol})</label>
                 <CurrencyInput
                   value={editingProd ? editingProd.sellingPrice : newProd.sellingPrice}
                   onChange={v => editingProd ? setEditingProd({ ...editingProd, sellingPrice: v }) : setNewProd({ ...newProd, sellingPrice: v })}
                   className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Status</label>
                 <select
                   value={editingProd ? editingProd.status : newProd.status}
                   onChange={e => editingProd
@@ -467,7 +467,7 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
               )}
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button onClick={() => { setShowAddProd(false); setEditingProd(null); }}
-                  style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+                  style={{ padding: '12px 20px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.7)', borderRadius: '12px', fontSize: '14px', cursor: 'pointer' }}>
                   Batal
                 </button>
                 <button onClick={() => {
@@ -485,7 +485,7 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                     setShowAddProd(false);
                     setNewProd({ name: '', collection: '', category: 'T-Shirt', sellingPrice: 0, status: 'Active' });
                   }
-                }} style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                }} style={{ padding: '12px 20px', background: accentHex, color: 'white', border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
                   {editingProd ? 'Simpan' : t('prod_modal_add_product').split(' ')[0] + ' Produk'}
                 </button>
               </div>
@@ -498,12 +498,12 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
       {showAddSample && (
         <div style={modalOverlay}>
           <div style={{ ...modalCard, maxWidth: '520px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, letterSpacing: '-0.03em', color: 'rgba(255,255,255,0.95)', marginBottom: '24px' }}>
               {t('prod_modal_add_sample')}
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Produk</label>
                 <select value={newSample.productId} onChange={e => {
                   const p = products.find(x => x.id === e.target.value);
                   setNewSample({ ...newSample, productId: e.target.value, productName: p?.name ?? '' });
@@ -512,12 +512,12 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Versi Pola</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Versi Pola</label>
                 <input type="text" value={newSample.version}
                   onChange={e => setNewSample({ ...newSample, version: e.target.value })} className={inputCls}/>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Material</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Material</label>
                 <select value={newSample.materialId}
                   onChange={e => setNewSample({ ...newSample, materialId: e.target.value })} className={inputCls}>
                   {computedMaterials.map(m => (
@@ -526,19 +526,19 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Usage (m)</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Usage (m)</label>
                 <NumberInput value={newSample.usageQty} onChange={n => setNewSample({ ...newSample, usageQty: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Waste % (0.10 = 10%)</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Waste % (0.10 = 10%)</label>
                 <NumberInput value={newSample.wastePercentage} onChange={n => setNewSample({ ...newSample, wastePercentage: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Labor ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Labor ({currencySymbol})</label>
                 <CurrencyInput value={newSample.laborCost} onChange={v => setNewSample({ ...newSample, laborCost: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Status</label>
                 <select value={newSample.status} onChange={e => setNewSample({ ...newSample, status: e.target.value as SampleDevelopment['status'] })} className={inputCls}>
                   <option value="Design">Design</option>
                   <option value="Sampling">Sampling</option>
@@ -547,17 +547,17 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                 </select>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Catatan</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Catatan</label>
                 <textarea value={newSample.notes} onChange={e => setNewSample({ ...newSample, notes: e.target.value })}
-                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded focus:outline-none text-xs font-mono"/>
+                  className="w-full h-14 p-3 bg-[var(--color-card-bg)] border border-white/[0.06] text-white rounded-xl focus:outline-none text-xs"/>
               </div>
             </div>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-              <button onClick={() => setShowAddSample(false)} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+              <button onClick={() => setShowAddSample(false)} style={{ padding: '12px 20px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.7)', borderRadius: '12px', fontSize: '14px', cursor: 'pointer' }}>
                 Batal
               </button>
               <button onClick={() => { addSample(newSample); setShowAddSample(false); }}
-                style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                style={{ padding: '12px 20px', background: accentHex, color: 'white', border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
                 Buat Sample
               </button>
             </div>
@@ -569,12 +569,12 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
       {showAddBatch && (
         <div style={modalOverlay}>
           <div style={{ ...modalCard, maxWidth: '520px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, letterSpacing: '-0.03em', color: 'rgba(255,255,255,0.95)', marginBottom: '24px' }}>
               {t('prod_modal_add_batch')}
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Produk</label>
                 <select value={newBatch.productId} onChange={e => {
                   const p = products.find(x => x.id === e.target.value);
                   setNewBatch({ ...newBatch, productId: e.target.value, productName: p?.name ?? '' });
@@ -583,37 +583,37 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Pabrik</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Pabrik</label>
                 <input type="text" value={newBatch.factory}
                   onChange={e => setNewBatch({ ...newBatch, factory: e.target.value })}
                   placeholder="Nama CMT / pabrik" className={inputCls}/>
               </div>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Material</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Material</label>
                 <select value={newBatch.materialId} onChange={e => setNewBatch({ ...newBatch, materialId: e.target.value })} className={inputCls}>
                   {computedMaterials.map(m => <option key={m.id} value={m.id}>{m.name} — sisa {m.remainingQty} {m.unit}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Qty Produksi</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Qty Produksi</label>
                 <NumberInput value={newBatch.qty} allowDecimal={false}
                   onChange={n => setNewBatch({ ...newBatch, qty: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Usage/PCS (m)</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Usage/PCS (m)</label>
                 <NumberInput value={newBatch.usagePerPcs}
                   onChange={n => setNewBatch({ ...newBatch, usagePerPcs: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Labor/PCS ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Labor/PCS ({currencySymbol})</label>
                 <CurrencyInput value={newBatch.laborCost} onChange={v => setNewBatch({ ...newBatch, laborCost: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Packaging/PCS ({currencySymbol})</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Packaging/PCS ({currencySymbol})</label>
                 <CurrencyInput value={newBatch.packagingCost} onChange={v => setNewBatch({ ...newBatch, packagingCost: v })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Status Produksi</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Status Produksi</label>
                 <select value={newBatch.productionStatus} onChange={e => setNewBatch({ ...newBatch, productionStatus: e.target.value as ProductionBatch['productionStatus'] })} className={inputCls}>
                   <option value="Scheduled">Scheduled</option>
                   <option value="In Progress">In Progress</option>
@@ -622,17 +622,17 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Tanggal</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Tanggal</label>
                 <input type="date" value={newBatch.productionDate}
                   onChange={e => setNewBatch({ ...newBatch, productionDate: e.target.value })} className={inputCls}/>
               </div>
             </div>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-              <button onClick={() => setShowAddBatch(false)} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+              <button onClick={() => setShowAddBatch(false)} style={{ padding: '12px 20px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.7)', borderRadius: '12px', fontSize: '14px', cursor: 'pointer' }}>
                 Batal
               </button>
               <button onClick={() => { addProduction(newBatch); setShowAddBatch(false); }}
-                style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+                style={{ padding: '12px 20px', background: accentHex, color: 'white', border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
                 Buat Batch
               </button>
             </div>
@@ -644,12 +644,12 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
       {showAddVariant && (
         <div style={modalOverlay}>
           <div style={modalCard}>
-            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, letterSpacing: '-0.03em', color: 'rgba(255,255,255,0.95)', marginBottom: '24px' }}>
               {t('prod_btn_add_variant')}
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div style={{ gridColumn: '1/-1' }}>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Produk</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Produk</label>
                 <select value={newVariant.productId} onChange={e => {
                   const p = products.find(x => x.id === e.target.value);
                   setNewVariant({ ...newVariant, productId: e.target.value, productName: p?.name ?? '' });
@@ -658,42 +658,42 @@ export default function ProductsView({ initialSubTab = 'master' }: ProductsViewP
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">SKU</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">SKU</label>
                 <input type="text" value={newVariant.sku}
                   onChange={e => setNewVariant({ ...newVariant, sku: e.target.value })}
                   placeholder="NVH-OTC-S-WHT" className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Warna</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Warna</label>
                 <input type="text" value={newVariant.color}
                   onChange={e => setNewVariant({ ...newVariant, color: e.target.value })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Size</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Size</label>
                 <select value={newVariant.size} onChange={e => setNewVariant({ ...newVariant, size: e.target.value })} className={inputCls}>
                   {['XS','S','M','L','XL','XXL','3XL','Free Size'].map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Stok Awal</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Stok Awal</label>
                 <NumberInput value={newVariant.currentStock} allowDecimal={false}
                   onChange={n => setNewVariant({ ...newVariant, currentStock: n })} className={inputCls}/>
               </div>
               <div>
-                <label className="text-[var(--color-text-muted)] uppercase text-[10px] font-mono mb-1 block">Min Stok</label>
+                <label className="text-sm font-medium text-[var(--color-text-muted)] mb-2 block">Min Stok</label>
                 <NumberInput value={newVariant.minStock} allowDecimal={false}
                   onChange={n => setNewVariant({ ...newVariant, minStock: n })} className={inputCls}/>
               </div>
             </div>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-              <button onClick={() => setShowAddVariant(false)} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', borderRadius: '9px', fontSize: '12px', cursor: 'pointer' }}>
+              <button onClick={() => setShowAddVariant(false)} style={{ padding: '12px 20px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.7)', borderRadius: '12px', fontSize: '14px', cursor: 'pointer' }}>
                 Batal
               </button>
               <button onClick={() => {
                 if (!newVariant.sku) return toast.error('SKU wajib diisi');
                 addVariant(newVariant);
                 setShowAddVariant(false);
-              }} style={{ padding: '9px 18px', background: accentHex, color: 'white', border: 'none', borderRadius: '9px', fontSize: '12px', fontWeight: 500, cursor: 'pointer' }}>
+              }} style={{ padding: '12px 20px', background: accentHex, color: 'white', border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
                 Tambah Variant
               </button>
             </div>

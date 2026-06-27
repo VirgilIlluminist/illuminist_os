@@ -156,7 +156,7 @@ export default function FinancialStatementsView() {
   const tbCredit = balances.reduce((s,a)=>s+a.credit, 0);
   const tbBalanced = Math.abs(tbDebit - tbCredit) < 1;
 
-  const card = 'bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-2xl';
+  const card = 'glass-panel bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-2xl';
 
   const exportCSV = () => {
     const rows = balances.map(a => `"${a.code}","${a.name}","${a.type}",${a.debit},${a.credit},${a.balance}`);
@@ -180,12 +180,12 @@ export default function FinancialStatementsView() {
         </div>
         <div className="flex items-center gap-2">
           <input type="month" value={period} onChange={e=>setPeriod(e.target.value)}
-            className="px-3 py-2 text-sm rounded-xl border border-[var(--color-border-line)] bg-[var(--color-background)] text-[var(--color-text-main)] cursor-pointer"/>
+            className="px-4 py-2.5 text-sm rounded-xl border border-white/[0.10] bg-white/[0.06] text-white cursor-pointer focus:outline-none"/>
           <button onClick={load} className="p-2.5 rounded-xl border border-[var(--color-border-line)] cursor-pointer hover:bg-[var(--color-background)]">
             <RefreshCw size={14} className="text-[var(--color-text-muted)]"/>
           </button>
           <button onClick={exportCSV} className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-xl border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-            <Download size={13}/> Export
+            <Download size={14}/> Export
           </button>
         </div>
       </div>
@@ -200,7 +200,7 @@ export default function FinancialStatementsView() {
         ].map((kpi,i) => (
           <motion.div key={i} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:i*0.05}} className={`${card} p-4`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{background:`${kpi.color}15`,color:kpi.color}}>{kpi.icon}</div>
             </div>
             <p className="text-xl font-bold tabular-nums" style={{color:kpi.color}}>{kpi.value}</p>
@@ -212,7 +212,7 @@ export default function FinancialStatementsView() {
       <div className="flex items-center gap-1 border-b border-[var(--color-border-line)]">
         {TABS.map(t => (
           <button key={t.id} onClick={()=>setTab(t.id as any)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium transition-all cursor-pointer border-b-2 -mb-px ${
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-all cursor-pointer border-b-2 -mb-px ${
               tab===t.id ? 'border-current' : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'
             }`}
             style={tab===t.id?{color:accent,borderColor:accent}:{}}>
@@ -249,7 +249,7 @@ export default function FinancialStatementsView() {
                   <table className="w-full text-sm">
                     <thead><tr className="border-b border-[var(--color-border-line)]">
                       {['Kode','Nama Akun','Tipe','Debit','Kredit','Saldo'].map((h,i) => (
-                        <th key={h} className={`px-4 py-3 text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wide ${i>2?'text-right':'text-left'}`}>{h}</th>
+                        <th key={h} className={`px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide ${i>2?'text-right':'text-left'}`}>{h}</th>
                       ))}
                     </tr></thead>
                     <tbody>
@@ -262,15 +262,15 @@ export default function FinancialStatementsView() {
                           <React.Fragment key={type}>
                             <tr className="bg-[var(--color-background)]">
                               <td colSpan={6} className="px-4 py-1.5">
-                                <span className="text-[9px] font-bold uppercase tracking-wider" style={{color:typeColor}}>{typeLabel}</span>
+                                <span className="text-xs font-bold uppercase tracking-wider" style={{color:typeColor}}>{typeLabel}</span>
                               </td>
                             </tr>
                             {rows.map(acc => (
                               <tr key={acc.code} className="border-b border-[var(--color-border-line)] last:border-0 hover:bg-[var(--color-background)]">
-                                <td className="px-4 py-2.5 font-mono text-xs text-[var(--color-text-muted)]">{acc.code}</td>
+                                <td className="px-4 py-2.5 text-xs text-[var(--color-text-muted)]">{acc.code}</td>
                                 <td className="px-4 py-2.5 text-[var(--color-text-main)]">{acc.name}</td>
                                 <td className="px-4 py-2.5">
-                                  <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full" style={{background:`${typeColor}15`,color:typeColor}}>{typeLabel}</span>
+                                  <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full" style={{background:`${typeColor}15`,color:typeColor}}>{typeLabel}</span>
                                 </td>
                                 <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-text-main)]">{acc.debit > 0 ? formatMoney(acc.debit) : '—'}</td>
                                 <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-text-main)]">{acc.credit > 0 ? formatMoney(acc.credit) : '—'}</td>

@@ -96,14 +96,14 @@ export const getColumnIcon = (type: ColumnType = 'text', currencySymbol?: string
     case 'percentage': return <span className="text-xs font-bold text-amber-400">%</span>;
     case 'date':
     case 'datetime': return <Calendar size={13} className="text-[var(--color-text-muted)]" />;
-    case 'checkbox': return <CheckSquare size={13} className="text-purple-400" />;
+    case 'checkbox': return <CheckSquare size={13} className="text-[var(--color-accent-highlight)]" />;
     case 'rating': return <Star size={13} className="text-yellow-400 fill-current" />;
     case 'tags': return <Tag size={13} className="text-emerald-400" />;
     case 'priority': return <AlertCircle size={13} className="text-red-400" />;
     case 'status': return <SlidersHorizontal size={13} className="text-cyan-400" />;
     case 'url': return <LinkIcon size={13} className="text-sky-400" />;
     case 'email': return <Mail size={13} className="text-orange-400" />;
-    case 'phone': return <Phone size={13} className="text-violet-400" />;
+    case 'phone': return <Phone size={13} className="text-[var(--color-accent-highlight)]" />;
     case 'image': return <ImageIcon size={13} className="text-teal-400" />;
     case 'file': return <FileText size={13} className="text-[var(--color-text-main)]" />;
     case 'formula': return <Calculator size={13} className="text-[var(--accent-primary)]" />;
@@ -1249,7 +1249,7 @@ export default function SmartTable({
       onCopy={handleCopy}
     >
       {/* HEADER CONTROLS TOOLBAR */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-[var(--color-background)]/65 border border-white/[0.04] rounded-lg shadow-xl backdrop-blur-md">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3 bg-[var(--color-background)]/65 border border-white/[0.04] rounded-lg shadow-xl">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 bg-[var(--color-card-bg)] border border-white/5 px-2 py-1 rounded-md">
             <span className="text-[var(--color-text-main)] font-semibold text-[12px] flex items-center gap-1.5">
@@ -1286,7 +1286,7 @@ export default function SmartTable({
               onClick={() => setShowAuditPanel(!showAuditPanel)}
               className={`px-2.5 py-1.5 rounded-md text-[10px] font-bold tracking-tight uppercase transition-all flex items-center gap-1 ${
                 showAuditPanel
-                  ? 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
+                  ? 'bg-[var(--color-accent-muted)] text-[var(--color-accent-highlight)] border border-[var(--color-accent-border)]'
                   : 'bg-[var(--color-card-bg)] text-[var(--color-text-muted)] border border-white/5 hover:bg-[var(--color-background)]'
               }`}
               title="Show ledger transaction edit logs"
@@ -1378,7 +1378,7 @@ export default function SmartTable({
 
       {/* SMART DECISION FILTERS WORKSPACE */}
       {showFilterPanel && (
-        <div className="p-3 bg-[#0a0a0d] border border-amber-500/20 rounded-lg shadow-xl backdrop-blur-md space-y-3 text-[var(--color-text-main)]">
+        <div className="p-3 bg-[#0a0a0d] border border-amber-500/20 rounded-lg shadow-xl space-y-3 text-[var(--color-text-main)]">
           <div className="flex items-center justify-between border-b border-white/5 pb-2">
             <span className="text-[10px] font-bold text-[var(--accent-primary)] tracking-widest uppercase flex items-center gap-1.5">
               <SlidersHorizontal size={12} /> Decision-Support Database Rule Builder
@@ -1555,10 +1555,10 @@ export default function SmartTable({
 
       {/* AUDIT LOG TIMELINE */}
       {showAuditPanel && (
-        <div className="p-3 bg-[#0a0a0d] border border-purple-500/20 rounded-lg shadow-xl backdrop-blur-md space-y-2 text-[var(--color-text-main)]">
+        <div className="p-3 bg-[#0a0a0d] border border-[var(--color-accent-border)] rounded-lg shadow-xl space-y-2 text-[var(--color-text-main)]">
           <div className="flex items-center justify-between border-b border-white/5 pb-1.5">
-            <span className="text-[10px] font-bold text-purple-300 tracking-widest uppercase flex items-center gap-1.5 align-middle">
-              <FileText size={12} className="text-purple-400" /> Database Registry Operations Audit History
+            <span className="text-[10px] font-bold text-[var(--color-accent-highlight)] tracking-widest uppercase flex items-center gap-1.5 align-middle">
+              <FileText size={12} className="text-[var(--color-accent-highlight)]" /> Database Registry Operations Audit History
             </span>
             <button onClick={() => setShowAuditPanel(false)} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]">
               <X size={12} />
@@ -1570,7 +1570,7 @@ export default function SmartTable({
             ) : (
               auditLogs.map((log, logIdx) => (
                 <div key={logIdx} className="flex items-center justify-between py-1 text-[9px] font-mono hover:bg-[rgba(255,255,255,0.01)]">
-                  <span className="text-purple-400 w-24 shrink-0">{log.timestamp}</span>
+                  <span className="text-[var(--color-text-muted)] w-24 shrink-0">{log.timestamp}</span>
                   <span className="text-[var(--accent-primary)] font-bold border border-[var(--accent-primary)]/20 rounded px-1.5 text-[8px] tracking-tight mr-2 uppercase shrink-0">{log.action}</span>
                   <span className="text-[var(--color-text-main)] truncate flex-1 text-left">{log.details}</span>
                 </div>
@@ -1582,7 +1582,7 @@ export default function SmartTable({
 
       {/* BULK SELECTION ACTION WORKSPACE */}
       {selectedRows.size > 0 && (
-        <div className="p-3 bg-[var(--color-background)] border border-[var(--accent-primary)]/30 rounded-lg shadow-2xl backdrop-blur-md flex flex-wrap items-center justify-between gap-4 border-t-2 border-t-[var(--accent-primary)]">
+        <div className="p-3 bg-[var(--color-background)] border border-[var(--accent-primary)]/30 rounded-lg shadow-2xl flex flex-wrap items-center justify-between gap-4 border-t-2 border-t-[var(--accent-primary)]">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-ping" />
             <span className="text-[10px] font-bold text-[var(--color-text-main)] uppercase tracking-wider">
@@ -1765,7 +1765,7 @@ export default function SmartTable({
       )}
 
       {/* --- RENDER GRID SPREADSHEET VIEW --- */}
-      <div className="relative border border-white/[0.04] bg-[var(--color-background)]/40 rounded-lg overflow-hidden shadow-2xl backdrop-blur-sm">
+      <div className="relative border border-white/[0.04] bg-[var(--color-background)]/40 rounded-lg overflow-hidden shadow-2xl">
           
           {/* STICKY COLUMN GRIDS HEADERS SCROLL WRAPPER */}
           <div ref={headerScrollRef} className="overflow-hidden border-b border-white/[0.06] bg-[#0d0d0f] relative">
@@ -2221,7 +2221,7 @@ export default function SmartTable({
       {contextMenu && (
         <div
           style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
-          className="fixed z-[100] bg-[#0c0c0f] border border-white/[0.08] text-[var(--color-text-main)] py-1.5 px-1 rounded-md shadow-2xl backdrop-blur-md min-w-[170px] flex flex-col gap-0.5"
+          className="fixed z-[100] bg-[#0c0c0f] border border-white/[0.08] text-[var(--color-text-main)] py-1.5 px-1 rounded-md shadow-2xl min-w-[170px] flex flex-col gap-0.5"
           onClick={(e) => e.stopPropagation()}
         >
           {contextMenu.type === 'cell' && contextMenu.rowIndex !== undefined && (
@@ -2341,8 +2341,8 @@ export default function SmartTable({
 
       {/* --- NEW ADD COLUMN OVERLAY MODAL --- */}
       {showAddColModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#0b0b0d] border border-white/10 p-5 rounded-lg max-w-sm w-full space-y-4 text-[var(--color-text-main)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'rgba(0,0,0,0.65)' }}>
+          <div className="p-5 rounded-2xl max-w-sm w-full space-y-4 text-white" style={{ background: 'rgba(14,10,28,0.92)', border: '1px solid rgba(255,255,255,0.12)' }}>
             <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--accent-primary)] border-b border-white/5 pb-2">
               Inject Custom Database Column
             </h4>
@@ -2446,7 +2446,8 @@ export default function SmartTable({
       {enlargedImage && (
         <div 
           onClick={() => setEnlargedImage(null)}
-          className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4 backdrop-blur-md cursor-zoom-out animate-fadeIn"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 cursor-zoom-out animate-fadeIn"
+          style={{ background: 'rgba(0,0,0,0.85)' }}
         >
           <div className="relative max-w-2xl max-h-[85vh] overflow-hidden rounded-xl border border-white/10">
             <img 

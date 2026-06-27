@@ -20,7 +20,7 @@ interface BadgeProps {
 }
 
 export default function Badge({ label, variant = 'neutral', size = 'xs', dot = false, className = '' }: BadgeProps) {
-  const sizeClass = size === 'xs' ? 'text-[9px] px-1.5 py-0.5' : 'text-[10.5px] px-2 py-0.5';
+  const sizeClass = size === 'xs' ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5';
   return (
     <span className={`inline-flex items-center gap-1 font-mono uppercase font-semibold rounded border ${sizeClass} ${variantMap[variant]} ${className}`}>
       {dot && <span className={`h-1.5 w-1.5 rounded-full ${dot && 'animate-pulse'} bg-current`} />}

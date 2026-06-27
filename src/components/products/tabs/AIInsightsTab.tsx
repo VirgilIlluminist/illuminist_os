@@ -106,18 +106,18 @@ Gunakan data real di atas. Singkat, actionable, dalam bahasa Indonesia.`;
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles size={13} style={{ color: accent }}/>
-          <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">
+          <Sparkles size={14} style={{ color: accent }}/>
+          <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
             AI Product Intelligence
           </p>
         </div>
         <button
           onClick={generate}
           disabled={loading}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-mono font-bold text-black disabled:opacity-50 cursor-pointer"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold text-black disabled:opacity-50 cursor-pointer"
           style={{ background: accent }}
         >
-          <RefreshCw size={10} className={loading ? 'animate-spin' : ''}/>
+          <RefreshCw size={14} className={loading ? 'animate-spin' : ''}/>
           {loading ? 'Menganalisis...' : generated ? 'Refresh Insights' : 'Generate Insights'}
         </button>
       </div>
@@ -128,7 +128,7 @@ Gunakan data real di atas. Singkat, actionable, dalam bahasa Indonesia.`;
           <p className="text-xs font-mono text-[var(--color-text-muted)]">
             Klik "Generate Insights" untuk analisis AI produk ini.
           </p>
-          <p className="text-[9px] font-mono text-[var(--color-text-muted)]/60 mt-1">
+          <p className="text-xs text-[var(--color-text-muted)]/60 mt-1">
             AI akan menganalisis pricing, channel, stok, dan performance.
           </p>
         </div>
@@ -152,7 +152,7 @@ Gunakan data real di atas. Singkat, actionable, dalam bahasa Indonesia.`;
             <div key={i} className={`rounded-xl border p-4 ${TYPE_STYLE[card.type]}`}>
               <div className="flex items-center gap-2 mb-2">
                 <div className={`w-2 h-2 rounded-full ${TYPE_DOT[card.type]}`}/>
-                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--color-text-main)]">{card.title}</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-main)]">{card.title}</p>
               </div>
               <p className="text-xs font-mono text-[var(--color-text-muted)] whitespace-pre-wrap leading-relaxed">{card.content}</p>
             </div>

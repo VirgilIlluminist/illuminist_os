@@ -21,15 +21,15 @@ export default function MarginCalculator({ initialHpp, initialPrice, currency, a
 
   return (
     <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-3">
-      <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-1">Margin Calculator</p>
+      <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-1">Margin Calculator</p>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">HPP</label>
+          <label className="text-xs text-[var(--color-text-muted)] mb-1 block">HPP</label>
           <NumberInput value={hpp} onChange={setHpp} className={INPUT}/>
         </div>
         <div>
-          <label className="text-[8px] font-mono text-[var(--color-text-muted)] mb-1 block">Harga Jual</label>
+          <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Harga Jual</label>
           <NumberInput value={price} onChange={setPrice} className={INPUT}/>
         </div>
       </div>
@@ -42,10 +42,10 @@ export default function MarginCalculator({ initialHpp, initialPrice, currency, a
 
       <div className="border-t border-[var(--color-border-line)] pt-3">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[8px] font-mono text-[var(--color-text-muted)]">Target Margin</span>
+          <span className="text-xs text-[var(--color-text-muted)]">Target Margin</span>
           <NumberInput value={targetPct} onChange={setTargetPct} allowDecimal={false} min={0} max={99}
-            className="w-14 bg-white/5 border border-[var(--color-border-line)] rounded-lg px-2 py-1 text-[10px] font-mono text-center text-[var(--color-text-main)] focus:outline-none"/>
-          <span className="text-[8px] font-mono text-[var(--color-text-muted)]">%</span>
+            className="w-14 bg-white/5 border border-[var(--color-border-line)] rounded-lg px-2 py-1 text-xs text-center text-[var(--color-text-main)] focus:outline-none"/>
+          <span className="text-xs text-[var(--color-text-muted)]">%</span>
         </div>
         <Row
           label={`Harga minimal untuk ${targetPct}% margin`}
@@ -63,7 +63,7 @@ function Row({ label, value, color = 'text-[var(--color-text-main)]', suffix }: 
 }) {
   return (
     <div className="flex justify-between items-center">
-      <span className="text-[9px] font-mono text-[var(--color-text-muted)]">{label}</span>
+      <span className="text-xs text-[var(--color-text-muted)]">{label}</span>
       <span className={`text-xs font-mono font-bold ${color}`}>{value}{suffix ? ` ${suffix}` : ''}</span>
     </div>
   );

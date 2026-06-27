@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTheme, ThemeId, WallpaperType } from '../../../shared/hooks/useTheme';
+import { useERP } from '../../../app/store/ERPContext';
+import { ACCENT_PRESETS, normalizeHex } from '../../../shared/theme/accent';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ThemeTab — Settings → Theme. Preset picker, glass transparency sliders, and
@@ -23,13 +25,63 @@ const section: React.CSSProperties = { marginBottom: '28px' };
 
 export default function ThemeTab() {
   const { settings, updateTheme } = useTheme();
+  const { config, updateConfig } = useERP();
+  const accent = config?.customAccentColor || '#7c3aed';
+
+  const setAccent = (hex: string) => {
+    const norm = normalizeHex(hex);
+    if (norm) updateConfig({ customAccentColor: norm });
+  };
 
   return (
     <div style={{ maxWidth: '620px', fontFamily: 'Inter, sans-serif' }}>
 
+      {/* Accent colour — the single colour used across the whole app */}
+      <div style={section}>
+        <label style={label}>Accent Color</label>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+          {ACCENT_PRESETS.map(p => {
+            const active = accent.toLowerCase() === p.hex.toLowerCase();
+            return (
+              <button
+                key={p.hex}
+                onClick={() => setAccent(p.hex)}
+                title={p.name}
+                style={{
+                  width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer',
+                  background: p.hex, padding: 0,
+                  border: active ? '2px solid var(--text-primary)' : '2px solid transparent',
+                  boxShadow: active ? `0 0 0 2px ${p.hex}` : 'none',
+                  outline: 'none', transition: 'var(--transition-base)',
+                }}
+              />
+            );
+          })}
+          {/* Custom hex */}
+          <label style={{
+            display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px',
+            background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)',
+            borderRadius: 'var(--radius-md)', padding: '4px 8px 4px 4px', cursor: 'pointer',
+          }}>
+            <input
+              type="color"
+              value={normalizeHex(accent) ?? '#7c3aed'}
+              onChange={e => setAccent(e.target.value)}
+              style={{ width: '24px', height: '24px', border: 'none', borderRadius: '6px', background: 'none', cursor: 'pointer', padding: 0 }}
+            />
+            <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+              {(normalizeHex(accent) ?? accent).toUpperCase()}
+            </span>
+          </label>
+        </div>
+        <p style={{ fontSize: '11.5px', color: 'var(--text-tertiary)', margin: '10px 0 0', lineHeight: 1.5 }}>
+          Satu warna aksen ini dipakai di seluruh aplikasi — sidebar, tombol, grafik, dan setiap bisnis.
+        </p>
+      </div>
+
       {/* Preset picker */}
       <div style={section}>
-        <label style={label}>Color Theme</label>
+        <label style={label}>Wallpaper Theme</label>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           {THEMES.map(thm => {
             const active = settings.themeId === thm.id;

@@ -46,11 +46,11 @@ function ProviderRow({ p }: { p: ProviderSummary }) {
     <div className="flex items-center justify-between py-1">
       <div className="flex items-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
-        <span className="text-[9px] font-mono uppercase text-[var(--color-text-muted)]">{p.provider}</span>
+        <span className="text-xs uppercase text-[var(--color-text-muted)]">{p.provider}</span>
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-[9px] font-mono text-[var(--color-text-muted)]">{fmtTokens(p.total_tokens)}tok</span>
-        <span className="text-[9px] font-mono text-[var(--color-text-main)]">{fmt(p.cost_usd)}</span>
+        <span className="text-xs text-[var(--color-text-muted)]">{fmtTokens(p.total_tokens)}tok</span>
+        <span className="text-xs text-[var(--color-text-main)]">{fmt(p.cost_usd)}</span>
       </div>
     </div>
   );
@@ -77,32 +77,32 @@ function BudgetEditor({ budget, onSave, onClose }: {
   return (
     <div className="absolute bottom-full left-0 right-0 mb-1 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-lg p-3 shadow-xl z-50">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-[var(--color-text-muted)]">AI Budget</span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">AI Budget</span>
         <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-          <X size={10}/>
+          <X size={14}/>
         </button>
       </div>
       <div className="space-y-2">
         <label className="block">
-          <span className="text-[8px] font-mono text-[var(--color-text-muted)] uppercase">Daily Limit (USD)</span>
+          <span className="text-xs text-[var(--color-text-muted)] uppercase">Daily Limit (USD)</span>
           <input type="text" inputMode="decimal" value={daily} onChange={e => setDaily(e.target.value.replace(/[^0-9.]/g, ''))}
-            className="mt-0.5 w-full bg-white/5 border border-[var(--color-border-line)] rounded px-2 py-1 text-[10px] font-mono text-[var(--color-text-main)] focus:outline-none focus:border-white/30"
+            className="mt-0.5 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"
           />
         </label>
         <label className="block">
-          <span className="text-[8px] font-mono text-[var(--color-text-muted)] uppercase">Monthly Limit (USD)</span>
+          <span className="text-xs text-[var(--color-text-muted)] uppercase">Monthly Limit (USD)</span>
           <input type="text" inputMode="decimal" value={monthly} onChange={e => setMonthly(e.target.value.replace(/[^0-9.]/g, ''))}
-            className="mt-0.5 w-full bg-white/5 border border-[var(--color-border-line)] rounded px-2 py-1 text-[10px] font-mono text-[var(--color-text-main)] focus:outline-none focus:border-white/30"
+            className="mt-0.5 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"
           />
         </label>
         <label className="block">
-          <span className="text-[8px] font-mono text-[var(--color-text-muted)] uppercase">Alert Threshold (%)</span>
+          <span className="text-xs text-[var(--color-text-muted)] uppercase">Alert Threshold (%)</span>
           <input type="text" inputMode="numeric" value={threshold} onChange={e => setThreshold(e.target.value.replace(/[^0-9]/g, ''))}
-            className="mt-0.5 w-full bg-white/5 border border-[var(--color-border-line)] rounded px-2 py-1 text-[10px] font-mono text-[var(--color-text-main)] focus:outline-none focus:border-white/30"
+            className="mt-0.5 w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-1.5 text-sm text-[var(--color-text-main)] focus:outline-none focus:border-white/30"
           />
         </label>
         <button onClick={handleSave}
-          className="w-full mt-1 py-1.5 rounded bg-white/10 hover:bg-white/15 text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-main)] transition-all cursor-pointer">
+          className="w-full mt-1 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-sm uppercase tracking-wider text-[var(--color-text-main)] transition-all cursor-pointer">
           Simpan
         </button>
       </div>
@@ -123,18 +123,18 @@ export default function AIUsageMonitor({ companyId, sessionId, accent = '#d4af37
         className="w-full flex items-center justify-between mb-1 group cursor-pointer"
       >
         <div className="flex items-center gap-1.5">
-          <Bot size={10} style={{ color: accent }}/>
-          <span className="text-[9px] font-mono font-bold uppercase tracking-[0.12em] text-[var(--color-text-muted)]">AI Usage</span>
-          {hasAlert && <AlertTriangle size={8} className="text-orange-400"/>}
+          <Bot size={14} style={{ color: accent }}/>
+          <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">AI Usage</span>
+          {hasAlert && <AlertTriangle size={12} className="text-orange-400"/>}
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={e => { e.stopPropagation(); setShowBudgetEditor(v => !v); }}
             className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer"
           >
-            <Settings2 size={9}/>
+            <Settings2 size={14}/>
           </button>
-          {collapsed ? <ChevronDown size={10} className="text-[var(--color-text-muted)]"/> : <ChevronUp size={10} className="text-[var(--color-text-muted)]"/>}
+          {collapsed ? <ChevronDown size={14} className="text-[var(--color-text-muted)]"/> : <ChevronUp size={14} className="text-[var(--color-text-muted)]"/>}
         </div>
       </button>
 
@@ -148,14 +148,14 @@ export default function AIUsageMonitor({ companyId, sessionId, accent = '#d4af37
           {/* Budget alerts */}
           {alerts.daily && (
             <div className="flex items-center gap-1 px-2 py-1 rounded bg-orange-500/10 border border-orange-500/20">
-              <AlertTriangle size={8} className="text-orange-400 shrink-0"/>
-              <span className="text-[8px] font-mono text-orange-400">Budget harian {Math.round((today.total_cost_usd / budget.daily_limit_usd) * 100)}%</span>
+              <AlertTriangle size={12} className="text-orange-400 shrink-0"/>
+              <span className="text-xs text-orange-400">Budget harian {Math.round((today.total_cost_usd / budget.daily_limit_usd) * 100)}%</span>
             </div>
           )}
           {alerts.monthly && (
             <div className="flex items-center gap-1 px-2 py-1 rounded bg-orange-500/10 border border-orange-500/20">
-              <AlertTriangle size={8} className="text-orange-400 shrink-0"/>
-              <span className="text-[8px] font-mono text-orange-400">Budget bulanan {Math.round((month.total_cost_usd / budget.monthly_limit_usd) * 100)}%</span>
+              <AlertTriangle size={12} className="text-orange-400 shrink-0"/>
+              <span className="text-xs text-orange-400">Budget bulanan {Math.round((month.total_cost_usd / budget.monthly_limit_usd) * 100)}%</span>
             </div>
           )}
 
@@ -167,9 +167,9 @@ export default function AIUsageMonitor({ companyId, sessionId, accent = '#d4af37
               { label: 'Bulan', cost: month.total_cost_usd,   tokens: month.total_tokens },
             ].map(({ label, cost, tokens }) => (
               <div key={label} className="bg-white/[0.03] rounded px-1.5 py-1">
-                <p className="text-[7.5px] font-mono text-[var(--color-text-muted)] uppercase">{label}</p>
-                <p className="text-[10px] font-mono font-bold text-[var(--color-text-main)]">{fmt(cost)}</p>
-                <p className="text-[7.5px] font-mono text-[var(--color-text-muted)]">{fmtTokens(tokens)}</p>
+                <p className="text-xs text-[var(--color-text-muted)] uppercase">{label}</p>
+                <p className="text-xs font-bold text-[var(--color-text-main)]">{fmt(cost)}</p>
+                <p className="text-xs text-[var(--color-text-muted)]">{fmtTokens(tokens)}</p>
               </div>
             ))}
           </div>
@@ -178,8 +178,8 @@ export default function AIUsageMonitor({ companyId, sessionId, accent = '#d4af37
           {budget.daily_limit_usd > 0 && (
             <div>
               <div className="flex justify-between mb-0.5">
-                <span className="text-[7.5px] font-mono text-[var(--color-text-muted)]">Hari / {fmt(budget.daily_limit_usd)}</span>
-                <span className="text-[7.5px] font-mono text-[var(--color-text-muted)]">{Math.round((today.total_cost_usd / budget.daily_limit_usd) * 100)}%</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Hari / {fmt(budget.daily_limit_usd)}</span>
+                <span className="text-xs text-[var(--color-text-muted)]">{Math.round((today.total_cost_usd / budget.daily_limit_usd) * 100)}%</span>
               </div>
               <GaugeBar value={today.total_cost_usd} limit={budget.daily_limit_usd} alert={alerts.daily} />
             </div>
@@ -189,8 +189,8 @@ export default function AIUsageMonitor({ companyId, sessionId, accent = '#d4af37
           {budget.monthly_limit_usd > 0 && (
             <div>
               <div className="flex justify-between mb-0.5">
-                <span className="text-[7.5px] font-mono text-[var(--color-text-muted)]">Bulan / {fmt(budget.monthly_limit_usd)}</span>
-                <span className="text-[7.5px] font-mono text-[var(--color-text-muted)]">{Math.round((month.total_cost_usd / budget.monthly_limit_usd) * 100)}%</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Bulan / {fmt(budget.monthly_limit_usd)}</span>
+                <span className="text-xs text-[var(--color-text-muted)]">{Math.round((month.total_cost_usd / budget.monthly_limit_usd) * 100)}%</span>
               </div>
               <GaugeBar value={month.total_cost_usd} limit={budget.monthly_limit_usd} alert={alerts.monthly} />
             </div>

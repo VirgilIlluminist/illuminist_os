@@ -207,9 +207,9 @@ export default function ModuleView({ module }: Props) {
                 <tr className="border-b border-[var(--color-border-line)]">
                   {visibleFields.map(f => (
                     <th key={f.key} onClick={()=>{ if(f.type!=='computed'){ if(sortKey===f.key) setSortDir(d=>d==='asc'?'desc':'asc'); else{setSortKey(f.key);setSortDir('asc');} }}}
-                      className={`px-4 py-3 text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wide whitespace-nowrap ${f.align==='right'?'text-right':'text-left'} ${f.type!=='computed'?'cursor-pointer hover:text-[var(--color-text-main)]':''}`}>
+                      className={`px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide whitespace-nowrap ${f.align==='right'?'text-right':'text-left'} ${f.type!=='computed'?'cursor-pointer hover:text-[var(--color-text-main)]':''}`}>
                       <span className="inline-flex items-center gap-1">
-                        {f.label}{sortKey===f.key && <ArrowUpDown size={9}/>}
+                        {f.label}{sortKey===f.key && <ArrowUpDown size={14}/>}
                       </span>
                     </th>
                   ))}
@@ -236,8 +236,8 @@ export default function ModuleView({ module }: Props) {
                     ))}
                     <td className="px-4 py-3">
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
-                        <button onClick={()=>openEdit(rec)} className="p-1.5 rounded-lg hover:bg-[var(--color-card-bg)] cursor-pointer"><Edit2 size={13} className="text-[var(--color-text-muted)]"/></button>
-                        <button onClick={()=>handleDelete(rec)} className="p-1.5 rounded-lg hover:bg-red-50 cursor-pointer"><Trash2 size={13} className="text-red-500"/></button>
+                        <button onClick={()=>openEdit(rec)} className="p-1.5 rounded-lg hover:bg-[var(--color-card-bg)] cursor-pointer"><Edit2 size={15} className="text-[var(--color-text-muted)]"/></button>
+                        <button onClick={()=>handleDelete(rec)} className="p-1.5 rounded-lg hover:bg-red-50 cursor-pointer"><Trash2 size={15} className="text-red-500"/></button>
                       </div>
                     </td>
                   </tr>
@@ -252,9 +252,9 @@ export default function ModuleView({ module }: Props) {
             <span className="text-xs text-[var(--color-text-muted)]">Hal. {page} dari {totalPages} · {processed.length} total</span>
             <div className="flex items-center gap-1">
               <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1}
-                className="p-1.5 rounded-lg border border-[var(--color-border-line)] disabled:opacity-30 cursor-pointer"><ChevronLeft size={14}/></button>
+                className="p-1.5 rounded-lg border border-[var(--color-border-line)] disabled:opacity-30 cursor-pointer"><ChevronLeft size={16}/></button>
               <button onClick={()=>setPage(p=>Math.min(totalPages,p+1))} disabled={page===totalPages}
-                className="p-1.5 rounded-lg border border-[var(--color-border-line)] disabled:opacity-30 cursor-pointer"><ChevronRight size={14}/></button>
+                className="p-1.5 rounded-lg border border-[var(--color-border-line)] disabled:opacity-30 cursor-pointer"><ChevronRight size={16}/></button>
             </div>
           </div>
         )}
@@ -263,7 +263,7 @@ export default function ModuleView({ module }: Props) {
       {/* Form Modal */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={()=>setShowForm(false)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={()=>setShowForm(false)}>
             <motion.div initial={{opacity:0,scale:0.96,y:10}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:0.96}}
               transition={{type:'spring',stiffness:400,damping:36}}
               className={`${card} w-full max-w-lg shadow-2xl`} style={{maxHeight:'90vh',display:'flex',flexDirection:'column'}}
@@ -318,7 +318,7 @@ export default function ModuleView({ module }: Props) {
       {/* Audit Modal */}
       <AnimatePresence>
         {showAudit && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={()=>setShowAudit(false)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={()=>setShowAudit(false)}>
             <motion.div initial={{opacity:0,scale:0.96}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:0.96}}
               className={`${card} w-full max-w-sm shadow-2xl`} style={{maxHeight:'80vh',display:'flex',flexDirection:'column'}}
               onClick={e=>e.stopPropagation()}>
@@ -331,7 +331,7 @@ export default function ModuleView({ module }: Props) {
                   <p className="text-sm text-[var(--color-text-muted)] text-center py-8">Belum ada aktivitas.</p>
                 ) : auditLog.slice(0,50).map((e,i)=>(
                   <div key={i} className="flex items-center gap-3 py-2 border-b border-[var(--color-border-line)] last:border-0">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
                       background: e.action==='create'?'#34c75918':e.action==='update'?'#0071e318':'#ff3b3018',
                       color: e.action==='create'?'#34c759':e.action==='update'?'#0071e3':'#ff3b30',
                     }}>{e.action}</span>

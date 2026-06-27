@@ -22,9 +22,9 @@ export default function CSVImportButton({ entity, onSuccess, label, accent, clas
     <>
       <button
         onClick={() => setOpen(true)}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-mono uppercase tracking-widest border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer ${className ?? ''}`}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs uppercase tracking-widest border border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer ${className ?? ''}`}
       >
-        <Upload size={10}/>
+        <Upload size={14}/>
         {label ?? 'Import CSV'}
       </button>
 

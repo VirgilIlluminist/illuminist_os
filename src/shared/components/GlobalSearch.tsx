@@ -154,15 +154,15 @@ export default function GlobalSearch({ open, onClose, onNavigate }: Props) {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-start justify-center pt-[8vh] px-4"
-        style={{ background:'rgba(0,0,0,0.45)', backdropFilter:'blur(8px)' }}
+        style={{ background:'rgba(0,0,0,0.65)' }}
         onClick={onClose}>
         <motion.div
           initial={{ opacity:0, scale:0.96, y:-12 }}
           animate={{ opacity:1, scale:1, y:0 }}
           exit={{ opacity:0, scale:0.96, y:-12 }}
           transition={{ type:'spring', stiffness:400, damping:36 }}
-          className="w-full max-w-xl bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-2xl shadow-2xl overflow-hidden"
-          style={{ maxHeight:'75vh', display:'flex', flexDirection:'column' }}
+          className="w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden"
+          style={{ maxHeight:'75vh', display:'flex', flexDirection:'column', background:'rgba(14,10,28,0.92)', border:'1px solid rgba(255,255,255,0.12)' }}
           onClick={e => e.stopPropagation()}
         >
           {/* Search input */}

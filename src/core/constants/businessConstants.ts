@@ -316,3 +316,18 @@ export function calcHealthScore(d: {
   return { score:capped, grade, label, color };
 }
 export const ALL_BUSINESS_TYPES = Object.values(BUSINESS_TYPE_CONFIGS);
+
+// Lucide icon names for each business type — used by UI components instead of emoji
+export const BUSINESS_ICON_NAMES: Record<BusinessTypeId, string> = {
+  fashion:          'Shirt',
+  coffee:           'Coffee',
+  restaurant:       'UtensilsCrossed',
+  retail:           'Store',
+  agency:           'Briefcase',
+  service:          'Wrench',
+  property:         'Building2',
+  personal_finance: 'Wallet',
+  investment:       'TrendingUp',
+  holding:          'Building',
+  custom:           'Zap',
+};

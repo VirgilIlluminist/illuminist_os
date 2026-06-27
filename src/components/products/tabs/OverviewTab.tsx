@@ -45,11 +45,11 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
         {kpis.map(({ label, value, sub, color, icon: Icon }) => (
           <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
             <div className="flex items-center gap-1.5 mb-2">
-              <Icon size={11} className="text-[var(--color-text-muted)]"/>
-              <span className="text-[8px] font-mono uppercase tracking-widest text-[var(--color-text-muted)]">{label}</span>
+              <Icon size={14} className="text-[var(--color-text-muted)]"/>
+              <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">{label}</span>
             </div>
             <p className={`text-xl font-mono font-bold ${color}`}>{value}</p>
-            <p className="text-[8px] font-mono text-[var(--color-text-muted)] mt-0.5">{sub}</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{sub}</p>
           </div>
         ))}
       </div>
@@ -61,8 +61,8 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
           restock.daysUntilStockout <= 14 ? 'border-yellow-500/30 bg-yellow-500/5' :
           'border-[var(--color-border-line)] bg-white/[0.02]'
         }`}>
-          <AlertTriangle size={13} className={restock.daysUntilStockout <= 7 ? 'text-red-400 mt-0.5 flex-shrink-0' : 'text-yellow-400 mt-0.5 flex-shrink-0'}/>
-          <div className="text-[10px] font-mono space-y-0.5">
+          <AlertTriangle size={14} className={restock.daysUntilStockout <= 7 ? 'text-red-400 mt-0.5 flex-shrink-0' : 'text-yellow-400 mt-0.5 flex-shrink-0'}/>
+          <div className="text-xs space-y-0.5">
             <p className="text-[var(--color-text-main)] font-semibold">
               Stok diperkirakan habis dalam <span className={restock.daysUntilStockout <= 7 ? 'text-red-400' : 'text-yellow-400'}>{restock.daysUntilStockout} hari</span>
               {restock.estimatedStockoutDate ? ` (${restock.estimatedStockoutDate})` : ''}
@@ -78,17 +78,17 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
         {/* Variant stock breakdown */}
         {variants.length > 0 && (
           <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
-            <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Stok per Variant</p>
+            <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Stok per Variant</p>
             <div className="space-y-2">
               {variants.filter(v => v.isActive).map(v => (
                 <div key={v.id} className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-[var(--color-text-main)]">{v.name}</span>
+                  <span className="text-xs text-[var(--color-text-main)]">{v.name}</span>
                   <div className="flex items-center gap-2">
                     <div className="w-20 h-1.5 rounded-full bg-white/10 overflow-hidden">
                       <div className="h-full rounded-full transition-all"
                         style={{ width: `${Math.min(100, (v.stock / Math.max(1, totalStock)) * 100)}%`, background: v.stock === 0 ? '#ef4444' : accent }}/>
                     </div>
-                    <span className={`text-[10px] font-mono font-bold w-8 text-right ${v.stock === 0 ? 'text-red-400' : 'text-[var(--color-text-main)]'}`}>
+                    <span className={`text-xs font-bold w-8 text-right ${v.stock === 0 ? 'text-red-400' : 'text-[var(--color-text-main)]'}`}>
                       {v.stock}
                     </span>
                   </div>
@@ -101,7 +101,7 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
         {/* Recent timeline */}
         {recentTimelineEvents.length > 0 && (
           <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
-            <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Timeline Terbaru</p>
+            <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Timeline Terbaru</p>
             <div className="space-y-3">
               {recentTimelineEvents.map((ev, i) => (
                 <div key={ev.id} className="flex gap-2.5">
@@ -110,8 +110,8 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
                     {i < recentTimelineEvents.length - 1 && <div className="w-px flex-1 bg-[var(--color-border-line)] mt-1"/>}
                   </div>
                   <div className="pb-2">
-                    <p className="text-[10px] font-mono font-semibold text-[var(--color-text-main)]">{ev.title}</p>
-                    <p className="text-[8px] font-mono text-[var(--color-text-muted)]">{ev.eventDate.slice(0, 10)}</p>
+                    <p className="text-xs font-semibold text-[var(--color-text-main)]">{ev.title}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{ev.eventDate.slice(0, 10)}</p>
                   </div>
                 </div>
               ))}
@@ -123,16 +123,16 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
       {/* Recent journal */}
       {recentJournalEntries.length > 0 && (
         <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
-          <p className="text-[9px] font-mono uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Catatan Terbaru</p>
+          <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Catatan Terbaru</p>
           <div className="space-y-3">
             {recentJournalEntries.map(j => (
               <div key={j.id} className="border-b border-[var(--color-border-line)]/50 pb-3 last:border-0 last:pb-0">
-                <p className="text-[10px] font-mono font-semibold text-[var(--color-text-main)]">{j.title}</p>
-                <p className="text-[9px] font-mono text-[var(--color-text-muted)] mt-0.5 line-clamp-2">{j.content}</p>
+                <p className="text-xs font-semibold text-[var(--color-text-main)]">{j.title}</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5 line-clamp-2">{j.content}</p>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-[7px] font-mono text-[var(--color-text-muted)]">{j.createdAt.slice(0, 10)}</span>
+                  <span className="text-xs text-[var(--color-text-muted)]">{j.createdAt.slice(0, 10)}</span>
                   {j.tags.slice(0, 3).map(t => (
-                    <span key={t} className="text-[7px] font-mono px-1.5 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{t}</span>
+                    <span key={t} className="text-xs px-1.5 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{t}</span>
                   ))}
                 </div>
               </div>

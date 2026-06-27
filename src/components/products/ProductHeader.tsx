@@ -36,21 +36,21 @@ export default function ProductHeader({ product, currentBatch, totalStock, curre
     <div className="space-y-3">
       {/* Back + status */}
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer">
-          <ArrowLeft size={12}/> Semua Produk
+        <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors cursor-pointer">
+          <ArrowLeft size={14}/> Semua Produk
         </button>
         <div className="relative">
           <button onClick={() => setShowStatus(v => !v)}
             className="flex items-center gap-1 cursor-pointer">
             <ProductStatusBadge status={currentStatus} size="md"/>
-            <ChevronDown size={10} className="text-[var(--color-text-muted)]"/>
+            <ChevronDown size={14} className="text-[var(--color-text-muted)]"/>
           </button>
           {showStatus && (
             <div className="absolute right-0 top-full mt-1 z-50 rounded-xl border border-[var(--color-border-line)] bg-[var(--color-bg-card)] shadow-xl overflow-hidden">
               {STATUS_OPTIONS.map(o => (
                 <button key={o.value}
                   onClick={() => { onStatusChange(o.value); setShowStatus(false); }}
-                  className={`w-full px-4 py-2 text-[10px] font-mono text-left hover:bg-white/5 cursor-pointer ${currentStatus === o.value ? 'text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)]'}`}>
+                  className={`w-full px-4 py-2 text-xs text-left hover:bg-white/5 cursor-pointer ${currentStatus === o.value ? 'text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)]'}`}>
                   {o.label}
                 </button>
               ))}
@@ -76,9 +76,9 @@ export default function ProductHeader({ product, currentBatch, totalStock, curre
             {product.name}
           </h1>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-            <span className="text-[9px] font-mono text-[var(--color-text-muted)]">{product.id}</span>
-            {product.category && <span className="text-[8px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{product.category}</span>}
-            {product.collection && <span className="text-[8px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{product.collection}</span>}
+            <span className="text-xs text-[var(--color-text-muted)]">{product.id}</span>
+            {product.category && <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{product.category}</span>}
+            {product.collection && <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--color-text-muted)]">{product.collection}</span>}
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function ProductHeader({ product, currentBatch, totalStock, curre
           { label: 'Margin', value: hpp > 0 ? `${margin.toFixed(1)}%` : '—', color: margin < 20 ? 'text-red-400' : margin < 35 ? 'text-yellow-400' : 'text-green-400' },
         ].map(({ label, value, color }) => (
           <div key={label} className="rounded-lg border border-[var(--color-border-line)] bg-white/[0.02] px-3 py-2">
-            <p className="text-[7px] font-mono uppercase text-[var(--color-text-muted)]">{label}</p>
+            <p className="text-xs uppercase text-[var(--color-text-muted)]">{label}</p>
             <p className={`text-sm font-mono font-bold ${color}`}>{value}</p>
           </div>
         ))}
@@ -100,8 +100,8 @@ export default function ProductHeader({ product, currentBatch, totalStock, curre
 
       {/* Margin calculator toggle */}
       <button onClick={() => setShowCalc(v => !v)}
-        className="flex items-center gap-1.5 text-[9px] font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
-        <Calculator size={10}/>
+        className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] cursor-pointer">
+        <Calculator size={14}/>
         {showCalc ? 'Sembunyikan Kalkulator' : 'Tampilkan Margin Calculator'}
       </button>
 

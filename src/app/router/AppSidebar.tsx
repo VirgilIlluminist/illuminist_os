@@ -2,12 +2,14 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAppNavigation } from './useAppNavigation';
 import { useBusiness } from '../store/BusinessContext';
+import { useERP } from '../store/ERPContext';
 import { getNavGroupsForType } from '../../core/constants/businessConstants';
 import {
   LayoutDashboard, Layers, Compass, Factory, Shirt, Boxes,
   DollarSign, Receipt, Megaphone, Users, ClipboardList, Truck,
   Smile, Cpu, Activity, BarChart3, Database, Bell, Sliders, Bot, ShoppingBag,
   Plus, LogOut,
+  Coffee, UtensilsCrossed, Store, Briefcase, Wrench, Building2, Wallet, TrendingUp, Building, Zap,
 } from 'lucide-react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,10 +96,11 @@ const ICON_KEYS: Record<string, string> = {
   'Reorder Point & Stock Aging': 'Activity',
 };
 
-const TYPE_ICONS: Record<string, string> = {
-  fashion: '👗', coffee: '☕', restaurant: '🍽', retail: '🏪',
-  agency: '💼', manufacturing: '🏭', service: '🛠', property: '🏠',
-  personal_finance: '💰', investment: '📈', holding: '🏢', custom: '⚡',
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BIZ_TYPE_ICONS: Record<string, React.ComponentType<any>> = {
+  fashion: Shirt, coffee: Coffee, restaurant: UtensilsCrossed, retail: Store,
+  agency: Briefcase, manufacturing: Building, service: Wrench, property: Building2,
+  personal_finance: Wallet, investment: TrendingUp, holding: Building, custom: Zap,
 };
 
 const WORKSPACE_IDS = ['Dashboard'];
@@ -111,6 +114,8 @@ interface AppSidebarProps {
 export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSidebarProps) {
   const { navigateTo, activePage } = useAppNavigation();
   const { activeBusiness, businesses, switchBusiness } = useBusiness();
+  const { config } = useERP();
+  const accent = config?.customAccentColor || '#7c3aed';
   const bizType = activeBusiness?.business_type ?? 'fashion';
   const navGroups = getNavGroupsForType(bizType);
 
@@ -139,11 +144,11 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: '36px', height: '36px', flexShrink: 0,
-            background: 'linear-gradient(135deg, #8b5cf6, #5b21b6)',
+            background: accent,
             borderRadius: '10px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '16px',
-            boxShadow: '0 4px 14px rgba(124,58,237,0.40)',
+            color: 'white',
+            boxShadow: `0 4px 14px ${accent}66`,
           }}>◆</div>
           <div style={{ overflow: 'hidden', flex: 1 }}>
             <div style={{
@@ -153,8 +158,8 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
             }}>
               {activeBusiness?.name ?? 'ILLUMINIST'}
             </div>
-            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)', marginTop: '2px', letterSpacing: '-0.01em' }}>
-              {TYPE_ICONS[bizType] ?? '🏢'} {bizType.replace(/_/g, ' ')}
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)', marginTop: '2px', letterSpacing: '-0.01em', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {React.createElement(BIZ_TYPE_ICONS[bizType] ?? Building, { size: 11 })} {bizType.replace(/_/g, ' ')}
             </div>
           </div>
         </div>
@@ -188,8 +193,8 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
                 style={{
                   padding: '4px 10px', borderRadius: '8px', fontSize: '11px', fontWeight: 500,
                   cursor: 'pointer',
-                  background: biz.id === activeBusiness?.id ? 'rgba(124,58,237,0.20)' : 'rgba(255,255,255,0.05)',
-                  border: biz.id === activeBusiness?.id ? '1px solid rgba(124,58,237,0.30)' : '1px solid rgba(255,255,255,0.07)',
+                  background: biz.id === activeBusiness?.id ? `${accent}33` : 'rgba(255,255,255,0.05)',
+                  border: biz.id === activeBusiness?.id ? `1px solid ${accent}4d` : '1px solid rgba(255,255,255,0.07)',
                   color: biz.id === activeBusiness?.id ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.40)',
                   whiteSpace: 'nowrap', maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis',
                   letterSpacing: '-0.01em',
@@ -217,6 +222,7 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
               IconComp={IconComp}
               isActive={activePage === id}
               onNavigate={navigateTo}
+              accent={accent}
             />
           );
         })}
@@ -245,6 +251,7 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
                     IconComp={IconComp}
                     isActive={activePage === id}
                     onNavigate={navigateTo}
+                    accent={accent}
                   />
                 );
               })}
@@ -265,10 +272,10 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
       }}>
         <div style={{
           width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0,
-          background: 'linear-gradient(135deg, #8b5cf6, #5b21b6)',
+          background: accent,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '14px', fontWeight: 700, color: 'white',
-          boxShadow: '0 2px 10px rgba(124,58,237,0.30)',
+          boxShadow: `0 2px 10px ${accent}4d`,
         }}>
           {initials}
         </div>
@@ -309,12 +316,13 @@ export function AppSidebar({ onSignOut, userEmail, onCreateBusiness }: AppSideba
 
 // ─── NavItem — matches template: 15px font, 20px icon, px-4 py-3, rounded-xl ──
 
-function NavItem({ id, IconComp, isActive, onNavigate }: {
+function NavItem({ id, IconComp, isActive, onNavigate, accent }: {
   id: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   IconComp: React.ComponentType<any>;
   isActive: boolean;
   onNavigate: (id: string) => void;
+  accent: string;
 }) {
   return (
     <button
@@ -352,8 +360,8 @@ function NavItem({ id, IconComp, isActive, onNavigate }: {
             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
             style={{
               position: 'absolute', inset: 0, borderRadius: '12px',
-              background: 'rgba(124,58,237,0.18)',
-              border: '1px solid rgba(124,58,237,0.28)',
+              background: `${accent}2e`,
+              border: `1px solid ${accent}47`,
             }}
           />
         )}

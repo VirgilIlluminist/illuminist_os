@@ -16,7 +16,7 @@ interface Props {
 export default function ProductStatusBadge({ status, size = 'sm' }: Props) {
   const key = (status ?? 'active').toLowerCase() as ProductStatus;
   const cfg = CONFIG[key] ?? CONFIG['active'];
-  const px  = size === 'sm' ? 'px-2 py-0.5 text-[8px]' : 'px-3 py-1 text-[10px]';
+  const px  = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-xs';
   return (
     <span className={`inline-flex items-center rounded-full font-mono uppercase tracking-widest font-semibold ${px} ${cfg.className}`}>
       {cfg.label}

@@ -18,7 +18,7 @@
   /* ALL transparent — glass-shell's single backdrop-filter does ALL the blur.
      Inner areas use semi-transparent fills with NO nested backdrop-filter. */
   --bg-content: transparent;
-  --bg-sidebar: rgba(0, 0, 0, 0.28);
+  --bg-sidebar: transparent;
   --bg-topbar: rgba(0, 0, 0, 0.18);
   --bg-surface: rgba(255, 255, 255, 0.05);
   --bg-surface-hover: rgba(255, 255, 255, 0.09);
@@ -118,7 +118,7 @@
   --border-accent: rgba(59, 130, 246, 0.35);
   --text-accent: #93c5fd;
   --bg-content: transparent;
-  --bg-sidebar: rgba(0, 0, 0, 0.28);
+  --bg-sidebar: transparent;
 }
 
 [data-theme="forest"] {
@@ -134,7 +134,7 @@
   --border-accent: rgba(34, 197, 94, 0.35);
   --text-accent: #86efac;
   --bg-content: transparent;
-  --bg-sidebar: rgba(0, 0, 0, 0.28);
+  --bg-sidebar: transparent;
 }
 
 [data-theme="rose"] {
@@ -150,7 +150,7 @@
   --border-accent: rgba(225, 29, 72, 0.35);
   --text-accent: #fda4af;
   --bg-content: transparent;
-  --bg-sidebar: rgba(0, 0, 0, 0.28);
+  --bg-sidebar: transparent;
 }
 
 [data-theme="light"] {

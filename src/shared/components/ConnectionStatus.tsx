@@ -20,7 +20,7 @@ export default function ConnectionStatus({ className = '' }: Props) {
           <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"/>
         </span>
         {expanded && (
-          <span className="text-[9px] font-mono text-green-400 whitespace-nowrap">Supabase</span>
+          <span className="text-xs text-green-400 whitespace-nowrap">Supabase</span>
         )}
       </button>
     );
@@ -36,7 +36,7 @@ export default function ConnectionStatus({ className = '' }: Props) {
         <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-400"/>
       </span>
       {expanded && (
-        <span className="text-[9px] font-mono text-yellow-400 whitespace-nowrap">localStorage</span>
+        <span className="text-xs text-yellow-400 whitespace-nowrap">localStorage</span>
       )}
     </button>
   );

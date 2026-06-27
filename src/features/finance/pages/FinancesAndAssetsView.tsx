@@ -92,7 +92,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
   const [density, setDensity] = useState<'high' | 'normal' | 'relaxed'>('normal');
   const [alternatingRows, setAlternatingRows] = useState(true);
   const [tableOpacity, setTableOpacity] = useState(90); // default glass opacity
-  const [tableBlur, setTableBlur] = useState(12); // backdrop-blur px
+  const [tableBlur, setTableBlur] = useState(12); // px
   const [activeTheme, setActiveTheme] = useState<'gold' | 'emerald' | 'crimson' | 'indigo' | 'slate'>('slate');
 
   // Multi-view layout switcher per active database tab
@@ -699,11 +699,11 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2 text-xs font-mono">
+          <div className="flex flex-wrap gap-2 text-xs">
             {activeTab === 'assets' && (
               <button 
                 onClick={() => setShowAddAsset(true)}
-                className="px-3.5 py-2 bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] text-[var(--color-text-main)] transition-all flex items-center font-bold gap-1.5 uppercase tracking-wider rounded text-[10.5px]"
+                className="px-3.5 py-2 bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] text-[var(--color-text-main)] transition-all flex items-center font-bold gap-1.5 uppercase tracking-wider rounded-xl text-xs"
               >
                 <Plus size={14} /> {t('fin_btn_add_asset')}
               </button>
@@ -723,9 +723,9 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 a.click();
               }}
               disabled={activeTab === 'reports'}
-              className="px-3 py-1.5 bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] border border-white/5 text-[var(--color-text-main)] disabled:opacity-40 rounded flex items-center gap-1.5 text-[10px] uppercase cursor-pointer transition-all"
+              className="px-3 py-1.5 bg-[var(--color-card-bg)] hover:bg-[var(--color-background)] border border-white/5 text-[var(--color-text-main)] disabled:opacity-40 rounded-xl flex items-center gap-1.5 text-xs uppercase cursor-pointer transition-all"
             >
-              <Download size={12} /> Export CSV
+              <Download size={14} /> Export CSV
             </button>
           </div>
         </div>
@@ -740,11 +740,11 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
           { label: 'ASSETS VALUATION', val: assets.reduce((sum, a) => sum + (a.value ?? (a.purchaseValue || 0) * (a.qty || 1)), 0), color: 'text-indigo-400', desc: 'Equipment Appraisals' }
         ].map((card, i) => (
           <div key={i} className="glass-panel p-4 rounded-xl border border-white/[0.03] bg-[var(--color-background)]/75 flex flex-col justify-between">
-            <span className="text-[10px] font-mono text-[var(--color-text-muted)] uppercase tracking-widest">{card.label}</span>
+            <span className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest">{card.label}</span>
             <div className={`text-xl font-mono font-medium ${card.color} my-2`}>
               {formatMoney(card.val)}
             </div>
-            <p className="text-[10px] text-[var(--color-text-muted)] font-mono leading-tight">{card.desc}</p>
+            <p className="text-xs text-[var(--color-text-muted)] leading-tight">{card.desc}</p>
           </div>
         ))}
       </div>
@@ -767,7 +767,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 setSelectedCell(null);
                 setSortField(item.id === 'customers' ? 'name' : 'id');
               }}
-              className={`pb-3 font-mono tracking-wider uppercase text-xs transition-colors relative cursor-pointer ${
+              className={`pb-3 tracking-wider uppercase text-xs transition-colors relative cursor-pointer ${
                 active ? 'text-[var(--color-accent-highlight)] font-bold' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'
               }`}
             >
@@ -784,25 +784,25 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
           
           {/* SEARCH & FILTERS */}
           <div className="flex flex-wrap items-center gap-3">
-            <div className="relative font-mono w-full max-w-xs">
-              <Search size={13} className="absolute left-3 top-3 text-[var(--color-text-muted)]" />
+            <div className="relative w-full max-w-xs">
+              <Search size={14} className="absolute left-3 top-3 text-[var(--color-text-muted)]" />
               <input
                 type="text"
                 placeholder="Realtime filtered coordinate matches..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-[var(--color-card-bg)] border border-white/[0.04] text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent-highlight)]/50 rounded text-xs"
+                className="w-full pl-9 pr-4 py-2 bg-[var(--color-card-bg)] border border-white/[0.04] text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent-highlight)]/50 rounded-xl text-xs"
               />
             </div>
 
             {/* DENSITY SELECTOR */}
-            <div className="flex items-center gap-1 p-1 bg-[var(--color-card-bg)] border border-white/[0.04] rounded text-[10px] font-mono text-[var(--color-text-muted)]">
+            <div className="flex items-center gap-1 p-1 bg-[var(--color-card-bg)] border border-white/[0.04] rounded-xl text-xs text-[var(--color-text-muted)]">
               <span className="px-2 select-none uppercase">Density</span>
               {(['high', 'normal', 'relaxed'] as const).map(d => (
                 <button
                   key={d}
                   onClick={() => setDensity(d)}
-                  className={`px-2 py-1 rounded transition-colors uppercase font-bold text-[9px] ${
+                  className={`px-2 py-1 rounded-xl transition-colors uppercase font-bold text-xs ${
                     density === d ? 'bg-[#d4af37] text-[var(--color-text-main)]' : 'hover:bg-[rgba(255,255,255,0.03)] text-[var(--color-text-main)]'
                   }`}
                 >
@@ -814,7 +814,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
             {/* SHOW ALTERNATING ROW COLOR */}
             <button
               onClick={() => setAlternatingRows(!alternatingRows)}
-              className={`px-2.5 py-1.5 rounded border text-[10px] font-mono uppercase font-semibold ${
+              className={`px-2.5 py-1.5 rounded-xl border text-xs uppercase font-semibold ${
                 alternatingRows ? 'border-[var(--color-accent-highlight)]/30 text-[var(--color-accent-highlight)]' : 'border-white/5 text-[var(--color-text-muted)]'
               }`}
             >
@@ -824,14 +824,14 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
             {/* CUSTOM COLUMNS GENERATION BUTTON */}
             <button 
               onClick={() => setShowAddCustomCol(true)}
-              className="px-3 py-1.5 border border-indigo-500/25 text-indigo-300 hover:border-indigo-400 hover:text-white rounded text-xs font-mono flex items-center gap-1.5 cursor-pointer bg-indigo-950/10"
+              className="px-3 py-1.5 border border-indigo-500/25 text-indigo-300 hover:border-indigo-400 hover:text-white rounded-xl text-xs flex items-center gap-1.5 cursor-pointer bg-indigo-950/10"
             >
-              <Plus size={12} /> ADD CUSTOM COLUMN
+              <Plus size={14} /> ADD CUSTOM COLUMN
             </button>
           </div>
 
           {/* SPREADSHEET SUB-VIEWS SWITCHER */}
-          <div className="flex items-center gap-1.5 bg-[var(--color-background)]/60 p-1 rounded-lg border border-white/5 text-xs font-mono">
+          <div className="flex items-center gap-1.5 bg-[var(--color-background)]/60 p-1 rounded-lg border border-white/5 text-xs">
             {[
               { id: 'spreadsheet', label: 'Spreadsheet', icon: Grid3X3 },
               { id: 'kanban', label: 'Kanban board', icon: KanbanSquare },
@@ -845,11 +845,11 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 <button
                   key={vOpt.id}
                   onClick={() => setViewLayout(vOpt.id as any)}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded transition-all cursor-pointer text-[10px] font-bold uppercase ${
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-xl transition-all cursor-pointer text-xs font-bold uppercase ${
                     isSelected ? 'bg-[#d4af37] text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'
                   }`}
                 >
-                  <IconComp size={11} />
+                  <IconComp size={14} />
                   <span>{vOpt.label}</span>
                 </button>
               );
@@ -861,8 +861,8 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
       {/* 5. EXCEL DYNAMIC FORMULA BAR BAR */}
       {activeTab !== 'reports' && (
-        <div className="glass-panel p-3.5 rounded-xl border border-white/[0.04] bg-[var(--color-background)]/80 flex items-center gap-3 font-mono text-xs">
-          <div className="bg-[var(--color-card-bg)] border border-white/10 text-[var(--color-text-main)] px-3 py-1.5 rounded font-mono text-[var(--color-accent-highlight)] font-semibold min-w-[200px] text-center text-[10px]">
+        <div className="glass-panel p-3.5 rounded-xl border border-white/[0.04] bg-[var(--color-background)]/80 flex items-center gap-3 text-xs">
+          <div className="bg-[var(--color-card-bg)] border border-white/10 text-[var(--color-accent-highlight)] px-3 py-1.5 rounded-xl font-semibold min-w-[200px] text-center text-xs">
             {selectedCell ? (
               <span>GRID REF: {selectedCell.rowId.toUpperCase()} » COL: {selectedCell.colKey.toUpperCase()}</span>
             ) : (
@@ -872,7 +872,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
           
           <div className="text-[var(--color-text-muted)] font-bold select-none text-sm px-1 shrink-0">ƒ<sub>x</sub></div>
           
-          <div className="flex-grow bg-black/60 border border-white/[0.06] rounded px-3 py-1.5 flex items-center justify-between">
+          <div className="flex-grow bg-black/60 border border-white/[0.06] rounded-xl px-3 py-1.5 flex items-center justify-between">
             <input
               type="text"
               placeholder={selectedCell ? "Type literal number or standard formulation starting with = (e.g., =[totalSpent] * 0.15)" : "Double-click spreadsheet cell grid to calculate margins, write status or append custom formula notes..."}
@@ -893,7 +893,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                   }
                 }
               }}
-              className="w-full bg-transparent text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-0 text-[11px]"
+              className="w-full bg-transparent text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] focus:outline-none focus:ring-0 text-xs"
             />
             {selectedCell && (() => {
               const formulaValue = customFormulas[`${activeTab}_${selectedCell.rowId}_${selectedCell.colKey}`] || '';
@@ -902,16 +902,16 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 <div className="flex items-center gap-2">
                   {hasFormula ? (
                     realTimeSyntaxError ? (
-                      <span className="text-[9px] text-red-400 bg-red-950/20 border border-red-500/10 px-2 py-0.5 rounded uppercase font-bold animate-fadeIn">
+                      <span className="text-xs text-red-400 bg-red-950/20 border border-red-500/10 px-2 py-0.5 rounded-xl uppercase font-bold animate-fadeIn">
                         ⚠️ Error: {realTimeSyntaxError}
                       </span>
                     ) : (
-                      <span className="text-[9px] text-emerald-400 bg-emerald-950/20 border border-emerald-500/10 px-2 py-0.5 rounded uppercase font-bold">
+                      <span className="text-xs text-emerald-400 bg-emerald-950/20 border border-emerald-500/10 px-2 py-0.5 rounded-xl uppercase font-bold">
                         ✓ Formula Active
                       </span>
                     )
                   ) : (
-                    <span className="text-[9px] text-[var(--color-text-muted)] uppercase bg-[var(--color-background)]/40 px-1.5 py-0.5 rounded">Literal Data</span>
+                    <span className="text-xs text-[var(--color-text-muted)] uppercase bg-[var(--color-background)]/40 px-1.5 py-0.5 rounded-xl">Literal Data</span>
                   )}
                   <button
                     type="button"
@@ -923,7 +923,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                         return next;
                       });
                     }}
-                    className="text-[var(--color-text-muted)] hover:text-red-400 text-[10px] uppercase font-bold cursor-pointer ml-1"
+                    className="text-[var(--color-text-muted)] hover:text-red-400 text-xs uppercase font-bold cursor-pointer ml-1"
                     title="Wipe current formula"
                   >
                     Wipe
@@ -951,24 +951,24 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 <div className="flex justify-between items-center border-b border-white/[0.05] pb-3">
                   <div>
                     <h3 className="text-base font-display font-medium uppercase tracking-wider text-[var(--color-accent-highlight)]">Financial Sourcing Balance-Sheet</h3>
-                    <p className="text-xs text-[var(--color-text-muted)] font-mono">Dynamic diagnostic of operational cashflow projections</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">Dynamic diagnostic of operational cashflow projections</p>
                   </div>
-                  <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-mono px-2 py-1 rounded">AUDIT ACTIVE</span>
+                  <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-1 rounded-xl">AUDIT ACTIVE</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-[var(--color-background)]/70 rounded border border-white/[0.02]">
-                    <div className="text-[10px] text-[var(--color-text-muted)] font-mono uppercase">Bank Net Deposits</div>
+                  <div className="p-4 bg-[var(--color-background)]/70 rounded-xl border border-white/[0.02]">
+                    <div className="text-xs text-[var(--color-text-muted)] uppercase">Bank Net Deposits</div>
                     <div className="text-2xl text-emerald-400 font-bold font-mono mt-1">{formatMoney(cashflowSummary.totalInflow)}</div>
                   </div>
-                  <div className="p-4 bg-[var(--color-background)]/70 rounded border border-white/[0.02]">
-                    <div className="text-[10px] text-[var(--color-text-muted)] font-mono uppercase">Operational Debit Expenses</div>
+                  <div className="p-4 bg-[var(--color-background)]/70 rounded-xl border border-white/[0.02]">
+                    <div className="text-xs text-[var(--color-text-muted)] uppercase">Operational Debit Expenses</div>
                     <div className="text-2xl text-red-400 font-bold font-mono mt-1">-{formatMoney(cashflowSummary.totalOutflow)}</div>
                   </div>
                 </div>
 
-                <div className="border border-white/10 rounded overflow-hidden">
-                  <div className="bg-[var(--color-card-bg)]/60 p-3 text-xs font-mono uppercase text-[var(--color-text-muted)] flex justify-between">
+                <div className="border border-white/10 rounded-xl overflow-hidden">
+                  <div className="bg-[var(--color-card-bg)]/60 p-3 text-xs uppercase text-[var(--color-text-muted)] flex justify-between">
                     <span>Active Marketing Channel</span>
                     <span>Contribution Value & Conversion</span>
                   </div>
@@ -977,7 +977,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                       <div key={rc.channel} className="p-3 text-xs flex justify-between items-center hover:bg-white/[0.01]">
                         <div>
                           <span className="font-semibold text-[var(--color-text-main)] uppercase">{rc.channel}</span>
-                          <span className="text-[var(--color-text-muted)] font-mono text-[10px] ml-2">({rc.count.toLocaleString()} Orders Filled)</span>
+                          <span className="text-[var(--color-text-muted)] text-xs ml-2">({rc.count.toLocaleString()} Orders Filled)</span>
                         </div>
                         <span className="font-mono text-emerald-400 font-medium">{formatMoney(rc.value)}</span>
                       </div>
@@ -990,17 +990,17 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
             {/* MARGIN DIAGNOSTICS & SYSTEM RECOMMENDATIONS */}
             <div className="glass-panel p-5 rounded-lg border border-white/[0.04] bg-[var(--color-card-bg)]/40 space-y-4">
               <h4 className="text-sm font-display uppercase tracking-widest border-b border-[var(--color-border-line)] pb-3" style={{color:accentHex}}>Capital Strategy Ledger</h4>
-              <div className="space-y-4 text-xs font-mono text-[var(--color-text-muted)] leading-relaxed">
+              <div className="space-y-4 text-xs text-[var(--color-text-muted)] leading-relaxed">
                 <p>
                   Nebulæ Operating System aggregates fabric purchasing ledgers to verify current working capital.
                 </p>
-                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-md text-emerald-400 font-mono space-y-1">
-                  <span className="text-[10px] text-[var(--color-text-muted)] uppercase">Cash Reserve Balance</span>
+                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-md text-emerald-400 space-y-1">
+                  <span className="text-xs text-[var(--color-text-muted)] uppercase">Cash Reserve Balance</span>
                   <div className="text-lg font-bold">{formatMoney(cashflowSummary.balance)}</div>
                 </div>
 
                 <div className="space-y-3 pt-3">
-                  <h5 className="font-mono text-[9px] text-[var(--color-accent-highlight)] uppercase tracking-wider">SYSTEM AI RECOMMENDATIONS</h5>
+                  <h5 className="text-xs text-[var(--color-accent-highlight)] uppercase tracking-wider">SYSTEM AI RECOMMENDATIONS</h5>
                   <div className="flex gap-2 items-start text-xs text-[var(--color-text-main)]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37] mt-1.5 shrink-0" />
                     <span>Primary growth engine triggered by luxury ecommerce. Allocate surplus reserves to VIP Client outreach databases.</span>
@@ -1074,28 +1074,28 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               return (
                 <div key={col.id} className="space-y-4 bg-[var(--color-background)]/40 p-4 rounded-xl border border-white/[0.04]">
                   <div className="flex justify-between items-center border-b border-white/[0.04] pb-2">
-                    <span className="text-[11px] font-mono font-bold text-[var(--color-accent-highlight)] uppercase">{col.title}</span>
-                    <span className="text-xs font-mono bg-[rgba(255,255,255,0.03)] px-2 py-0.5 rounded-full">{columnRows.length}</span>
+                    <span className="text-xs font-bold text-[var(--color-accent-highlight)] uppercase">{col.title}</span>
+                    <span className="text-xs bg-[rgba(255,255,255,0.03)] px-2 py-0.5 rounded-full">{columnRows.length}</span>
                   </div>
 
                   <div className="space-y-3 max-h-[450px] overflow-y-auto pr-1">
                     {columnRows.map((row) => (
                       <div 
                         key={row.id || row.name} 
-                        className="glass-panel p-3.5 rounded-lg border border-white/5 bg-[var(--color-card-bg)]/60 shadow-lg space-y-2 hover:border-[var(--color-accent-highlight)]/30 transition-all font-mono text-[11px]"
+                        className="glass-panel p-3.5 rounded-lg border border-white/5 bg-[var(--color-card-bg)]/60 shadow-lg space-y-2 hover:border-[var(--color-accent-highlight)]/30 transition-all text-xs"
                       >
                         <div className="flex justify-between items-start">
                           <h5 className="font-bold text-[var(--color-text-main)] uppercase truncate">{row.name || row.category}</h5>
-                          <span className="text-[9px] text-[var(--color-accent-highlight)]">REF: {row.id || 'CRM'}</span>
+                          <span className="text-xs text-[var(--color-accent-highlight)]">REF: {row.id || 'CRM'}</span>
                         </div>
                         <div className="text-xs text-emerald-400 font-bold">
                           {formatMoney(row.value || row.totalSpent || row.amount || 0)}
                         </div>
-                        <p className="text-[9.5px] text-[var(--color-text-muted)] uppercase truncate leading-none">{row.email || row.category || row.type || 'Standard'}</p>
+                        <p className="text-xs text-[var(--color-text-muted)] uppercase truncate leading-none">{row.email || row.category || row.type || 'Standard'}</p>
                       </div>
                     ))}
                     {columnRows.length === 0 && (
-                      <div className="text-center py-8 text-[var(--color-text-muted)] uppercase font-mono text-[9px]">Empty deck</div>
+                      <div className="text-center py-8 text-[var(--color-text-muted)] uppercase text-xs">Empty deck</div>
                     )}
                   </div>
                 </div>
@@ -1112,10 +1112,10 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 key={row.id || row.name} 
                 className="glass-panel p-5 rounded-xl border border-white/[0.03] bg-[var(--color-card-bg)]/60 shadow-xl overflow-hidden hover:scale-[1.01] transition-transform flex flex-col justify-between"
               >
-                <div className="space-y-3 font-mono">
+                <div className="space-y-3">
                   {/* Dynamic Asset/Customer Visual card headers */}
                   {activeTab === 'assets' && (row.image || row.id) && (
-                    <div className="w-full h-36 overflow-hidden rounded bg-[var(--color-background)] mb-1 border border-white/[0.05]">
+                    <div className="w-full h-36 overflow-hidden rounded-xl bg-[var(--color-background)] mb-1 border border-white/[0.05]">
                       <img 
                         src={row.image || 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80&w=400'} 
                         alt={row.name} 
@@ -1127,11 +1127,11 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="text-[10px] text-[var(--color-text-muted)] block uppercase">SYSTEM REG: {row.id || 'VIP'}</span>
+                      <span className="text-xs text-[var(--color-text-muted)] block uppercase">SYSTEM REG: {row.id || 'VIP'}</span>
                       <h4 className="text-sm font-semibold uppercase text-[var(--color-text-main)] tracking-tight mt-1 truncate max-w-[200px]">{row.name || row.category}</h4>
                     </div>
                     {row.status && (
-                      <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] px-2 py-0.5 rounded font-bold uppercase">
+                      <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2 py-0.5 rounded-xl font-bold uppercase">
                         {row.status}
                       </span>
                     )}
@@ -1139,20 +1139,20 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
                   <div className="pt-3 border-t border-white/[0.04] space-y-1.5 text-xs text-[var(--color-text-muted)]">
                     <div className="flex justify-between">
-                      <span className="text-[var(--color-text-muted)] text-[10px]">VALUATION METRIC</span>
+                      <span className="text-[var(--color-text-muted)] text-xs">VALUATION METRIC</span>
                       <span className="text-[var(--color-accent-highlight)] font-bold">
                         {formatMoney(row.value || row.totalSpent || row.amount || 0)}
                       </span>
                     </div>
                     {row.email && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--color-text-muted)] text-[10px]">REACHOUT PATH</span>
+                        <span className="text-[var(--color-text-muted)] text-xs">REACHOUT PATH</span>
                         <span className="text-[var(--color-text-main)] truncate max-w-[150px]">{row.email}</span>
                       </div>
                     )}
                     {row.maintenanceDate && (
                       <div className="flex justify-between">
-                        <span className="text-[var(--color-text-muted)] text-[10px]">SERVICE STAMP</span>
+                        <span className="text-[var(--color-text-muted)] text-xs">SERVICE STAMP</span>
                         <span className="text-[var(--color-text-main)]">{row.maintenanceDate}</span>
                       </div>
                     )}
@@ -1165,7 +1165,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                       onClick={() => {
                         if (window.confirm(`Write-off physical asset ledger ${row.name}?`)) deleteAsset(row.id);
                       }}
-                      className="p-1 px-2.5 bg-red-950/25 border border-red-500/15 text-red-400 hover:bg-red-900 hover:text-white rounded text-[10px] uppercase font-bold"
+                      className="p-1 px-2.5 bg-red-950/25 border border-red-500/15 text-red-400 hover:bg-red-900 hover:text-white rounded-xl text-xs uppercase font-bold"
                     >
                       DEPRECATE
                     </button>
@@ -1174,7 +1174,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                     onClick={() => {
                       setSelectedCell({ tabKey: activeTab, rowId: row.id || row.name, colKey: activeTab === 'customers' ? 'name' : 'id', rowIndex: 0, colIndex: 0 });
                     }}
-                    className="p-1.5 border border-white/5 text-[var(--color-text-muted)] hover:text-white rounded text-[10px] uppercase"
+                    className="p-1.5 border border-white/5 text-[var(--color-text-muted)] hover:text-white rounded-xl text-xs uppercase"
                   >
                     Select Formula coordinates
                   </button>
@@ -1186,9 +1186,9 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
         {/* --- VIEW 5: CALENDAR SCHEDULE INTERFACE --- */}
         {activeTab !== 'reports' && viewLayout === 'calendar' && (
-          <div className="p-6 font-mono text-xs text-[var(--color-text-main)] space-y-4">
+          <div className="p-6 text-xs text-[var(--color-text-main)] space-y-4">
             <h4 className="text-xs uppercase text-[var(--color-accent-highlight)] tracking-wider border-b border-white/[0.04] pb-2 flex items-center gap-1.5">
-              <Calendar size={13} /> Active Administrative Schedule Scheduler (2026 Grid Dates)
+              <Calendar size={14} /> Active Administrative Schedule Scheduler (2026 Grid Dates)
             </h4>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -1199,11 +1199,11 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 { label: 'Q4 ANNUAL VERIFICATIONS', date: '2026-12-05', list: focusRowsData.filter(r => r.maintenanceDate?.includes('-10-') || r.maintenanceDate?.includes('-11-') || r.maintenanceDate?.includes('-12-')) }
               ].map((quarter, i) => (
                 <div key={i} className="p-4 bg-[var(--color-background)]/60 rounded-xl border border-white/[0.04] space-y-3">
-                  <span className="text-[10px] text-[var(--color-text-muted)] uppercase block font-bold">{quarter.label}</span>
+                  <span className="text-xs text-[var(--color-text-muted)] uppercase block font-bold">{quarter.label}</span>
                   <div className="text-[var(--color-accent-highlight)] font-semibold">{quarter.date}</div>
-                  <div className="space-y-1 text-[10px] text-[var(--color-text-muted)] max-h-[150px] overflow-y-auto">
+                  <div className="space-y-1 text-xs text-[var(--color-text-muted)] max-h-[150px] overflow-y-auto">
                     {quarter.list.map((it: any) => (
-                      <div key={it.id || it.name} className="truncate p-1 bg-[rgba(255,255,255,0.03)] rounded">
+                      <div key={it.id || it.name} className="truncate p-1 bg-[rgba(255,255,255,0.03)] rounded-xl">
                         {it.name || it.category} ({it.maintenanceDate})
                       </div>
                     ))}
@@ -1219,9 +1219,9 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
         {/* --- VIEW 6: DIAGNOSTICS ANALYTICS BAR CHART SYSTEM --- */}
         {activeTab !== 'reports' && viewLayout === 'analytics' && (
-          <div className="p-6 font-mono text-[var(--color-text-main)] space-y-4">
+          <div className="p-6 text-[var(--color-text-main)] space-y-4">
             <h4 className="text-xs uppercase text-[var(--color-accent-highlight)] tracking-wider border-b border-white/[0.04] pb-2 flex items-center gap-1.5">
-              <BarChart3 size={13} /> Sourcing ledger value distribution
+              <BarChart3 size={14} /> Sourcing ledger value distribution
             </h4>
 
             <div className="space-y-4">
@@ -1232,11 +1232,11 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
                 return (
                   <div key={index} className="space-y-1.5">
-                    <div className="flex justify-between items-center text-[10px] text-[var(--color-text-muted)]">
+                    <div className="flex justify-between items-center text-xs text-[var(--color-text-muted)]">
                       <span className="uppercase text-[var(--color-text-main)] font-semibold truncate max-w-xs">{row.name || row.category} ({row.id || 'CRM'})</span>
                       <span className="text-[var(--color-accent-highlight)] font-bold">{formatMoney(totalItemSpent)}</span>
                     </div>
-                    <div className="w-full bg-[var(--color-background)]/85 h-3 rounded overflow-hidden p-0.5 border border-white/5">
+                    <div className="w-full bg-[var(--color-background)]/85 h-3 rounded-xl overflow-hidden p-0.5 border border-white/5">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${percentage}%` }}
@@ -1254,16 +1254,16 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
       </div>
 
       {/* 7. BOTTOM LEVEL INTERFACE PRESETS DESIGN CUSTOMIZER */}
-      <div className="glass-panel p-5 rounded-xl border border-white/[0.04] bg-[var(--color-background)]/70 space-y-4 font-mono">
+      <div className="glass-panel p-5 rounded-xl border border-white/[0.04] bg-[var(--color-background)]/70 space-y-4">
         <h3 className="text-xs font-bold text-[var(--color-accent-highlight)] uppercase tracking-wider flex items-center gap-2">
-          <Palette size={13} /> Creative Database Customizer Canvas
+          <Palette size={14} /> Creative Database Customizer Canvas
         </h3>
 
         <div className="flex flex-wrap gap-6 items-center justify-between text-xs">
           
           {/* THEME PRESET */}
           <div className="space-y-2">
-            <span className="text-[var(--color-text-muted)] uppercase text-[10px] font-bold">Accent Tint Color</span>
+            <span className="text-[var(--color-text-muted)] uppercase text-xs font-bold">Accent Tint Color</span>
             <div className="flex gap-2">
               {[
                 { id: 'gold', hex: '#d4af37', name: 'Industrial Gold' },
@@ -1287,13 +1287,13 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
           {/* DENSITY SELECTION */}
           <div className="space-y-2">
-            <span className="text-[var(--color-text-muted)] uppercase text-[10px] font-bold block">Compact Grid Spacing</span>
-            <div className="bg-[var(--color-card-bg)] rounded p-1 flex gap-1 border border-white/5">
+            <span className="text-[var(--color-text-muted)] uppercase text-xs font-bold block">Compact Grid Spacing</span>
+            <div className="bg-[var(--color-card-bg)] rounded-xl p-1 flex gap-1 border border-white/5">
               {(['high', 'normal', 'relaxed'] as const).map(d => (
                 <button
                   key={d}
                   onClick={() => setDensity(d)}
-                  className={`px-3 py-1 rounded text-[10px] uppercase font-bold transition-colors cursor-pointer ${
+                  className={`px-3 py-1 rounded-xl text-xs uppercase font-bold transition-colors cursor-pointer ${
                     density === d ? 'bg-[#d4af37] text-[var(--color-text-muted)]' : 'hover:text-white text-[var(--color-text-muted)]'
                   }`}
                 >
@@ -1305,7 +1305,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
           {/* DYNAMIC SHADOW OPACITY BACKGROUND */}
           <div className="space-y-2 flex-grow max-w-xs">
-            <div className="flex justify-between items-center text-[10px]">
+            <div className="flex justify-between items-center text-xs">
               <span className="text-[var(--color-text-muted)] uppercase font-bold">Glass Opacity ({tableOpacity}%)</span>
               <span className="text-[var(--color-accent-highlight)]">{tableOpacity}%</span>
             </div>
@@ -1316,13 +1316,13 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               step={5}
               value={tableOpacity}
               onChange={(e) => setTableOpacity(parseInt(e.target.value))}
-              className="w-full accent-[#d4af37] bg-[var(--color-card-bg)] cursor-pointer text-[var(--color-text-muted)] h-1 rounded"
+              className="w-full accent-[#d4af37] bg-[var(--color-card-bg)] cursor-pointer text-[var(--color-text-muted)] h-1 rounded-xl"
             />
           </div>
 
           {/* BACKGROUND GLASS BLUR DEPTH */}
           <div className="space-y-2 flex-grow max-w-xs">
-            <div className="flex justify-between items-center text-[10px]">
+            <div className="flex justify-between items-center text-xs">
               <span className="text-[var(--color-text-muted)] uppercase font-bold">Diffusion backdrop Blur ({tableBlur}px)</span>
               <span className="text-[var(--color-accent-highlight)]">{tableBlur}px</span>
             </div>
@@ -1333,7 +1333,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               step={2}
               value={tableBlur}
               onChange={(e) => setTableBlur(parseInt(e.target.value))}
-              className="w-full accent-[#d4af37] bg-[var(--color-card-bg)] cursor-pointer h-1 rounded"
+              className="w-full accent-[#d4af37] bg-[var(--color-card-bg)] cursor-pointer h-1 rounded-xl"
             />
           </div>
 
@@ -1342,7 +1342,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
       {/* --- ADD ASSET MODAL DIALOG --- */}
       {showAddAsset && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn font-mono">
+        <div className="fixed inset-0 bg-black/85 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="glass-panel-heavy rounded-lg max-w-md w-full p-6 space-y-4 border border-[var(--color-accent-highlight)]/30 bg-[var(--color-background)]">
             <div className="flex justify-between items-center border-b border-white/[0.05] pb-3">
               <h3 className="text-sm font-display font-bold uppercase tracking-wider text-[var(--color-accent-highlight)]">Capitalize Equipment Asset</h3>
@@ -1351,7 +1351,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               </button>
             </div>
             
-            <div className="space-y-3.5 text-xs font-mono">
+            <div className="space-y-3.5 text-xs">
               <div className="space-y-1">
                 <label className="text-[var(--color-text-muted)] uppercase">Asset Name</label>
                 <input 
@@ -1359,7 +1359,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                   value={newAsset.name} 
                   placeholder="e.g. Masterwork Embroidery Grid"
                   onChange={(e) => setNewAsset({...newAsset, name: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
+                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
                 />
               </div>
 
@@ -1368,7 +1368,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 <select 
                   value={newAsset.category} 
                   onChange={(e) => setNewAsset({...newAsset, category: e.target.value})}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
+                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
                 >
                   <option value="Production Machine">Production Machine / Looms</option>
                   <option value="IT Infrastructure">Server / CAD Terminal</option>
@@ -1383,7 +1383,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                   <CurrencyInput
                     value={newAsset.value}
                     onChange={(val) => setNewAsset({...newAsset, value: val})}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
+                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1392,7 +1392,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                     type="date" 
                     value={newAsset.maintenanceDate} 
                     onChange={(e) => setNewAsset({...newAsset, maintenanceDate: e.target.value})}
-                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
+                    className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none focus:border-[var(--color-accent-highlight)]/50"
                   />
                 </div>
               </div>
@@ -1406,10 +1406,10 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               </div>
             </div>
 
-            <div className="flex gap-2 justify-end text-xs font-mono pt-4 border-t border-white/[0.05]">
+            <div className="flex gap-2 justify-end text-xs pt-4 border-t border-white/[0.05]">
               <button 
                 onClick={() => setShowAddAsset(false)}
-                className="px-4 py-2 border border-white/5 text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded"
+                className="px-4 py-2 border border-white/5 text-[var(--color-text-muted)] hover:text-white transition-colors uppercase rounded-xl"
               >
                 Cancel
               </button>
@@ -1419,7 +1419,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                   addAsset(newAsset);
                   setShowAddAsset(false);
                 }}
-                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded"
+                className="px-4 py-2 bg-[var(--color-card-bg)] text-[var(--color-text-main)] font-semibold hover:bg-[var(--color-background)] transition-colors uppercase rounded-xl"
               >
                 Capitalize Asset
               </button>
@@ -1431,10 +1431,10 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
       {/* --- CELL CONTEXT MENU OVERLAY (RIGHT-CLICK CONTEXT MENU) --- */}
       {contextMenu && (
         <div 
-          className="fixed bg-[var(--color-background)]/95 border border-[var(--color-accent-highlight)]/35 rounded-lg shadow-2xl p-2 z-[999] min-w-[200px] text-xs font-mono select-none"
+          className="fixed bg-[var(--color-background)]/95 border border-[var(--color-accent-highlight)]/35 rounded-lg shadow-2xl p-2 z-[999] min-w-[200px] text-xs select-none"
           style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
         >
-          <div className="text-[10px] text-[var(--color-text-muted)] px-2 py-1 uppercase border-b border-white/5 block font-bold leading-none mb-1.5">
+          <div className="text-xs text-[var(--color-text-muted)] px-2 py-1 uppercase border-b border-white/5 block font-bold leading-none mb-1.5">
             Cell Parameters Edit
           </div>
 
@@ -1443,29 +1443,29 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               setEditingCell({ rowId: contextMenu.rowId, colKey: contextMenu.colKey });
               setEditValue(customFormulas[`${contextMenu.tabKey}_${contextMenu.rowId}_${contextMenu.colKey}`] ?? '');
             }}
-            className="w-full text-left p-2 hover:bg-[var(--color-accent-highlight)]/10 hover:text-[var(--color-accent-highlight)] rounded flex items-center gap-2 transition-colors cursor-pointer"
+            className="w-full text-left p-2 hover:bg-[var(--color-accent-highlight)]/10 hover:text-[var(--color-accent-highlight)] rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
           >
-            <Hash size={12} /> Double-Click Input / Equation
+            <Hash size={14} /> Double-Click Input / Equation
           </button>
 
           <button
             onClick={toggleRowLock}
-            className="w-full text-left p-2 hover:bg-red-400/10 hover:text-red-400 rounded flex items-center gap-2 transition-colors cursor-pointer"
+            className="w-full text-left p-2 hover:bg-red-400/10 hover:text-red-400 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
           >
             {cellMetadata[`${contextMenu.tabKey}_${contextMenu.rowId}_${contextMenu.colKey}`]?.isLocked ? (
               <>
-                <Unlock size={12} /> Unlock cell grid edits
+                <Unlock size={14} /> Unlock cell grid edits
               </>
             ) : (
               <>
-                <Lock size={12} /> Lock spreadsheet editing
+                <Lock size={14} /> Lock spreadsheet editing
               </>
             )}
           </button>
 
           {/* Color preset list inside right-click menu */}
           <div className="border-t border-white/5 my-1.5 pt-1.5 px-2">
-            <span className="text-[9px] text-[var(--color-accent-highlight)] uppercase font-bold block mb-1">Set Highlight Accent</span>
+            <span className="text-xs text-[var(--color-accent-highlight)] uppercase font-bold block mb-1">Set Highlight Accent</span>
             <div className="flex gap-2.5">
               {[
                 { hex: 'rgba(212, 175, 55, 0.15)', label: 'Gold' },
@@ -1487,13 +1487,13 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
           {/* Stickers */}
           <div className="border-t border-white/5 my-1.5 pt-1.5 px-2">
-            <span className="text-[9px] text-[var(--color-accent-highlight)] uppercase font-bold block mb-1">Add Sticker Stamp</span>
+            <span className="text-xs text-[var(--color-accent-highlight)] uppercase font-bold block mb-1">Add Sticker Stamp</span>
             <div className="flex gap-1.5">
               {['⭐', '⚠️', '💎', '🔥', '✅', '❌', 'None'].map((emoji, emoIdx) => (
                 <button
                   key={emoIdx}
                   onClick={() => insertAnnotationEmoji(emoji === 'None' ? '' : emoji)}
-                  className="p-1 hover:bg-[rgba(255,255,255,0.06)] rounded cursor-pointer text-xs"
+                  className="p-1 hover:bg-[rgba(255,255,255,0.06)] rounded-xl cursor-pointer text-xs"
                 >
                   {emoji === 'None' ? 'Wipe' : emoji}
                 </button>
@@ -1513,9 +1513,9 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                   }));
                 }
               }}
-              className="w-full text-left p-2 hover:bg-[rgba(255,255,255,0.03)] rounded flex items-center gap-2 transition-colors cursor-pointer"
+              className="w-full text-left p-2 hover:bg-[rgba(255,255,255,0.03)] rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
             >
-              <MessageSquare size={12} /> Add static comment note
+              <MessageSquare size={14} /> Add static comment note
             </button>
           </div>
         </div>
@@ -1523,7 +1523,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
 
       {/* --- ADD CUSTOM COLUMN DRAW/MODAL DIALOG --- */}
       {showAddCustomCol && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn font-mono">
+        <div className="fixed inset-0 bg-black/85 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="glass-panel rounded-lg max-w-sm w-full p-5 space-y-4 border border-[var(--color-accent-highlight)]/30 bg-[var(--color-background)]">
             <div className="flex justify-between items-center border-b border-white/5 pb-2">
               <span className="text-xs uppercase font-bold text-[var(--color-accent-highlight)] tracking-wider">Initialize Custom Grid Column</span>
@@ -1540,7 +1540,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                   placeholder="e.g. Audit Approval Code"
                   value={newColDetails.label}
                   onChange={(e) => setNewColDetails({ ...newColDetails, label: e.target.value })}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
+                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none"
                 />
               </div>
 
@@ -1549,7 +1549,7 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
                 <select
                   value={newColDetails.type}
                   onChange={(e) => setNewColDetails({ ...newColDetails, type: e.target.value as any })}
-                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded focus:outline-none"
+                  className="w-full px-3 py-2 bg-[var(--color-card-bg)] border border-white/[0.05] text-white rounded-xl focus:outline-none"
                 >
                   <option value="text">Alphanumeric string (Text)</option>
                   <option value="number">Numeric monetary (Rp / IDR)</option>
@@ -1558,16 +1558,16 @@ export default function FinancesAndAssetsView({ initialSubTab = 'reports' }: Fin
               </div>
             </div>
 
-            <div className="flex gap-2 justify-end text-xs font-mono pt-3 border-t border-white/5">
+            <div className="flex gap-2 justify-end text-xs pt-3 border-t border-white/5">
               <button 
                 onClick={() => setShowAddCustomCol(false)}
-                className="px-3.5 py-1.5 border border-white/5 text-[var(--color-text-muted)] hover:text-white rounded"
+                className="px-3.5 py-1.5 border border-white/5 text-[var(--color-text-muted)] hover:text-white rounded-xl"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleCreateCustomColumn}
-                className="px-4 py-1.5 bg-[#d4af37] text-[var(--color-text-main)] font-bold rounded hover:bg-[#d4af37]/80 cursor-pointer"
+                className="px-4 py-1.5 bg-[#d4af37] text-[var(--color-text-main)] font-bold rounded-xl hover:bg-[#d4af37]/80 cursor-pointer"
               >
                 Assemble Column
               </button>

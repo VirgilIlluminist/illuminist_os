@@ -43,7 +43,7 @@ export default function OwnerFinanceView() {
         ].map((kpi,i) => (
           <div key={i} className={`${card} p-4`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-medium">{kpi.label}</span>
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{background:`${kpi.color}15`,color:kpi.color}}>{kpi.icon}</div>
             </div>
             <p className="text-xl font-bold text-[var(--color-text-main)] tabular-nums">{kpi.value}</p>
@@ -76,7 +76,7 @@ export default function OwnerFinanceView() {
                 <div className="h-1.5 bg-[var(--color-background)] rounded-full overflow-hidden">
                   <div className="h-full rounded-full" style={{width:`${a.pct}%`, background:a.color}}/>
                 </div>
-                <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">{a.desc}</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{a.desc}</p>
               </div>
             </div>
           ))}

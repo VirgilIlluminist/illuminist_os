@@ -84,10 +84,10 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
   const chatMessages = messages.filter(m => m.role !== 'system');
 
   return (
-    <div className={`flex flex-col bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-xl overflow-hidden ${compact ? 'h-[420px]' : 'h-full min-h-[500px]'} ${className}`}>
+    <div className={`flex flex-col bg-white/[0.04] border border-white/[0.08] rounded-xl overflow-hidden ${compact ? 'h-[420px]' : 'h-full min-h-[500px]'} ${className}`}>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-line)] shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.08] shrink-0">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-xl" style={{ background: accentHex + '20' }}>
             <Bot size={17} style={{ color: accentHex }} />
@@ -130,7 +130,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
             <div className="w-full space-y-1.5">
               {QUICK_PROMPTS.map(q => (
                 <button key={q} onClick={() => sendMessage(q)}
-                  className="w-full text-left text-xs px-3 py-2 border border-[var(--color-border-line)] rounded-lg hover:bg-white/[0.03] text-[var(--color-text-muted)] transition-colors cursor-pointer">
+                  className="w-full text-left text-xs px-3 py-2 border border-white/[0.08] rounded-lg hover:bg-white/[0.03] text-[var(--color-text-muted)] transition-colors cursor-pointer">
                   {q}
                 </button>
               ))}
@@ -163,7 +163,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
               <div className={`max-w-[85%] px-4 py-3 rounded-xl leading-relaxed ${
                 msg.role === 'user'
                   ? 'bg-white/[0.05] text-[var(--color-text-main)] ml-auto'
-                  : 'bg-[var(--color-background)] border border-[var(--color-border-line)] text-[var(--color-text-main)]'
+                  : 'bg-white/[0.04] border border-white/[0.08] text-[var(--color-text-main)]'
               }`}>
                 {msg.role === 'assistant'
                   ? <div dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} className="prose-sm" />
@@ -185,7 +185,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
             <div className="p-2 rounded-xl h-fit" style={{ background: accentHex + '20' }}>
               <Bot size={16} style={{ color: accentHex }} />
             </div>
-            <div className="bg-[var(--color-background)] border border-[var(--color-border-line)] px-4 py-3 rounded-xl flex items-center gap-2.5">
+            <div className="bg-white/[0.04] border border-white/[0.08] px-4 py-3 rounded-xl flex items-center gap-2.5">
               <Loader size={14} className="animate-spin text-[var(--color-text-muted)]" />
               <span style={{ fontSize: '13px', letterSpacing: '-0.01em' }} className="text-[var(--color-text-muted)]">Menganalisis data bisnis...</span>
             </div>
@@ -195,7 +195,7 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-[var(--color-border-line)] shrink-0">
+      <div className="p-3 border-t border-white/[0.08] shrink-0">
         {error && (
           <p className="text-[10px] text-red-400 font-mono mb-2 px-1">{error}</p>
         )}
@@ -207,9 +207,8 @@ export default function AIChat({ className = '', initialPrompt, compact = false 
             onKeyDown={handleKeyDown}
             placeholder="Tanya tentang inventori, penjualan, keuangan..."
             rows={1}
-            className="flex-1 resize-none font-sans px-4 py-3 bg-[var(--color-background)] border border-[var(--color-border-line)] text-[var(--color-text-main)] rounded-xl focus:outline-none transition-all max-h-28"
-          style={{ fontSize: '14px', letterSpacing: '-0.01em' }}
-            style={{ lineHeight: '1.5' }}
+            className="flex-1 resize-none font-sans px-4 py-2.5 bg-white/[0.06] border border-white/[0.10] text-white rounded-xl focus:outline-none transition-all max-h-28"
+            style={{ fontSize: '14px', letterSpacing: '-0.01em', lineHeight: '1.5' }}
           />
           <button
             onClick={handleSend}
