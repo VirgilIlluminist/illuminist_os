@@ -19,6 +19,7 @@ Every request belongs to one of six problem types. Misclassifying the type leads
 | **Architecture** | "refactor", "restructure", "too messy", "duplicate code", "slow", "hard to maintain" | architect → auto-refactor-mode → code-review |
 | **New feature** | "add", "build", "create", "implement", "need X feature" | feature-planner → prd-writer (if spec unclear) → architect → qa-checklist |
 | **Data / graph** | "HPP", "cost calculation", "data not updating", "formula", "derived value", "connected data" | debug-visualization-mode (verify graph alive first) → graph-core-spec → debug-trace → performance |
+| **Database / schema** | "table", "column", "migration", "schema", "supabase", "does this table exist", "what columns" | database-introspection (Step 1 migration files first, Step 2 code, Step 3 live DB only with user approval) |
 | **Release / validation** | "ready?", "done?", "check", "verify", "before deploy", "final check" | qa-checklist → consistency-audit → frontend-review |
 
 ### Scope classification

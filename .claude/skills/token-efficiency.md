@@ -79,6 +79,7 @@ Dispatch only what the task actually needs:
 | Add new feature | feature-planner, architect, qa-checklist | consistency-audit (unless UI) |
 | Style inconsistency | illuminist-ui, consistency-audit | architect, performance |
 | Full system refactor | architect, auto-refactor-mode, code-review, qa-checklist | — |
+| Schema / DB question | database-introspection (Step 1 migration files, stop early) | — never probe prod directly |
 
 ### Step 4 — Load only required files
 ```bash
