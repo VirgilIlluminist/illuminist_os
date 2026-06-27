@@ -593,6 +593,54 @@ Saat melaporkan: sebutkan (1) fitur ditambah (2) data berubah (3) repository (4)
 
 ---
 
+## KESALAHAN YANG SUDAH TERJADI — JANGAN DIULANG
+
+Ini log kesalahan nyata yang pernah terjadi dan dilaporkan user. Setiap item ada karena Claude pernah melakukannya. Baca ini sebelum setiap task.
+
+### ❌ FALSE COMPLETION — Klaim "selesai" tanpa verifikasi end-to-end
+**Kejadian:** Slider HPPEngineView diklaim "reactive" padahal memanggil `setMaterialCostTweak()` (local state), bukan `updateGraphNode()`. Graph tidak pernah di-mutate. Klaim "sudah reactive" adalah salah.
+**Rule:** Jangan pernah klaim fitur berfungsi tanpa menjalankan 5-step truth gate. "Compiles" ≠ "works". "Looks correct" ≠ "verified".
+
+### ❌ ASSUME EXISTING SYSTEM — Percaya sesuatu "sudah ada" tanpa trace live
+**Kejadian:** Mengklaim implementasi sudah ada berdasarkan memory session sebelumnya atau "kelihatan dari kode", tanpa baca file aktual dan verifikasi runtime.
+**Rule:** Prior sessions dan git history bukan verifikasi. Baca file aktual. Jalankan `preview_eval`. Cek localStorage. Kalau tidak bisa diverifikasi → status = UNVERIFIED.
+
+### ❌ ISOLATED PATCH — Mengubah 1 komponen tanpa audit yang lain
+**Kejadian:** Mengubah satu file tanpa memeriksa semua file lain yang menggunakan pola yang sama, menghasilkan inkonsistensi.
+**Rule:** Setiap perubahan adalah GLOBAL CHANGE REQUEST. Scan dulu dengan grep, baru sentuh file.
+
+### ❌ VERBOSE OUTPUT — Penjelasan panjang yang tidak diminta
+**Kejadian:** Menulis analisis panjang, teori, dan penjelasan yang tidak berdampak pada implementasi.
+**Rule:** Output harus proporsional dengan scope task. TINY fix = 1-2 baris. Bukan essay.
+
+---
+
+*Log ini di-update setiap kali user melaporkan kesalahan baru. Jangan hapus entries lama.*
+
+---
+
+## SUPABASE — DATABASE PROTOCOL
+
+### Aturan: Schema mengikuti fitur (bukan di-akhir)
+
+**Setiap kali membangun fitur baru yang butuh data persisten:**
+1. Buat UI + logic
+2. Tulis Supabase migration untuk tabel yang dibutuhkan
+3. Apply migration via Supabase MCP tool
+4. Wire read/write ke Supabase
+
+**Jangan tunggu sampai semua fitur selesai baru buat schema.** Itu menumpuk technical debt dan berisiko schema tidak cocok dengan data model yang sudah dibangun.
+
+**Kapan apply migration:**
+- Fitur baru yang butuh tabel baru → apply sekaligus
+- Field baru di fitur existing → migration ALTER TABLE
+- Tidak perlu konfirmasi user untuk migration additive (tambah tabel/kolom)
+- Perlu konfirmasi user untuk migration destructive (DROP, rename kolom dengan data)
+
+**Format migration file:** `supabase/migrations/YYYYMMDD_feature_name.sql`
+
+---
+
 ## FINAL GOAL
 
 ILLUMINIST OS = AI-Powered Business Operating System untuk founder multi-bisnis dalam satu platform.
