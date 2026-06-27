@@ -1,54 +1,106 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useERP } from '../../../app/store/ERPContext';
 import SmartTable, { ColumnDef } from '../../../shared/table/SmartTable';
 import {
   Layers, Compass, Factory, Receipt, Megaphone,
-  TrendingUp, Activity, Sliders, ArrowRight, Percent
+  TrendingUp, Activity, ArrowRight, Percent, Package,
+  Cpu, ChevronRight, Bug,
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import type {
+  MaterialCostNode, LaborCostNode, PackagingCostNode, OverheadCostNode,
+} from '../../../core/graph/types';
+
+// ─── Inline editable number cell ─────────────────────────────────────────────
+function EditCell({
+  value, onCommit, disabled = false, prefix = 'Rp', suffix = '',
+}: {
+  value: number;
+  onCommit: (v: number) => void;
+  disabled?: boolean;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [raw, setRaw] = useState(String(value));
+
+  const commit = () => {
+    const n = parseFloat(raw.replace(/[^0-9.-]/g, ''));
+    if (!isNaN(n) && n !== value) onCommit(n);
+    setEditing(false);
+  };
+
+  if (disabled) {
+    return (
+      <span className="font-mono text-xs text-[var(--color-text-muted)] tabular-nums">
+        {prefix}{value.toLocaleString('id-ID')}{suffix}
+      </span>
+    );
+  }
+
+  return editing ? (
+    <input
+      autoFocus
+      type="number"
+      value={raw}
+      onChange={e => setRaw(e.target.value)}
+      onBlur={commit}
+      onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') setEditing(false); }}
+      className="w-full bg-black/30 border border-[var(--color-border-line)] rounded px-1.5 py-0.5 text-xs font-mono text-[var(--color-text-main)] focus:outline-none focus:border-[var(--accent-primary)]"
+    />
+  ) : (
+    <button
+      onClick={() => { setRaw(String(value)); setEditing(true); }}
+      className="text-xs font-mono text-[var(--color-text-main)] hover:underline cursor-text tabular-nums text-left"
+      title="Click to edit"
+    >
+      {prefix}{value.toLocaleString('id-ID')}{suffix}
+    </button>
+  );
+}
 
 export default function HPPEngineView() {
   const {
-    computedProducts,
-    graphNodes,
+    computedProducts, graphNodes, updateGraphNode,
     config, formatMoney, t,
     getProductCostBreakdown,
   } = useERP();
 
-  // Derive product list from graph nodes when computedProducts is empty (Supabase cold start)
+  const [selectedProductId, setSelectedProductId] = useState<string>(
+    computedProducts[0]?.id || 'PROD-001'
+  );
+  const [simulatedRetailPrice, setSimulatedRetailPrice] = useState(0);
+  const [debugOpen, setDebugOpen] = useState(false);
+
+  const accentHex = config?.customAccentColor || '#7c3aed';
+
+  // Toggle debug panel with Ctrl+Shift+D
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') setDebugOpen(v => !v);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // Derive product list from computedProducts or fall back to graph margin nodes
   const productList = useMemo(() => {
     if (computedProducts.length > 0) return computedProducts.map(p => ({
       id: p.id, name: p.name, sellingPrice: p.sellingPrice,
       operationalCost: p.operationalCost, adsAllocation: p.adsAllocation,
       kolAllocation: p.kolAllocation, finalHPP: p.finalHPP,
     }));
-    // Fall back to graph margin nodes which carry sellingPrice
-    const marginNodes = graphNodes.filter(n => n.type === 'margin');
-    return marginNodes.map(n => {
-      const mn = n as import('../../../core/graph/types').MarginNode;
-      return {
-        id: mn.productId,
-        name: mn.productId,
-        sellingPrice: mn.sellingPrice,
-        operationalCost: 0,
-        adsAllocation: 0,
-        kolAllocation: 0,
-        finalHPP: mn.sellingPrice - mn.value,
-      };
-    });
+    return graphNodes
+      .filter(n => n.type === 'margin')
+      .map(n => {
+        const mn = n as import('../../../core/graph/types').MarginNode;
+        return {
+          id: mn.productId, name: mn.productId,
+          sellingPrice: mn.sellingPrice, operationalCost: 0,
+          adsAllocation: 0, kolAllocation: 0,
+          finalHPP: mn.sellingPrice - mn.value,
+        };
+      });
   }, [computedProducts, graphNodes]);
-
-  const [selectedProductId, setSelectedProductId] = useState<string>(
-    computedProducts[0]?.id || 'PROD-001'
-  );
-  const [materialCostTweak, setMaterialCostTweak]           = useState(0);
-  const [wasteRateOverride, setWasteRateOverride]           = useState(12);
-  const [laborCostTweak, setLaborCostTweak]                 = useState(0);
-  const [packagingTweak, setPackagingTweak]                 = useState(0);
-  const [campaignBudgetMultiplier, setCampaignBudgetMultiplier] = useState(1.0);
-  const [simulatedRetailPrice, setSimulatedRetailPrice]     = useState(0);
-
-  const accentHex = config?.customAccentColor || '#7c3aed';
 
   const activeProduct = useMemo(() => {
     const prod = productList.find(p => p.id === selectedProductId);
@@ -56,56 +108,53 @@ export default function HPPEngineView() {
     return prod;
   }, [selectedProductId, productList]);
 
-  const resetTweaks = () => {
-    setMaterialCostTweak(0);
-    setWasteRateOverride(12);
-    setLaborCostTweak(0);
-    setPackagingTweak(0);
-    setCampaignBudgetMultiplier(1.0);
-    if (activeProduct) setSimulatedRetailPrice(activeProduct.sellingPrice);
-  };
-
-  const sim = useMemo(() => {
+  // Cost breakdown — reads LIVE from graph nodes (re-runs whenever graphNodes changes)
+  const bd = useMemo(() => {
     if (!activeProduct) return null;
+    return getProductCostBreakdown(activeProduct.id);
+  }, [activeProduct, graphNodes]);
 
-    // Read base costs from graph nodes (source of truth)
-    const graphBreakdown = getProductCostBreakdown(activeProduct.id);
-    const baseMat      = graphBreakdown.nodes.materials.reduce((s, n) => s + n.value, 0)
-                         || graphBreakdown.hpp?.breakdown.materials || 225000;
-    const baseLabor    = graphBreakdown.nodes.labor.reduce((s, n) => s + n.value, 0)
-                         || graphBreakdown.hpp?.breakdown.labor || 250000;
-    const basePkg      = graphBreakdown.nodes.packaging.reduce((s, n) => s + n.value, 0)
-                         || graphBreakdown.hpp?.breakdown.packaging || 45000;
-    const baseOverhead = graphBreakdown.nodes.overhead.reduce((s, n) => s + n.value, 0)
-                         || graphBreakdown.hpp?.breakdown.overhead || 0;
-
-    const appliedMat   = Math.max(1000, baseMat + materialCostTweak);
-    const directMat    = appliedMat * (1 + wasteRateOverride / 100);
-    const directLabor  = Math.max(0, baseLabor + laborCostTweak);
-    const appliedPkg   = Math.max(0, basePkg + packagingTweak);
-    const opsAlloc     = baseOverhead || activeProduct.operationalCost || 120000;
-    const marketing    = ((activeProduct.adsAllocation || 85000) + (activeProduct.kolAllocation || 50000)) * campaignBudgetMultiplier;
-
-    const finalHPP     = directMat + directLabor + appliedPkg + opsAlloc + marketing;
-    const sellP        = simulatedRetailPrice || activeProduct.sellingPrice;
-    const grossP       = sellP - (directMat + directLabor + appliedPkg);
-    const netP         = sellP - finalHPP;
-
-    // Graph HPP node value = actual baseline before simulation tweaks
-    const graphHPP     = graphBreakdown.hpp?.value ?? activeProduct.finalHPP;
+  // Simulation — pure read from graph, no local tweak state
+  const sim = useMemo(() => {
+    if (!activeProduct || !bd) return null;
+    const directMat   = bd.nodes.materials.reduce((s, n) => s + n.value, 0);
+    const directLabor = bd.nodes.labor.reduce((s, n) => s + n.value, 0);
+    const appliedPkg  = bd.nodes.packaging.reduce((s, n) => s + n.value, 0);
+    const opsAlloc    = bd.nodes.overhead.reduce((s, n) => s + n.value, 0)
+                        || activeProduct.operationalCost || 0;
+    const marketing   = (activeProduct.adsAllocation || 0) + (activeProduct.kolAllocation || 0);
+    const finalHPP    = bd.hpp?.value ?? (directMat + directLabor + appliedPkg + opsAlloc + marketing);
+    const sellP       = simulatedRetailPrice || activeProduct.sellingPrice;
+    const grossP      = sellP - (directMat + directLabor + appliedPkg);
+    const netP        = sellP - finalHPP;
 
     return {
       directMat, directLabor, appliedPkg, opsAlloc, marketing,
       finalHPP, grossP, netP,
-      grossMargin: (grossP / sellP) * 100,
-      netMargin:   (netP / sellP) * 100,
-      originalHPP: graphHPP,
+      grossMargin: sellP > 0 ? (grossP / sellP) * 100 : 0,
+      netMargin:   sellP > 0 ? (netP / sellP) * 100 : 0,
+      originalHPP: bd.hpp?.value ?? 0,
     };
-  }, [activeProduct, materialCostTweak, wasteRateOverride, laborCostTweak,
-      packagingTweak, campaignBudgetMultiplier, simulatedRetailPrice,
-      getProductCostBreakdown]);
+  }, [activeProduct, simulatedRetailPrice, bd]);
 
-  /* ── Scenario table ─────────────────────────────────────────────────── */
+  // ── Graph mutation handlers ────────────────────────────────────────────────
+  const updateMaterialNode = useCallback((id: string, field: 'quantityPerUnit' | 'pricePerUnit', v: number) => {
+    updateGraphNode(id, { [field]: v } as Partial<MaterialCostNode>);
+  }, [updateGraphNode]);
+
+  const updateLaborNode = useCallback((id: string, v: number) => {
+    updateGraphNode(id, { costPerUnit: v } as Partial<LaborCostNode>);
+  }, [updateGraphNode]);
+
+  const updatePackagingNode = useCallback((id: string, v: number) => {
+    updateGraphNode(id, { costPerUnit: v } as Partial<PackagingCostNode>);
+  }, [updateGraphNode]);
+
+  const updateOverheadNode = useCallback((id: string, field: 'monthlyTotal' | 'unitsPerMonth', v: number) => {
+    updateGraphNode(id, { [field]: v } as Partial<OverheadCostNode>);
+  }, [updateGraphNode]);
+
+  /* ── Scenario table ─────────────────────────────────────────────────────── */
   const scenarioCols: ColumnDef[] = [
     { key: 'tier',          label: t('hpp_scenario_col_tier'),   type: 'text',       isEditable: false },
     { key: 'scenarioPrice', label: t('hpp_scenario_col_price'),  type: 'currency',   align: 'right', isEditable: false },
@@ -119,15 +168,15 @@ export default function HPPEngineView() {
   const scenarioRows = useMemo(() => {
     if (!activeProduct || !sim) return [];
     return [
-      { tier: t('hpp_scenario_20off'),  multiplier: 0.8  },
-      { tier: t('hpp_scenario_std'),    multiplier: 1.0  },
-      { tier: t('hpp_scenario_premium'),multiplier: 1.15 },
-      { tier: t('hpp_scenario_supreme'),multiplier: 1.4  },
+      { tier: t('hpp_scenario_20off'),   multiplier: 0.8  },
+      { tier: t('hpp_scenario_std'),     multiplier: 1.0  },
+      { tier: t('hpp_scenario_premium'), multiplier: 1.15 },
+      { tier: t('hpp_scenario_supreme'), multiplier: 1.4  },
     ].map((sc, idx) => {
-      const sp      = Math.round(activeProduct.sellingPrice * sc.multiplier);
-      const net     = sp - sim.finalHPP;
-      const margin  = sp > 0 ? (net / sp) * 100 : 0;
-      const status  = margin > 50
+      const sp     = Math.round(activeProduct.sellingPrice * sc.multiplier);
+      const net    = sp - sim.finalHPP;
+      const margin = sp > 0 ? (net / sp) * 100 : 0;
+      const status = margin > 50
         ? t('hpp_status_pristine')
         : margin > 10 ? t('hpp_status_marginal') : t('hpp_status_deficit');
       return { id: `sc_${idx}`, tier: sc.tier, scenarioPrice: sp,
@@ -135,7 +184,7 @@ export default function HPPEngineView() {
     });
   }, [activeProduct, sim]);
 
-  /* ── Cascade step helper ────────────────────────────────────────────── */
+  /* ── CascadeStep card ───────────────────────────────────────────────────── */
   const CascadeStep = ({ label, title, value, note, icon }: {
     label: string; title: string; value: number; note: string; icon: React.ReactNode;
   }) => (
@@ -153,23 +202,18 @@ export default function HPPEngineView() {
     </div>
   );
 
-  /* ── Slider row helper ──────────────────────────────────────────────── */
-  const SliderRow = ({ label, value, min, max, step, onChange, display }: {
-    label: string; value: number; min: number; max: number;
-    step: number; onChange: (v: number) => void; display: string;
-  }) => (
-    <div className="space-y-2">
-      <div className="flex justify-between text-xs">
-        <span className="text-[var(--color-text-muted)] uppercase">{label}</span>
-        <span className="text-[var(--color-text-main)]">{display}</span>
-      </div>
-      <input type="range" min={min} max={max} step={step} value={value}
-        onChange={e => onChange(parseFloat(e.target.value))}
-        className="w-full"
-        style={{ accentColor: accentHex }}
-      />
-    </div>
-  );
+  /* ── Cost node rows ─────────────────────────────────────────────────────── */
+  const NodeTypeIcon = ({ type }: { type: string }) => {
+    const icons: Record<string, React.ReactNode> = {
+      material: <Package size={13} />,
+      labor: <Compass size={13} />,
+      packaging: <Factory size={13} />,
+      overhead: <Receipt size={13} />,
+      hpp: <Layers size={13} />,
+      margin: <TrendingUp size={13} />,
+    };
+    return <span className="text-[var(--color-text-muted)]">{icons[type] ?? <Cpu size={13}/>}</span>;
+  };
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -187,90 +231,242 @@ export default function HPPEngineView() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] p-2 rounded-lg">
-          <span className="text-xs uppercase text-[var(--color-text-muted)] mr-1">
-            {t('hpp_target_product')}
-          </span>
-          <select
-            value={selectedProductId}
-            onChange={e => { setSelectedProductId(e.target.value); setSimulatedRetailPrice(0); }}
-            className="bg-[var(--color-card-bg)] border border-[var(--color-border-line)] text-xs uppercase text-[var(--color-text-main)] px-2.5 py-1.5 focus:outline-none rounded-xl"
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] p-2 rounded-lg">
+            <span className="text-xs uppercase text-[var(--color-text-muted)] mr-1">
+              {t('hpp_target_product')}
+            </span>
+            <select
+              value={selectedProductId}
+              onChange={e => { setSelectedProductId(e.target.value); setSimulatedRetailPrice(0); }}
+              className="bg-[var(--color-card-bg)] border border-[var(--color-border-line)] text-xs uppercase text-[var(--color-text-main)] px-2.5 py-1.5 focus:outline-none rounded-xl"
+            >
+              {productList.map(p => (
+                <option key={p.id} value={p.id}>{p.name} ({p.id})</option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={() => setDebugOpen(v => !v)}
+            title="Debug panel (Ctrl+Shift+D)"
+            className={`p-2 rounded-lg border text-xs transition-colors ${
+              debugOpen
+                ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-400'
+                : 'border-[var(--color-border-line)] text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]'
+            }`}
           >
-            {productList.map(p => (
-              <option key={p.id} value={p.id}>{p.name} ({p.id})</option>
-            ))}
-          </select>
+            <Bug size={14} />
+          </button>
         </div>
       </div>
 
-      {sim && activeProduct && (
+      {/* ── Debug panel ────────────────────────────────────────────────── */}
+      {debugOpen && bd && (
+        <div className="bg-black/60 border border-yellow-500/30 rounded-xl p-4 text-xs font-mono space-y-2">
+          <p className="text-yellow-400 font-bold uppercase tracking-widest text-[10px] mb-2">
+            Graph Debug — {activeProduct?.id} — {graphNodes.length} total nodes
+          </p>
+          {bd && [...bd.nodes.materials, ...bd.nodes.labor, ...bd.nodes.overhead, ...bd.nodes.packaging,
+                  ...(bd.hpp ? [bd.hpp] : []), ...(bd.margin ? [bd.margin] : [])].map(n => (
+            <div key={n.id} className="flex gap-3 items-center py-0.5 border-b border-white/5">
+              <span className={`w-16 shrink-0 ${
+                n.isComputed ? 'text-emerald-400' : 'text-sky-400'
+              }`}>{n.type.toUpperCase()}</span>
+              <span className="text-white/60 w-48 shrink-0 truncate">{n.id}</span>
+              <span className="text-white/40 w-32 shrink-0 truncate">{n.label}</span>
+              <span className="text-yellow-300 font-semibold">
+                {n.isComputed ? '🟢' : '🔵'} Rp{n.value.toLocaleString('id-ID')}
+              </span>
+              <span className="text-white/30 text-[10px]">{n.updatedAt.slice(11, 19)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {sim && activeProduct && bd && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* ── LEFT: Simulation Knobs ──────────────────────────────────── */}
-          <div className="glass-panel p-5 rounded-lg space-y-5 lg:col-span-1">
-            <div className="flex justify-between items-center border-b border-[var(--color-border-line)] pb-3">
+          {/* ── LEFT: Cost Breakdown Table ──────────────────────────────── */}
+          <div className="glass-panel p-5 rounded-lg space-y-4 lg:col-span-1">
+            <div className="border-b border-[var(--color-border-line)] pb-3">
               <h3 className="text-xs font-bold tracking-widest uppercase flex items-center gap-1.5"
                   style={{ color: accentHex }}>
-                <Sliders size={14} /> {t('hpp_sim_knobs')}
+                <Layers size={14} /> Cost Breakdown
               </h3>
-              <button onClick={resetTweaks}
-                className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] border border-[var(--color-border-line)] px-2 py-0.5 rounded-xl cursor-pointer transition-colors">
-                {t('hpp_reset_tweaks')}
-              </button>
+              <p className="text-[10px] text-[var(--color-text-muted)] mt-1">
+                Click any value to edit. Changes persist to graph immediately.
+              </p>
             </div>
 
-            <div className="space-y-4">
-              <SliderRow
-                label={t('hpp_material_delta')}
-                value={materialCostTweak} min={-150000} max={450000} step={5000}
-                onChange={setMaterialCostTweak}
-                display={`${materialCostTweak >= 0 ? '+' : ''}${formatMoney(materialCostTweak)}`}
-              />
-              <SliderRow
-                label={t('hpp_waste_margin')}
-                value={wasteRateOverride} min={2} max={40} step={1}
-                onChange={setWasteRateOverride}
-                display={`${wasteRateOverride}%`}
-              />
-              <SliderRow
-                label={t('hpp_labor_premium')}
-                value={laborCostTweak} min={-150000} max={500000} step={5000}
-                onChange={setLaborCostTweak}
-                display={`${laborCostTweak >= 0 ? '+' : ''}${formatMoney(laborCostTweak)}`}
-              />
-              <SliderRow
-                label={t('hpp_packaging_fee')}
-                value={packagingTweak} min={-40000} max={150000} step={2000}
-                onChange={setPackagingTweak}
-                display={`${packagingTweak >= 0 ? '+' : ''}${formatMoney(packagingTweak)}`}
-              />
-              <SliderRow
-                label={t('hpp_ads_multiplier')}
-                value={campaignBudgetMultiplier} min={0.2} max={3.0} step={0.1}
-                onChange={setCampaignBudgetMultiplier}
-                display={`${campaignBudgetMultiplier.toFixed(1)} ${t('hpp_x_spend')}`}
-              />
+            {/* Node table */}
+            <div className="space-y-1">
+              {/* Header */}
+              <div className="grid grid-cols-[1fr_auto_auto] gap-2 text-[10px] uppercase text-[var(--color-text-muted)] tracking-wider px-1 pb-1">
+                <span>Component</span>
+                <span className="text-right w-24">Input</span>
+                <span className="text-right w-20">Total</span>
+              </div>
 
-              {/* Target price slider */}
-              <div className="space-y-2 pt-3 border-t border-[var(--color-border-line)]">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-[var(--color-text-muted)] uppercase">{t('hpp_target_price')}</span>
-                  <span className="text-base font-bold" style={{ color: accentHex }}>
-                    {formatMoney(simulatedRetailPrice)}
-                  </span>
+              {/* Material nodes */}
+              {bd.nodes.materials.map(n => (
+                <div key={n.id}
+                  className="grid grid-cols-[1fr_auto_auto] gap-2 items-center rounded-lg px-2 py-1.5 hover:bg-white/5 transition-colors group">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <NodeTypeIcon type="material" />
+                    <span className="text-xs text-[var(--color-text-main)] truncate">{n.label}</span>
+                    <ChevronRight size={10} className="text-[var(--color-text-muted)] opacity-0 group-hover:opacity-100"/>
+                  </div>
+                  <div className="w-24 text-right space-y-0.5">
+                    <EditCell
+                      value={n.quantityPerUnit} prefix="" suffix=" u"
+                      onCommit={v => updateMaterialNode(n.id, 'quantityPerUnit', v)}
+                    />
+                    <span className="text-[10px] text-[var(--color-text-muted)] block">×</span>
+                    <EditCell
+                      value={n.pricePerUnit}
+                      onCommit={v => updateMaterialNode(n.id, 'pricePerUnit', v)}
+                    />
+                  </div>
+                  <div className="w-20 text-right">
+                    <span className="text-xs font-mono font-semibold text-[var(--color-text-main)] tabular-nums">
+                      {formatMoney(n.value)}
+                    </span>
+                  </div>
                 </div>
-                <input type="range"
-                  min={Math.max(1, Math.ceil(sim.finalHPP))}
-                  max={Math.max(Math.ceil(sim.finalHPP) * 5, (activeProduct.sellingPrice || sim.finalHPP * 3) * 2.5)}
-                  step={config?.activeCurrency === 'IDR' || config?.currencySymbol === 'Rp' ? 1000 : 1}
-                  value={simulatedRetailPrice}
-                  onChange={e => setSimulatedRetailPrice(parseInt(e.target.value))}
-                  className="w-full"
-                  style={{ accentColor: accentHex }}
-                />
-                <div className="flex justify-between text-xs text-[var(--color-text-muted)]">
-                  <span>{t('hpp_floor_hpp')} {formatMoney(Math.ceil(sim.finalHPP))}</span>
-                  <span>{t('hpp_ceiling')} {formatMoney(Math.max(Math.ceil(sim.finalHPP) * 5, (activeProduct.sellingPrice || sim.finalHPP * 3) * 2.5))}</span>
+              ))}
+
+              {/* Labor nodes */}
+              {bd.nodes.labor.map(n => (
+                <div key={n.id}
+                  className="grid grid-cols-[1fr_auto_auto] gap-2 items-center rounded-lg px-2 py-1.5 hover:bg-white/5 transition-colors group">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <NodeTypeIcon type="labor" />
+                    <span className="text-xs text-[var(--color-text-main)] truncate">{n.label}</span>
+                  </div>
+                  <div className="w-24 text-right">
+                    <EditCell
+                      value={n.costPerUnit}
+                      onCommit={v => updateLaborNode(n.id, v)}
+                    />
+                  </div>
+                  <div className="w-20 text-right">
+                    <span className="text-xs font-mono font-semibold text-[var(--color-text-main)] tabular-nums">
+                      {formatMoney(n.value)}
+                    </span>
+                  </div>
                 </div>
+              ))}
+
+              {/* Packaging nodes */}
+              {bd.nodes.packaging.map(n => (
+                <div key={n.id}
+                  className="grid grid-cols-[1fr_auto_auto] gap-2 items-center rounded-lg px-2 py-1.5 hover:bg-white/5 transition-colors group">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <NodeTypeIcon type="packaging" />
+                    <span className="text-xs text-[var(--color-text-main)] truncate">{n.label}</span>
+                  </div>
+                  <div className="w-24 text-right">
+                    <EditCell
+                      value={n.costPerUnit}
+                      onCommit={v => updatePackagingNode(n.id, v)}
+                    />
+                  </div>
+                  <div className="w-20 text-right">
+                    <span className="text-xs font-mono font-semibold text-[var(--color-text-main)] tabular-nums">
+                      {formatMoney(n.value)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Overhead nodes */}
+              {bd.nodes.overhead.map(n => (
+                <div key={n.id}
+                  className="grid grid-cols-[1fr_auto_auto] gap-2 items-center rounded-lg px-2 py-1.5 hover:bg-white/5 transition-colors group">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <NodeTypeIcon type="overhead" />
+                    <span className="text-xs text-[var(--color-text-main)] truncate">{n.label}</span>
+                  </div>
+                  <div className="w-24 text-right space-y-0.5">
+                    <EditCell
+                      value={n.monthlyTotal} prefix="Rp" suffix="/mo"
+                      onCommit={v => updateOverheadNode(n.id, 'monthlyTotal', v)}
+                    />
+                    <span className="text-[10px] text-[var(--color-text-muted)] block">÷</span>
+                    <EditCell
+                      value={n.unitsPerMonth} prefix="" suffix=" u/mo"
+                      onCommit={v => updateOverheadNode(n.id, 'unitsPerMonth', v)}
+                    />
+                  </div>
+                  <div className="w-20 text-right">
+                    <span className="text-xs font-mono font-semibold text-[var(--color-text-main)] tabular-nums">
+                      {formatMoney(n.value)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Divider */}
+              <div className="border-t border-[var(--color-border-line)] my-2" />
+
+              {/* HPP — computed, read-only */}
+              {bd.hpp && (
+                <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center rounded-lg px-2 py-2"
+                  style={{ background: `${accentHex}15`, border: `1px solid ${accentHex}30` }}>
+                  <div className="flex items-center gap-1.5">
+                    <NodeTypeIcon type="hpp" />
+                    <span className="text-xs font-semibold" style={{ color: accentHex }}>HPP / Unit</span>
+                    <span className="text-[10px] text-[var(--color-text-muted)]">computed</span>
+                  </div>
+                  <div className="w-24" />
+                  <div className="w-20 text-right">
+                    <span className="text-sm font-mono font-bold tabular-nums" style={{ color: accentHex }}>
+                      {formatMoney(bd.hpp.value)}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Margin — computed, read-only */}
+              {bd.margin && (
+                <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center rounded-lg px-2 py-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <NodeTypeIcon type="margin" />
+                    <span className="text-xs text-emerald-400">Margin</span>
+                  </div>
+                  <div className="w-24 text-right">
+                    <span className="text-xs font-mono text-emerald-400">
+                      {bd.margin.marginPercent.toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="w-20 text-right">
+                    <span className="text-xs font-mono font-semibold text-emerald-400 tabular-nums">
+                      {formatMoney(bd.margin.value)}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Retail price slider (simulation only — affects profit cards & scenario table) */}
+            <div className="pt-3 border-t border-[var(--color-border-line)] space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[var(--color-text-muted)] uppercase">{t('hpp_target_price')}</span>
+                <span className="font-mono font-bold" style={{ color: accentHex }}>
+                  {formatMoney(simulatedRetailPrice)}
+                </span>
+              </div>
+              <input type="range"
+                min={Math.max(1, Math.ceil(sim.finalHPP))}
+                max={Math.max(Math.ceil(sim.finalHPP) * 5, (activeProduct.sellingPrice || sim.finalHPP * 3) * 2.5)}
+                step={config?.activeCurrency === 'IDR' || config?.currencySymbol === 'Rp' ? 1000 : 1}
+                value={simulatedRetailPrice}
+                onChange={e => setSimulatedRetailPrice(parseInt(e.target.value))}
+                className="w-full"
+                style={{ accentColor: accentHex }}
+              />
+              <div className="flex justify-between text-[10px] text-[var(--color-text-muted)]">
+                <span>Floor: {formatMoney(Math.ceil(sim.finalHPP))}</span>
+                <span>Max: {formatMoney(Math.max(Math.ceil(sim.finalHPP) * 5, (activeProduct.sellingPrice || sim.finalHPP * 3) * 2.5))}</span>
               </div>
             </div>
           </div>
@@ -306,9 +502,6 @@ export default function HPPEngineView() {
                   </p>
                 </div>
                 <div className="text-right shrink-0">
-                  <span className="text-[var(--color-text-muted)] text-xs line-through mr-2">
-                    {t('hpp_core_label')} {formatMoney(sim.originalHPP)}
-                  </span>
                   <span className="text-2xl font-mono font-bold" style={{ color: accentHex }}>
                     {formatMoney(sim.finalHPP)}
                   </span>
@@ -318,7 +511,6 @@ export default function HPPEngineView() {
 
             {/* Profit cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Gross Profit */}
               <div className="glass-panel p-5 rounded-lg space-y-3">
                 <div className="flex justify-between items-center">
                   <h4 className="text-xs font-semibold tracking-wider text-[var(--color-text-main)] uppercase flex items-center gap-1">
@@ -338,7 +530,6 @@ export default function HPPEngineView() {
                 </p>
               </div>
 
-              {/* Net Profit */}
               <div className={`glass-panel p-5 rounded-lg space-y-3 border-l-2 ${
                 sim.netP > 0 ? 'border-emerald-500' : 'border-red-500'
               }`}>
