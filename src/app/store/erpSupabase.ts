@@ -612,3 +612,55 @@ export const sbSale = {
   },
   remove: (companyId: string, code: string) => softDeleteByCode('sales_orders', companyId, code),
 };
+
+// ─── First-login seed ───────────────────────────────────────────────────────────
+// Writes the demo dataset into Supabase for a company that has no rows yet. Saves
+// run in foreign-key dependency order: parents (suppliers, products) MUST land
+// before children that resolve their codes → UUIDs (materials, samples, sales…).
+// Best-effort: every sb*.save swallows its own errors, so a missing table or RLS
+// rule degrades to a no-op rather than throwing.
+
+export interface SeedData {
+  suppliers: Supplier[];
+  products: MasterProduct[];
+  materials: Material[];
+  customers: Customer[];
+  assets: AssetEquipment[];
+  adsCampaigns: AdsCampaign[];
+  kols: KolTracking[];
+  cashflow: CashTransaction[];
+  operationalCosts: OperationalCost[];
+  variants: SizeVariantInventory[];
+  samples: SampleDevelopment[];
+  production: ProductionBatch[];
+  sales: SalesRecord[];
+  purchaseOrders: PurchaseOrder[];
+}
+
+export async function seedSupabase(companyId: string, d: SeedData): Promise<void> {
+  if (!supabase || !companyId) return;
+
+  // Tier 1 — no FK dependencies (parents resolved by later tiers)
+  await Promise.all(d.suppliers.map(s => sbSupplier.save(companyId, s)));
+  await Promise.all(d.products.map(p => sbProduct.save(companyId, p)));
+
+  // Tier 2 — depend on suppliers/products existing, plus standalone entities
+  await Promise.all([
+    ...d.materials.map(m => sbMaterial.save(companyId, m)),
+    ...d.customers.map(c => sbCustomer.save(companyId, c)),
+    ...d.assets.map(a => sbAsset.save(companyId, a)),
+    ...d.adsCampaigns.map(a => sbAds.save(companyId, a)),
+    ...d.kols.map(k => sbKol.save(companyId, k)),
+    ...d.cashflow.map(c => sbCashTransaction.save(companyId, c)),
+    ...d.operationalCosts.map(o => sbOpsCost.save(companyId, o)),
+  ]);
+
+  // Tier 3 — depend on products + materials (resolved above)
+  await Promise.all([
+    ...d.variants.map(v => sbVariant.save(companyId, v)),
+    ...d.samples.map(s => sbSample.save(companyId, s)),
+    ...d.production.map(p => sbProduction.save(companyId, p)),
+    ...d.sales.map(s => sbSale.save(companyId, s)),
+    ...d.purchaseOrders.map(po => sbPurchaseOrder.save(companyId, po)),
+  ]);
+}

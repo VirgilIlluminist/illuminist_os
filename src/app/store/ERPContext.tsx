@@ -6,7 +6,7 @@ import { useBusiness } from './BusinessContext';
 import { storageMode } from '../../core/repositories/index';
 import { isSupabaseEnabled } from '../../infra/supabase/client';
 import {
-  hydrateFromSupabase,
+  hydrateFromSupabase, seedSupabase,
   sbSupplier, sbMaterial, sbProduct, sbCustomer, sbSale,
   sbSample, sbProduction, sbVariant, sbAds, sbKol,
   sbPurchaseOrder, sbAsset, sbCashTransaction, sbOpsCost,
@@ -540,6 +540,47 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
     hydrateFromSupabase(companyId)
       .then(h => {
         if (cancelled) return;
+        // A brand-new company (or an unmigrated Supabase project) returns no rows
+        // for any core entity. Rather than show empty pages everywhere, populate
+        // the UI from the local demo dataset and persist it to Supabase once.
+        const isEmpty =
+          h.suppliers.length === 0 && h.products.length === 0 &&
+          h.materials.length === 0 && h.sales.length === 0 &&
+          h.customers.length === 0;
+
+        if (isEmpty) {
+          setSuppliers(initialSuppliers);
+          setMaterials(initialMaterials);
+          setProducts(initialProducts);
+          setCustomers(initialCustomers);
+          setSales(initialSales);
+          setSamples(initialSamples);
+          setProduction(initialProduction);
+          setVariants(initialVariants);
+          setAdsCampaigns(initialAdsCampaigns);
+          setKols(initialKols);
+          setPurchaseOrders(initialPOS);
+          setAssets(initialAssets);
+          setCashflowState(initialCash);
+          setOperationalCosts(initialOperationalCosts);
+
+          // Persist the seed to Supabase exactly once per company (best-effort).
+          const seedFlag = `illum_seeded_${companyId}`;
+          if (!localStorage.getItem(seedFlag)) {
+            localStorage.setItem(seedFlag, '1');
+            seedSupabase(companyId, {
+              suppliers: initialSuppliers, products: initialProducts,
+              materials: initialMaterials, customers: initialCustomers,
+              assets: initialAssets, adsCampaigns: initialAdsCampaigns,
+              kols: initialKols, cashflow: initialCash,
+              operationalCosts: initialOperationalCosts, variants: initialVariants,
+              samples: initialSamples, production: initialProduction,
+              sales: initialSales, purchaseOrders: initialPOS,
+            }).catch(() => { /* best-effort; UI already populated */ });
+          }
+          return;
+        }
+
         setSuppliers(h.suppliers);
         setMaterials(h.materials);
         setProducts(h.products);
