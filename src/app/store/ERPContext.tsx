@@ -548,7 +548,14 @@ export function ERPProvider({ children }: { children: React.ReactNode }) {
           h.materials.length === 0 && h.sales.length === 0 &&
           h.customers.length === 0;
 
-        if (isEmpty) {
+        // Only the canonical demo business (NEVAEH) gets the fashion demo dataset.
+        // A brand-new business created via the wizard must start EMPTY — seeding it
+        // with parkas/hoodies would be wrong for a coffee shop or agency.
+        const isDemoCompany =
+          companyId === 'nevaeh' ||
+          companyId === '00000000-0000-0000-0000-000000000002';
+
+        if (isEmpty && isDemoCompany) {
           setSuppliers(initialSuppliers);
           setMaterials(initialMaterials);
           setProducts(initialProducts);
