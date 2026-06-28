@@ -76,7 +76,7 @@ function ChannelForm({
       </div>
 
       {/* Live preview */}
-      <div className="rounded-lg border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+      <div className="glass-inset rounded-lg p-4">
         <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">
           Preview: Gross Rp 100.000
         </p>
@@ -321,7 +321,7 @@ export default function ShopeeChannelView() {
           )}
 
           {showForm && (
-            <div className="border border-[var(--color-border-line)] rounded-xl p-5 bg-white/[0.02]">
+            <div className="glass-panel border border-[var(--color-border-line)] bg-[var(--color-card-bg)] rounded-2xl p-5">
               <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-main)] mb-4">
                 {editChannel ? 'Edit Channel' : 'Channel Baru'}
               </h3>
@@ -341,7 +341,7 @@ export default function ShopeeChannelView() {
           ) : (
             <div className="space-y-3">
               {channels.map(ch => (
-                <div key={ch.id} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.02] flex flex-col md:flex-row md:items-center gap-4">
+                <div key={ch.id} className="glass-panel border border-[var(--color-border-line)] bg-[var(--color-card-bg)] rounded-2xl p-4 flex flex-col md:flex-row md:items-center gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <ShoppingBag size={14} style={{ color: accent }}/>
@@ -413,7 +413,7 @@ export default function ShopeeChannelView() {
 
           {/* Import result preview */}
           {importResult && (
-            <div className="border border-[var(--color-border-line)] rounded-xl p-5 bg-white/[0.02] space-y-4">
+            <div className="glass-panel border border-[var(--color-border-line)] bg-[var(--color-card-bg)] rounded-2xl p-5 space-y-4">
               <div className="flex items-center gap-2">
                 <Check size={14} className="text-green-400"/>
                 <span className="text-sm font-semibold text-[var(--color-text-main)]">
@@ -428,7 +428,7 @@ export default function ShopeeChannelView() {
                   { label: 'Total Fee',     value: importResult.batch.total_fees,  icon: TrendingDown, color: 'text-red-400' },
                   { label: 'Net Earnings',  value: importResult.batch.total_net,   icon: Package,      color: 'text-green-400' },
                 ].map(({ label, value, icon: Icon, color }) => (
-                  <div key={label} className="bg-white/[0.03] rounded-lg p-3">
+                  <div key={label} className="glass-inset rounded-lg p-3">
                     <Icon size={14} className={`mb-1 ${color}`}/>
                     <p className="text-xs text-[var(--color-text-muted)] uppercase">{label}</p>
                     <p className={`text-sm font-mono font-bold ${color}`}>{currency}{value.toLocaleString('id')}</p>
@@ -484,7 +484,7 @@ export default function ShopeeChannelView() {
                   const isActive = activeBatch === b.id;
                   return (
                     <div key={b.id}
-                      className={`border rounded-xl p-4 cursor-pointer transition-all ${isActive ? 'border-white/30 bg-white/[0.04]' : 'border-[var(--color-border-line)] bg-white/[0.02] hover:bg-white/[0.03]'}`}
+                      className={`bg-[var(--color-card-bg)] border rounded-2xl p-4 cursor-pointer transition-all ${isActive ? 'border-[var(--accent-primary)]/50' : 'border-[var(--color-border-line)] hover:border-white/15'}`}
                       onClick={() => handleViewBatch(b.id)}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -530,7 +530,7 @@ export default function ShopeeChannelView() {
 
               {/* Settlement detail */}
               {activeBatch && settlements.length > 0 && (
-                <div className="border border-[var(--color-border-line)] rounded-xl p-4">
+                <div className="glass-panel border border-[var(--color-border-line)] bg-[var(--color-card-bg)] rounded-2xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-bold text-[var(--color-text-main)] uppercase">
                       Detail: {activeBatchData?.filename}
