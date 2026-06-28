@@ -37,13 +37,14 @@ function AppLayoutInner({ onSignOut, userEmail }: { onSignOut: () => void; userE
 
   const unread = notifications.filter(n => !n.read).length;
 
-  // Theme sync
+  // Theme sync — all dark-wallpaper themes use html.glass so cards are
+  // semi-transparent and the wallpaper gradient bleeds through (Fierce/visionOS style).
+  // Only 'light' theme uses solid card surfaces.
   React.useEffect(() => {
     const html = document.documentElement;
     html.classList.remove('is-light', 'glass', 'is-dark');
-    if (config?.themeMode === 'light')      html.classList.add('is-light');
-    else if (config?.themeMode === 'glass') html.classList.add('glass');
-    else                                    html.classList.add('is-dark');
+    if (config?.themeMode === 'light') html.classList.add('is-light');
+    else                               html.classList.add('glass');
   }, [config?.themeMode]);
 
   // Tab title sync — reflect the workspace name, never the legacy product name

@@ -522,17 +522,74 @@ grep -rn "#8b5cf6\|#5b21b6\|rgba(124,58,237\|bg-purple-\|text-purple-\|text-viol
 
 ---
 
-## SISTEM GLASS (backdrop-filter)
+## SISTEM GLASS — DEFINISI RESMI
 
-`backdrop-filter` HANYA di **satu** elemen: `.glass-shell` (wrapper luar, `index.css`).
-Ia juga punya `transform: translateZ(0)` → bikin stacking/containing context.
+### Apa yang dimaksud "glass" dalam proyek ini
 
-- ❌ JANGAN tambah `backdropFilter`/`backdrop-blur` di card/panel/modal dalam shell.
-  Nested blur = white-wash + bisa mematikan pointer event di input.
-- ✅ Surface dalam = fill solid translucent: card `rgba(255,255,255,0.06)`, modal `rgba(14,10,28,0.92)`.
-- ✅ Modal: overlay `rgba(0,0,0,0.65)` TANPA blur; card `rgba(14,10,28,0.92)` + border `rgba(255,255,255,0.12)`.
-- Pengecualian (jangan diubah): LoginPage card, panel Wallpaper di BackgroundStage,
-  fitur slider `blur(${tableBlur}px)` di FinancesAndAssetsView.
+**Glass = wallpaper gradient TERLIHAT menembus card surfaces.** Bukan flat dark. Bukan solid hitam.
+Referensi visual: **Fierce app, visionOS, Arc browser** — background ambient bleeding through translucent panels.
+
+Visual BENAR ✅:
+- Background: gradient wallpaper (purple/blue/green sesuai tema) VISIBLE di balik semua elemen
+- Cards: semi-transparent overlay (`rgba(255,255,255,0.06)` = 6% white tint), wallpaper terlihat
+- Sidebar: TRANSPARAN — wallpaper gradient terlihat melaluinya
+- Satu blur layer (`glass-shell`) mengaburkan wallpaper → frosted glass look
+- Hasilnya: app terasa "mengapung" di atas ambient background, bukan kotak hitam
+
+Visual SALAH ❌ (jangan buat):
+- Card backgrounds solid gelap (`#0d0d15` atau `rgba(14,10,28,0.92)` untuk card biasa)
+- Wallpaper tidak terlihat sama sekali di belakang content
+- Tampilan "flat dark mode" tanpa translucency
+
+### Cara kerja implementasi
+
+```
+BackgroundStage        → renders --bg-wallpaper gradient di belakang segalanya
+  └── bezel-frame      → decorative ring
+      └── glass-shell  → SATU backdrop-filter: blur(24px) saturate(140%)
+                         background: rgba(10,6,26,0.22) — dark transparent tint
+          └── content  → background: transparent
+              ├── sidebar → transparent
+              └── cards   → rgba(255,255,255,0.06) — wallpaper terlihat
+```
+
+### html.glass — SELALU AKTIF untuk dark themes
+
+`html.glass` **selalu ditambahkan untuk semua dark themes** (midnight/ocean/forest/rose).
+Hanya `html.is-light` untuk light mode. **`html.is-dark` dihapus — tidak dipakai lagi.**
+
+Efek `html.glass`:
+- `--color-card-bg: rgba(30,28,40,0.55)` (bukan solid `#0d0d15`)
+- Semua `[class*="rounded-2xl"]` → `rgba(255,255,255,0.06)` via CSS override
+
+### Class primitif yang benar
+
+| Use case | Class | Hasil |
+|---|---|---|
+| Card/panel biasa | `glass-card` atau `glass-inset` | `rgba(255,255,255,0.06)` |
+| Modal outer | inline `rgba(14,10,28,0.92)` | Pekat, untuk modal focus |
+
+- ✅ PAKAI `glass-card` / `glass-inset` untuk card biasa
+- ✅ PAKAI `bg-[var(--color-card-bg)]` — dalam `html.glass` ini TRANSLUCENT
+- ❌ JANGAN `bg-white/[0.02]` hardcode — terlalu samar, tidak ikut theme system
+- ❌ JANGAN nested `backdrop-filter`/`backdrop-blur` di dalam glass-shell (white-wash + matikan input)
+- ❌ JANGAN solid `rgba(14,10,28,0.92)` untuk regular card — itu untuk MODAL saja
+
+### Verifikasi glass (preview_eval)
+
+```javascript
+({
+  htmlClass: document.documentElement.className,          // harus "glass" (bukan is-dark)
+  cardBg: getComputedStyle(document.documentElement)
+            .getPropertyValue('--color-card-bg').trim(),  // harus rgba(..., 0.55)
+  firstCard: (() => { const el = document.querySelector('[class*="rounded-2xl"]');
+    return el ? getComputedStyle(el).background : 'none'; })() // harus rgba(255,255,255,0.06)
+})
+// Expected: htmlClass:"glass", cardBg:"rgba(30,28,40,0.55)", firstCard:"rgba(255,255,255,0.06)"
+```
+
+Pengecualian (jangan diubah): LoginPage card, panel Wallpaper di BackgroundStage,
+fitur slider `blur(${tableBlur}px)` di FinancesAndAssetsView.
 
 ---
 
