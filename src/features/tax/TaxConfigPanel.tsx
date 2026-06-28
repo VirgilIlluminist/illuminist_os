@@ -90,7 +90,7 @@ export default function TaxConfigPanel() {
       </div>
 
       {/* Status PKP */}
-      <div className="flex items-center justify-between p-3 rounded-xl border border-[var(--color-border-line)] bg-white/[0.02]">
+      <div className="glass-panel flex items-center justify-between p-4 rounded-2xl border border-[var(--color-border-line)] bg-[var(--color-card-bg)]">
         <div>
           <p className="text-xs font-semibold text-[var(--color-text-main)]">Status PKP</p>
           <p className="text-xs text-[var(--color-text-muted)]">Pengusaha Kena Pajak — wajib pungut PPN</p>
@@ -147,7 +147,7 @@ export default function TaxConfigPanel() {
 
       {/* Live preview PPN */}
       {form.pkp_status && (
-        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+        <div className="glass-inset rounded-xl p-4">
           <div className="flex items-center gap-1.5 mb-3">
             <Info size={14} className="text-[var(--color-text-muted)]"/>
             <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">

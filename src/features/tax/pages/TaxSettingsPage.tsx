@@ -89,7 +89,7 @@ export default function TaxSettingsPage() {
                     { label: 'PPh 23',          value: summary.pph23_total,     color: 'text-[var(--color-text-muted)]' },
                     { label: 'Total Pajak',     value: summary.total_tax,       color: 'text-yellow-400' },
                   ].map(({ label, value, color }) => (
-                    <div key={label} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.02]">
+                    <div key={label} className="glass-panel border border-[var(--color-border-line)] bg-[var(--color-card-bg)] rounded-2xl p-4">
                       <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
                       <p className={`text-lg font-mono font-bold ${color}`}>{currency}{value.toLocaleString('id')}</p>
                     </div>
@@ -97,7 +97,7 @@ export default function TaxSettingsPage() {
                 </div>
               )}
 
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-white/[0.02] border border-[var(--color-border-line)]">
+              <div className="flex items-center gap-2 p-3 rounded-lg glass-inset">
                 <FileText size={14} className="text-[var(--color-text-muted)]"/>
                 <span className="text-xs text-[var(--color-text-muted)]">
                   Untuk laporan SPT Masa PPN, export data dari rekapitulasi di atas per bulan.
