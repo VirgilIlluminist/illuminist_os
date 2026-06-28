@@ -63,7 +63,7 @@ export default function ImageUploader({
 
   return (
     <div className="space-y-1.5" id="image-uploader-wrapper">
-      {label && <span className="block text-[10px] uppercase text-[var(--color-text-muted)] font-mono tracking-wider">{label}</span>}
+      {label && <span className="block text-xs uppercase text-[var(--color-text-muted)] tracking-wider">{label}</span>}
       
       {currentImage ? (
         <div className="relative group overflow-hidden border border-white/[0.08] bg-[var(--color-background)]/40 rounded flex items-center justify-center p-2 h-28 aspect-video max-w-sm rounded-lg">
@@ -114,8 +114,8 @@ export default function ImageUploader({
             <Upload size={14} className="animate-pulse" />
           </div>
           <div className="text-center">
-            <p className="text-[10px] font-mono text-[var(--color-text-muted)]">Drag swatches or click to browse</p>
-            <p className="text-[9px] font-mono text-[var(--color-text-muted)] mt-0.5">JPEG, PNG, WebP up to 2MB</p>
+            <p className="text-xs text-[var(--color-text-muted)]">Drag swatches or click to browse</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-0.5">JPEG, PNG, WebP up to 2MB</p>
           </div>
         </div>
       )}

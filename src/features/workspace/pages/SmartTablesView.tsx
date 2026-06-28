@@ -1778,7 +1778,7 @@ export default function SmartTablesView() {
                             width: colWidths[col.key] || 150,
                             minWidth: colWidths[col.key] || 150,
                             maxWidth: colWidths[col.key] || 150,
-                            backgroundColor: meta.highlight || (isSelected ? 'rgba(99,102,241,0.1)' : 'transparent')
+                            backgroundColor: meta.highlight || (isSelected ? 'color-mix(in srgb, var(--accent-primary) 10%, transparent)' : 'transparent')
                           }}
                         >
                           {/* Top-right annotation comment red tag bookmark */}
