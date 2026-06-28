@@ -203,7 +203,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
               <div className="overflow-x-auto rounded-xl border border-[var(--color-border-line)]">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-[var(--color-border-line)] bg-white/[0.02]">
+                    <tr className="border-b border-[var(--color-border-line)] bg-white/[0.06]">
                       <th className="px-3 py-2 text-left text-[var(--color-text-muted)]">#</th>
                       <th className="px-3 py-2 text-left text-[var(--color-text-muted)]">Status</th>
                       {template.fields.map(f => (
@@ -259,7 +259,7 @@ export default function CSVImportModal({ entity, onClose, onSuccess }: Props) {
                   { label: 'Berhasil',     value: result.imported, color: 'text-green-400'                },
                   { label: 'Dilewati',     value: result.skipped,  color: result.skipped > 0 ? 'text-red-400' : 'text-[var(--color-text-muted)]' },
                 ].map(({ label, value, color }) => (
-                  <div key={label} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.02]">
+                  <div key={label} className="border border-[var(--color-border-line)] rounded-xl p-4 bg-white/[0.06]">
                     <p className="text-xs uppercase text-[var(--color-text-muted)]">{label}</p>
                     <p className={`text-2xl font-mono font-bold ${color}`}>{value}</p>
                   </div>

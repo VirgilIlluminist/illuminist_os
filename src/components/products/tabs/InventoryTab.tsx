@@ -56,13 +56,13 @@ export default function InventoryTab({ productId, variants, sizeVariants, sales,
     <div className="space-y-4">
       {/* Stock summary */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
           <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">Total Stok</p>
           <p className={`text-2xl font-mono font-bold ${displayStock === 0 ? 'text-red-400' : displayStock <= 10 ? 'text-yellow-400' : 'text-green-400'}`}>
             {displayStock} <span className="text-base font-normal">pcs</span>
           </p>
         </div>
-        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
           <p className="text-xs uppercase text-[var(--color-text-muted)] mb-2">Per Variant</p>
           <div className="space-y-1">
             {(bbVariants.length > 0 ? bbVariants.map(v => ({ name: v.name, stock: v.stock })) :
@@ -102,7 +102,7 @@ export default function InventoryTab({ productId, variants, sizeVariants, sales,
           <div className="overflow-x-auto rounded-xl border border-[var(--color-border-line)]">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[var(--color-border-line)] bg-white/[0.02]">
+                <tr className="border-b border-[var(--color-border-line)] bg-white/[0.06]">
                   {['Tanggal', 'Tipe', 'Qty', 'Referensi', 'Saldo'].map(h => (
                     <th key={h} className="px-3 py-2.5 text-left text-xs uppercase text-[var(--color-text-muted)]">{h}</th>
                   ))}
@@ -110,7 +110,7 @@ export default function InventoryTab({ productId, variants, sizeVariants, sales,
               </thead>
               <tbody>
                 {filtered.map((m, i) => (
-                  <tr key={i} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.02]">
+                  <tr key={i} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.06]">
                     <td className="px-3 py-2 text-[var(--color-text-muted)]">{m.date.slice(0, 10)}</td>
                     <td className="px-3 py-2">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase ${m.type === 'in' ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400'}`}>

@@ -23,7 +23,7 @@ export default function SalesInvoicePanel({ sales, products }: Props) {
     products.find(p => p.id === productId)?.name ?? productId;
 
   return (
-    <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+    <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText size={16} style={{ color: accent }}/>
@@ -61,7 +61,7 @@ export default function SalesInvoicePanel({ sales, products }: Props) {
           </div>
 
           {selectedSale && (
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-[var(--color-border-line)]">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.06] border border-[var(--color-border-line)]">
               <div className="text-sm text-[var(--color-text-muted)] space-y-0.5">
                 <p><span className="text-[var(--color-text-main)]">{selectedSale.customerName}</span> · {selectedSale.channel}</p>
                 <p>Qty {selectedSale.qtySold} × Rp{selectedSale.pricePerPcs.toLocaleString('id')} · {selectedSale.date}</p>

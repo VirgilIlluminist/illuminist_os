@@ -72,7 +72,7 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
 
           {/* Order summary */}
-          <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-2">
+          <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4 space-y-2">
             <p className="text-xs font-medium text-[var(--color-text-muted)] mb-3">Ringkasan Pesanan</p>
             <div className="flex justify-between text-xs font-mono">
               <span className="text-[var(--color-text-muted)]">Produk</span>
@@ -114,7 +114,7 @@ export default function InvoiceModal({ sale, productName, onClose }: Props) {
                 className="w-full bg-white/5 border border-[var(--color-border-line)] rounded-xl px-4 py-2.5 text-sm text-[var(--color-text-main)] focus:outline-none"/>
             </div>
             <div className="flex items-end pb-1">
-              <div className="flex items-center justify-between w-full p-3 rounded-xl border border-[var(--color-border-line)] bg-white/[0.02]">
+              <div className="flex items-center justify-between w-full p-3 rounded-xl border border-[var(--color-border-line)] bg-white/[0.06]">
                 <div>
                   <p className="text-sm font-medium text-[var(--color-text-main)]">Status Pembayaran</p>
                   <p className="text-xs text-[var(--color-text-muted)]">{isPaid ? 'Lunas' : 'Belum Lunas'}</p>

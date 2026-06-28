@@ -42,7 +42,7 @@ export default function MaterialsTab({ productId, materials, productHPP, currenc
       <div className="overflow-x-auto rounded-xl border border-[var(--color-border-line)]">
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-[var(--color-border-line)] bg-white/[0.02]">
+            <tr className="border-b border-[var(--color-border-line)] bg-white/[0.06]">
               {['Nama Bahan', 'Satuan', 'Harga/Satuan', 'Supplier', 'Stok Min'].map(h => (
                 <th key={h} className="px-3 py-2.5 text-left text-[var(--color-text-muted)] text-xs uppercase tracking-wider">{h}</th>
               ))}
@@ -50,7 +50,7 @@ export default function MaterialsTab({ productId, materials, productHPP, currenc
           </thead>
           <tbody>
             {linkedMaterials.map(m => (
-              <tr key={m.id} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.02] transition-colors">
+              <tr key={m.id} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.06] transition-colors">
                 <td className="px-3 py-2 font-semibold text-[var(--color-text-main)]">{m.name}</td>
                 <td className="px-3 py-2 text-[var(--color-text-muted)]">{m.unit}</td>
                 <td className="px-3 py-2 text-[var(--color-text-main)]">{currency}{m.costPerUnit.toLocaleString('id')}</td>
@@ -69,7 +69,7 @@ export default function MaterialsTab({ productId, materials, productHPP, currenc
           { label: 'HPP Aktual', value: `${currency}${productHPP.toLocaleString('id')}`, color: 'text-[var(--color-text-main)]' },
           { label: 'Labor + Overhead', value: `${currency}${laborOverhead.toLocaleString('id')}`, color: laborOverhead < 0 ? 'text-red-400' : 'text-[var(--color-text-muted)]' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+          <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
             <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
             <p className={`text-base font-mono font-bold ${color}`}>{value}</p>
           </div>

@@ -161,7 +161,7 @@ export default function ProductListView() {
               <div
                 key={p.id}
                 onClick={() => navigate(`/app/products/${p.id}`)}
-                className="group relative rounded-2xl border border-[var(--color-border-line)] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/20 transition-all cursor-pointer overflow-hidden"
+                className="group relative rounded-2xl border border-[var(--color-border-line)] bg-white/[0.06] hover:bg-white/[0.04] hover:border-white/20 transition-all cursor-pointer overflow-hidden"
               >
                 {/* Cover */}
                 <div className="aspect-[4/3] bg-black/20 overflow-hidden">

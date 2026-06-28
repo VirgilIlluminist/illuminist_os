@@ -110,7 +110,7 @@ export default function ImageUploader({
             className="absolute inset-0 opacity-0 cursor-pointer"
             onChange={handleChange}
           />
-          <div className="p-1.5 rounded bg-white/[0.02] border border-white/[0.05] text-[var(--color-text-muted)]">
+          <div className="p-1.5 rounded bg-white/[0.06] border border-white/[0.05] text-[var(--color-text-muted)]">
             <Upload size={14} className="animate-pulse" />
           </div>
           <div className="text-center">

@@ -65,7 +65,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
             { label: 'HPP Tertinggi',  value: `${currency}${Math.round(maxHPP).toLocaleString('id')}` },
             { label: 'HPP Terendah',   value: `${currency}${Math.round(minHPP).toLocaleString('id')}` },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-3">
+            <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-3">
               <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
               <p className="text-base font-mono font-bold text-[var(--color-text-main)]">{value}</p>
             </div>
@@ -87,7 +87,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
 
       {/* Add batch form */}
       {showForm && (
-        <form onSubmit={handleAdd} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-3">
+        <form onSubmit={handleAdd} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4 space-y-3">
           <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
             {nextBatchNumber(batches)}
           </p>
@@ -136,7 +136,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
         <div className="overflow-x-auto rounded-xl border border-[var(--color-border-line)]">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-[var(--color-border-line)] bg-white/[0.02]">
+              <tr className="border-b border-[var(--color-border-line)] bg-white/[0.06]">
                 {['Batch', 'Tanggal', 'Qty', 'HPP/pcs', 'Harga Jual', 'Status', 'Catatan'].map(h => (
                   <th key={h} className="px-3 py-2.5 text-left text-xs uppercase tracking-wider text-[var(--color-text-muted)]">{h}</th>
                 ))}
@@ -144,7 +144,7 @@ export default function ProductionTab({ productId, batches, currency, accent, on
             </thead>
             <tbody>
               {batches.map(b => (
-                <tr key={b.id} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.02]">
+                <tr key={b.id} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.06]">
                   <td className="px-3 py-2 font-semibold text-[var(--color-text-main)]">{b.batchNumber}</td>
                   <td className="px-3 py-2 text-[var(--color-text-muted)]">{b.productionDate.slice(0, 10)}</td>
                   <td className="px-3 py-2 text-[var(--color-text-main)]">{b.quantity} pcs</td>

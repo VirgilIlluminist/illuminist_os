@@ -43,7 +43,7 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
       {/* KPI Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {kpis.map(({ label, value, sub, color, icon: Icon }) => (
-          <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+          <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
             <div className="flex items-center gap-1.5 mb-2">
               <Icon size={14} className="text-[var(--color-text-muted)]"/>
               <span className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">{label}</span>
@@ -59,7 +59,7 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
         <div className={`flex items-start gap-3 rounded-xl p-3 border ${
           restock.daysUntilStockout <= 7 ? 'border-red-500/30 bg-red-500/5' :
           restock.daysUntilStockout <= 14 ? 'border-yellow-500/30 bg-yellow-500/5' :
-          'border-[var(--color-border-line)] bg-white/[0.02]'
+          'border-[var(--color-border-line)] bg-white/[0.06]'
         }`}>
           <AlertTriangle size={14} className={restock.daysUntilStockout <= 7 ? 'text-red-400 mt-0.5 flex-shrink-0' : 'text-yellow-400 mt-0.5 flex-shrink-0'}/>
           <div className="text-xs space-y-0.5">
@@ -77,7 +77,7 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Variant stock breakdown */}
         {variants.length > 0 && (
-          <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
             <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Stok per Variant</p>
             <div className="space-y-2">
               {variants.filter(v => v.isActive).map(v => (
@@ -100,7 +100,7 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
 
         {/* Recent timeline */}
         {recentTimelineEvents.length > 0 && (
-          <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+          <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
             <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Timeline Terbaru</p>
             <div className="space-y-3">
               {recentTimelineEvents.map((ev, i) => (
@@ -122,7 +122,7 @@ export default function OverviewTab({ overview, sales, currency, accent }: Props
 
       {/* Recent journal */}
       {recentJournalEntries.length > 0 && (
-        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+        <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
           <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-3">Catatan Terbaru</p>
           <div className="space-y-3">
             {recentJournalEntries.map(j => (

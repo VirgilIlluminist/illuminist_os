@@ -61,7 +61,7 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
 
       {/* New entry form */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-3">
+        <form onSubmit={handleSubmit} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4 space-y-3">
           <div>
             <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Judul</label>
             <input type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
@@ -120,7 +120,7 @@ export default function JournalTab({ entries, accent, onNewEntry, onEditEntry }:
       ) : (
         <div className="space-y-3">
           {entries.map(entry => (
-            <div key={entry.id} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+            <div key={entry.id} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <h4 className="text-sm font-mono font-semibold text-[var(--color-text-main)]">{entry.title}</h4>

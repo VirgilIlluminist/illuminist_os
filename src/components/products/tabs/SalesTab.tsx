@@ -51,7 +51,7 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
           { label: 'Avg Order Value',value: `${currency}${Math.round(aov).toLocaleString('id')}` },
           { label: 'Bulan Terbaik',  value: bestMonth?.month ?? '-', sub: bestMonth ? `${currency}${Math.round(bestMonth.revenue / 1_000_000)}jt` : '' },
         ].map(({ label, value, sub }) => (
-          <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+          <div key={label} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
             <p className="text-xs uppercase text-[var(--color-text-muted)] mb-1">{label}</p>
             <p className="text-lg font-mono font-bold text-[var(--color-text-main)]">{value}</p>
             {sub && <p className="text-xs text-[var(--color-text-muted)]">{sub}</p>}
@@ -60,7 +60,7 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
       </div>
 
       {/* Monthly bar chart */}
-      <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4">
+      <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4">
         <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-4">Revenue 12 Bulan Terakhir</p>
         <div className="flex items-end gap-1.5 h-24">
           {last12.map(m => {
@@ -81,7 +81,7 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
         <div className="rounded-xl border border-[var(--color-border-line)] overflow-hidden">
           <table className="w-full text-xs">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-[var(--color-border-line)]">
+              <tr className="bg-white/[0.06] border-b border-[var(--color-border-line)]">
                 {['Channel', 'Units', 'Gross Revenue', 'Fees', 'Net Revenue'].map(h => (
                   <th key={h} className="px-3 py-2.5 text-left text-xs uppercase text-[var(--color-text-muted)]">{h}</th>
                 ))}
@@ -89,7 +89,7 @@ export default function SalesTab({ productId, sales, currency, accent }: Props) 
             </thead>
             <tbody>
               {channels.map(ch => (
-                <tr key={ch.channel} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.02]">
+                <tr key={ch.channel} className="border-b border-[var(--color-border-line)]/50 hover:bg-white/[0.06]">
                   <td className="px-3 py-2 font-semibold text-[var(--color-text-main)] capitalize">{ch.channel}</td>
                   <td className="px-3 py-2 text-[var(--color-text-main)]">{ch.unitsSold}</td>
                   <td className="px-3 py-2 text-[var(--color-text-main)]">{currency}{Math.round(ch.grossRevenue).toLocaleString('id')}</td>

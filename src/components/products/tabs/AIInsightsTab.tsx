@@ -38,7 +38,7 @@ function parseInsights(text: string): InsightCard[] {
 }
 
 const TYPE_STYLE: Record<InsightCard['type'], string> = {
-  info:    'border-[var(--color-border-line)] bg-white/[0.02]',
+  info:    'border-[var(--color-border-line)] bg-white/[0.06]',
   warning: 'border-yellow-500/30 bg-yellow-500/5',
   success: 'border-green-500/30 bg-green-500/5',
   tip:     'border-blue-500/30 bg-blue-500/5',
@@ -137,7 +137,7 @@ Gunakan data real di atas. Singkat, actionable, dalam bahasa Indonesia.`;
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 animate-pulse">
+            <div key={i} className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4 animate-pulse">
               <div className="h-3 bg-white/10 rounded w-1/3 mb-2"/>
               <div className="h-2 bg-white/5 rounded w-full mb-1"/>
               <div className="h-2 bg-white/5 rounded w-4/5"/>

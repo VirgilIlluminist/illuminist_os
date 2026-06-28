@@ -20,7 +20,7 @@ export default function MarginCalculator({ initialHpp, initialPrice, currency, a
   const INPUT = 'w-full bg-white/5 border border-[var(--color-border-line)] rounded-lg px-3 py-2 text-sm font-mono text-[var(--color-text-main)] focus:outline-none text-right';
 
   return (
-    <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.02] p-4 space-y-3">
+    <div className="rounded-xl border border-[var(--color-border-line)] bg-white/[0.06] p-4 space-y-3">
       <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)] mb-1">Margin Calculator</p>
 
       <div className="grid grid-cols-2 gap-3">

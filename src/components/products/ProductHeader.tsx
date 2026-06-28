@@ -91,7 +91,7 @@ export default function ProductHeader({ product, currentBatch, totalStock, curre
           { label: 'Harga',  value: `${currency}${price.toLocaleString('id')}`, color: 'text-[var(--color-text-main)]' },
           { label: 'Margin', value: hpp > 0 ? `${margin.toFixed(1)}%` : '—', color: margin < 20 ? 'text-red-400' : margin < 35 ? 'text-yellow-400' : 'text-green-400' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="rounded-lg border border-[var(--color-border-line)] bg-white/[0.02] px-3 py-2">
+          <div key={label} className="rounded-lg border border-[var(--color-border-line)] bg-white/[0.06] px-3 py-2">
             <p className="text-xs uppercase text-[var(--color-text-muted)]">{label}</p>
             <p className={`text-sm font-mono font-bold ${color}`}>{value}</p>
           </div>
