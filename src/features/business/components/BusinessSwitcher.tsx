@@ -1,12 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, Plus, Check } from 'lucide-react';
+import {
+  ChevronDown, Plus, Check,
+  Shirt, Coffee, UtensilsCrossed, Store, Briefcase, Wrench,
+  Building2, Wallet, TrendingUp, Building, Zap, Factory,
+} from 'lucide-react';
 import { useBusiness, Business } from '../../../app/store/BusinessContext';
 
-export const TYPE_ICONS: Record<string, string> = {
-  fashion:'👗', coffee:'☕', restaurant:'🍽', retail:'🏪',
-  agency:'💼', manufacturing:'🏭', service:'🛠',
-  personal_finance:'💰', investment:'📈', holding:'🏢', custom:'⚡',
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const BIZ_ICON_MAP: Record<string, React.ComponentType<any>> = {
+  fashion: Shirt, coffee: Coffee, restaurant: UtensilsCrossed, retail: Store,
+  agency: Briefcase, manufacturing: Factory, service: Wrench, property: Building2,
+  personal_finance: Wallet, investment: TrendingUp, holding: Building, custom: Zap,
 };
 
 export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => void }) {
@@ -30,7 +35,9 @@ export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => v
         onClick={() => { switchBusiness(biz.id); setOpen(false); }}
         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all cursor-pointer text-left ${indent ? 'ml-4 w-[calc(100%-16px)]' : ''} ${isActive ? 'bg-[var(--color-accent-highlight)]/10 text-[var(--color-text-main)]' : 'text-[var(--color-text-muted)] hover:bg-white/[0.04] hover:text-[var(--color-text-main)]'}`}
       >
-        <span className="text-sm">{TYPE_ICONS[biz.business_type] || '🏢'}</span>
+        <span className="flex items-center justify-center w-5 h-5 text-[var(--color-text-muted)]">
+          {React.createElement(BIZ_ICON_MAP[biz.business_type] ?? Building, { size: 14 })}
+        </span>
         <div className="flex-1 min-w-0">
           <p className="font-semibold truncate leading-tight">{biz.name}</p>
           <p className="text-xs opacity-60 capitalize leading-tight">{biz.business_type?.replace('_',' ')}</p>
@@ -44,7 +51,10 @@ export default function BusinessSwitcher({ onCreateNew }: { onCreateNew: () => v
     <div ref={ref} className="relative">
       <button onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-white/[0.04] transition-all cursor-pointer">
-        <span className="text-lg">{TYPE_ICONS[activeBusiness?.business_type || 'holding']||'🏢'}</span>
+        <span className="flex items-center justify-center w-6 h-6 rounded-lg text-[var(--color-accent-highlight)]"
+              style={{ background: 'var(--accent-primary)18' }}>
+          {React.createElement(BIZ_ICON_MAP[activeBusiness?.business_type ?? 'holding'] ?? Building, { size: 14 })}
+        </span>
         <div className="flex-1 min-w-0 text-left">
           <p className="text-[12px] font-semibold text-[var(--color-text-main)] truncate leading-tight">
             {activeBusiness?.name || 'Select Business'}

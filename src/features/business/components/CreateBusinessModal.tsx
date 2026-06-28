@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Building2, Check } from 'lucide-react';
+import { X, Building2, Building, Check } from 'lucide-react';
 import { useBusiness, CreateBusinessData } from '../../../app/store/BusinessContext';
-import { TYPE_ICONS } from './BusinessSwitcher';
+import { BIZ_ICON_MAP } from './BusinessSwitcher';
 
 const BUSINESS_TYPES = [
-  { id:'fashion',         label:'Fashion Brand',      icon:'👗', desc:'Apparel & accessories' },
-  { id:'coffee',          label:'Coffee Shop',         icon:'☕', desc:'Cafe & beverage' },
-  { id:'restaurant',      label:'Restaurant',          icon:'🍽', desc:'Food & beverage' },
-  { id:'retail',          label:'Retail Store',        icon:'🏪', desc:'Physical & online retail' },
-  { id:'agency',          label:'Agency',              icon:'💼', desc:'Creative or digital agency' },
-  { id:'manufacturing',   label:'Manufacturing',        icon:'🏭', desc:'Production facility' },
-  { id:'service',         label:'Service Business',    icon:'🛠', desc:'Professional services' },
-  { id:'personal_finance',label:'Personal Finance',    icon:'💰', desc:'Personal money management' },
-  { id:'investment',      label:'Investment Portfolio', icon:'📈', desc:'Portfolio tracking' },
-  { id:'custom',          label:'Custom',              icon:'⚡', desc:'Define your own' },
+  { id:'fashion',         label:'Fashion Brand',       desc:'Apparel & accessories' },
+  { id:'coffee',          label:'Coffee Shop',          desc:'Cafe & beverage' },
+  { id:'restaurant',      label:'Restaurant',           desc:'Food & beverage' },
+  { id:'retail',          label:'Retail Store',         desc:'Physical & online retail' },
+  { id:'agency',          label:'Agency',               desc:'Creative or digital agency' },
+  { id:'manufacturing',   label:'Manufacturing',         desc:'Production facility' },
+  { id:'service',         label:'Service Business',     desc:'Professional services' },
+  { id:'personal_finance',label:'Personal Finance',     desc:'Personal money management' },
+  { id:'investment',      label:'Investment Portfolio',  desc:'Portfolio tracking' },
+  { id:'custom',          label:'Custom',               desc:'Define your own' },
 ];
 
 const CURRENCIES = [
@@ -99,7 +99,10 @@ export default function CreateBusinessModal({ open, onClose, onCreated }: Props)
                             : 'border-white/[0.07] hover:border-white/15 hover:bg-white/[0.04]'
                         }`}
                       >
-                        <span className="text-xl mt-0.5">{t.icon}</span>
+                        <span className="flex items-center justify-center w-7 h-7 rounded-lg mt-0.5 text-[var(--color-accent-highlight)]"
+                              style={{ background: 'var(--accent-primary)18' }}>
+                          {React.createElement(BIZ_ICON_MAP[t.id] ?? Building, { size: 15 })}
+                        </span>
                         <div className="min-w-0">
                           <p className={`text-sm font-medium leading-tight ${form.business_type===t.id?'text-white':'text-white/70'}`}>{t.label}</p>
                           <p className="text-xs text-white/40 leading-tight mt-0.5">{t.desc}</p>

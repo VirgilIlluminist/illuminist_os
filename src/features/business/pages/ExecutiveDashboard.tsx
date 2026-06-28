@@ -5,10 +5,10 @@
  */
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { TrendingUp, TrendingDown, DollarSign, Users, Building2, BarChart3, ArrowRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Users, Building2, BarChart3, ArrowRight, Building } from 'lucide-react';
 import { useBusiness } from '../../../app/store/BusinessContext';
 import { useERP } from '../../../app/store/ERPContext';
-import { TYPE_ICONS } from '../../../features/business/components/BusinessSwitcher';
+import { BIZ_ICON_MAP } from '../../../features/business/components/BusinessSwitcher';
 
 interface BizStat {
   id:       string;
@@ -94,9 +94,9 @@ export default function ExecutiveDashboard() {
               className="p-4 bg-[var(--color-card-bg)] border border-[var(--color-border-line)] rounded-xl flex items-center gap-4 hover:border-[var(--color-accent-highlight)]/30 transition-all group"
             >
               {/* Icon */}
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
-                   style={{background:accent+'15'}}>
-                {TYPE_ICONS[s.type] || '🏢'}
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-[var(--color-accent-highlight)]"
+                   style={{background:accent+'18'}}>
+                {React.createElement(BIZ_ICON_MAP[s.type] ?? Building, { size: 18 })}
               </div>
 
               {/* Info */}
